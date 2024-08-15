@@ -1,0 +1,78 @@
+<div class="sticky-top">
+	<div class="{% if app.request.get('_route') starts with 'home'%}bg-zen-primary{% elseif app.request.get('_route') starts with 'investisseur'%}bg-zen-investisseur{% elseif app.request.get('_route') starts with 'intraday'%}bg-zen-intraday{% endif %}">
+		<div class="container-fluid blog-header-top">
+			<header class="blog-header py-3 ">
+				<div class="row flex-nowrap justify-content-between align-items-center">
+					<div class="col-3">
+						<a class="blog-header-logo text-light text-uppercase" href="/" style="font-size: 35px; font-family:'Times new Roman'">
+							zenbourse 50
+							{#<img src="{{ asset('images/zen-l.png') }}" alt="Logo" width="200" class="d-inline-block align-text-top">#}
+						</a>
+					</div>
+					<div class="col-4 pt-1">
+						<h5 class="fst-italic text-light" style="font-size: 25px">Détecter les meilleurs boîtes de DARVAS</h5>
+					</div>
+
+					<div class="col-5 d-flex align-items-center  justify-content-end">
+						{% if app.request.get('_route') starts with 'home'%}
+							<div class="mr-3">
+								<a class="link-light" href="{{ path('investisseur_presentation') }}" style="font-size: 13px">METHODE INVESTISSEUR</a>
+							</div>
+							<div class="p-3">
+								<a class="link-light" href="#" style="font-size: 13px">METHODE INTRADAY</a>
+							</div>
+						{% endif %}
+						{% if app.request.get('_route') starts with 'investisseur'%}
+							<div class="p-3">
+								<a class="link-light" href="#" style="font-size: 13px">METHODE INTRADAY</a>
+							</div>
+						{% endif %}
+						{% if app.request.get('_route') starts with 'intraday'%}
+							<div class="p-3">
+								<a class="link-light" href="{{ path('investisseur_presentation') }}" style="font-size: 13px">METHODE INVESTISSEUR</a>
+							</div>
+						{% endif %}
+						{% if app.user %}
+							<a class="btn btn-sm 
+								{% if app.request.get('_route') starts with 'home'%}
+									btn-outline-secondary 
+								{% elseif app.request.get('_route') starts with 'investisseur' or 'intraday' %}
+									btn-outline-light
+								{% endif %}
+							mx-2" 
+							href="{{ path('app_logout') }}">Deconnexion</a>
+						{% else %}
+							<a class=" btn btn-sm 
+							{% if app.request.get('_route') starts with 'home'%}
+								btn-outline-secondary 
+								{% elseif app.request.get('_route') starts with 'investisseur' or 'intraday' %}
+								btn-outline-light
+							{% endif %}
+							mx-2" href="{{ path('home_login') }}">Connexion</a>
+						{% endif %}
+
+						<div class="dropdown">
+							<button class="btn btn-sm btn-warning dropdown-toggle" type="button" id="dropdownLang" data-bs-toggle="dropdown" aria-expanded="false">
+								<span class="fi fi-fr"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLang">
+								<li>
+									<a class="dropdown-item" href="#">
+										<span class="fi fi-fr"></span>
+										Français
+									</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="#">
+										<span class="fi fi-gb"></span>
+										English
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</header>
+		</div>
+	</div>
+</div>

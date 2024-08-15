@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zenbourse La Méthode
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+	{% include 'partials/menu_home.html.twig' %}
+
+	<main class="container-fluid mt-4">
+		<div class="row g-5">
+			<div class="col-md-9">
+				<h3 class="pb-4 mb-4 fst-italic border-bottom">METHODE INVESTISSEUR</h3>
+				<div class="" id="article-liste">
+					<p>
+						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium dicta doloremque eius enim fuga fugit illum in neque, placeat quis suscipit totam ullam vel, voluptas voluptate? At molestias neque quaerat?
+					</p>
+				</div>
+				<div class="mb-5"></div>
+				<h3 class="pb-4 mb-4 fst-italic border-bottom">METHODE INTRADAY</h3>
+				<div class="" id="article-liste">
+					<p>
+						<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. At doloribus dolorum, eaque eum fugiat, hic labore laboriosam nobis, officia officiis omnis porro provident quia quis rem similique velit voluptates! Quisquam?</span>
+						<span>Adipisci ex fugiat ipsam magni maiores non quis quos. Debitis exercitationem fugit magnam nostrum pariatur quibusdam ut. Animi consequatur cum ducimus ipsum libero necessitatibus perspiciatis quia similique sint, ullam vitae.</span>
+						<span>Assumenda commodi consectetur corporis cumque deleniti est, modi reiciendis sapiente temporibus! Architecto assumenda cumque cupiditate dignissimos tempora. Asperiores deserunt dicta id ipsa, laborum, minus necessitatibus omnis praesentium quae quia quibusdam.</span>
+						<span>Atque dolore enim, est fugit impedit ipsa ipsam labore odio ratione reiciendis repudiandae soluta tempore, voluptatibus. At dicta, dignissimos facilis laboriosam nesciunt quod reiciendis temporibus. Consectetur distinctio ipsum repudiandae voluptatum!</span>
+						<span>Aliquid asperiores aspernatur atque ducimus et fuga, fugiat hic illum incidunt magnam maxime nobis non, nulla numquam obcaecati perspiciatis porro provident quas quia reiciendis rem saepe similique vitae? Et, id!</span>
+					</p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				{% include 'home/widgets/sidebar.html.twig' %}
+			</div>
+		</div>
+	</main>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zenbourse - Contactez-nous
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+	{% include 'partials/menu_home.html.twig' %}
+
+	<main class="container-fluid mt-4">
+        <div class="row g-5" >
+            <div class="col-md-9">
+                <h3 class="pb-4 mb-4 fst-italic border-bottom">Contact</h3>
+                <p>
+                    REDIGEZ VOTRE MESSAGE
+                </p>
+                <div class="row bg-light rounded p-4">
+                    <div class="col-10 mx-auto">
+                        {{ form(form) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                {% include 'home/widgets/sidebar.html.twig' %}
+            </div>
+        </div>
+    </main>
+
+	{% endblock %}

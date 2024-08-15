@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {% include 'investisseur/partials/menu.html.twig' %}
+    {% set subMenu = get_sub_menus(url_investisseur, "bibliotheque") %}
+
+    <div class="bg-light position-sticky" style="top: 8.3rem; z-index: 1">
+        <div class="container">
+            <div class="nav-scroller py-2">
+                <div class="py-3 blog-nav d-flex align-items-center justify-content-start border-0">
+                    <span class="fw-bolder m-0">BIBLIOTHÈQUE -></span>
+                    <nav class="nav d-flex justify-content-between text-uppercase">
+                        {% for childMenu in subMenu.subMenus %}
+                            <a class="px-4 link-secondary" href="{{ path(childMenu.url) }}">{{ childMenu.title }}</a>
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-5 mt-1" >
+        <div class="col-md-8">
+
+        </div>
+        <div class="col-md-4">
+
+            {% include 'investisseur/partials/_widget.html.twig' %}
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    Zenbourse - Investisseur - La méthode
+{% endblock %}
+
+
+

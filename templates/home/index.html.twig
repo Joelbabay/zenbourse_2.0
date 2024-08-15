@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Zenbourse
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+	{% include 'partials/menu_home.html.twig' %}
+	<main class="container-fluid">
+		{% for label, messages in  app.flashes%}
+			{% for message in messages %}
+				<div class="alert alert-{{ label }} text-center fw-bold">
+					{{ message }}
+				</div>
+			{% endfor %}
+		{% endfor %}
+
+		<div class="row g-5">
+			<div class="col-md-9">
+				<div class="card text-dark mb-4 border-0 shadow-sm">
+					<img src="{{ asset('/images/home.jpg') }}" class="card-img" alt="fond">
+					<div class="card-img-overlay mt-4">
+						<span class="fst-italic card-title h3">« Se simplifier la vie c'est le luxe suprême ! »</span>
+						<span class="card-text">Léonard de Vinci.</span>
+						<h3 class="fst-italic card-title text-center mt-3">
+							Une méthode simple c'est le luxe suprême !
+						</h3>
+					</div>
+				</div>
+				<h3 class="pb-4 mb-4 fst-italic border-bottom">Les boîtes de DARVAS</h3>
+				<div class="" id="article-liste"></div>
+			</div>
+
+			<div class="col-md-3">
+				{% include 'home/widgets/sidebar.html.twig' %}
+			</div>
+		</div>
+	</main>
+
+{% endblock %}
