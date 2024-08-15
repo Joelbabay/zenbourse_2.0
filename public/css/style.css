@@ -141,8 +141,8 @@ a {
 }
 
 .zen-button:hover {
-    background-color: #f9f9f9;
-    color: #183d3d !important;
+    background-color: #235858;
+    color: #fff !important;
 }
 
 .form-control:focus {

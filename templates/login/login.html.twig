@@ -20,7 +20,12 @@
             <label for="username" class="mb-2">Email</label>
             <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
             <label for="password" class="mb-2 mt-4">Mot de passe</label>
-            <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+            <div class="input-group">
+                <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                <button class="zen-button btn btn-light bg-zen-primary border-0 text-light" type="button" id="togglePassword">
+                    <i class="bi bi-eye"></i> <!-- Icône d'œil de Bootstrap Icons -->
+                </button>
+            </div>
 
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
@@ -39,4 +44,21 @@
             </button>
         </form>
     </div>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function (e) {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            // Bascule entre "password" et "text"
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+    </script>
 {% endblock %}
