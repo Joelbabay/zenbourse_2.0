@@ -1,0 +1,8 @@
+# .htaccess à la racine du projet
+
+# Redirect all requests to the public directory
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
