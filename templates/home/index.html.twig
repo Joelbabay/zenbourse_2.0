@@ -7,7 +7,7 @@
 {% block body %}
 	{% include 'partials/header.html.twig' %}
 	{% include 'partials/menu_home.html.twig' %}
-	<main class="container-fluid">
+	<main class="custom-container">
 		{% for label, messages in  app.flashes%}
 			{% for message in messages %}
 				<div class="alert alert-{{ label }} text-center fw-bold">
