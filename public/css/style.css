@@ -82,6 +82,10 @@ input::placeholder {
     color: #fff !important;
 }
 
+.methode-section a {
+    font-size: 15px;
+}
+
 .blog-footer {
     padding: 2.5rem 0;
     color: #727272;
