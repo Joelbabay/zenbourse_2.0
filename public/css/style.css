@@ -12,12 +12,16 @@ h6 {
     line-height: 1.2;
 }
 
+html {
+    overflow-x: hidden;
+}
+
 body {
     background-color: #ecf0f1 !important;
 }
 
 .custom-container {
-    max-width: 1500px;
+    max-width: 1400px;
     /* Définis la largeur maximale souhaitée */
     margin: 0 auto;
     /* Centrer le conteneur */
