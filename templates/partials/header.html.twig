@@ -33,7 +33,7 @@
 							</div>
 						{% endif %}
 						{% if app.user %}
-							<a class="btn btn-sm 
+							<a class="btn btn-sm text-uppercase
 								{% if app.request.get('_route') starts with 'home'%}
 									btn-outline-secondary 
 								{% elseif app.request.get('_route') starts with 'investisseur' or 'intraday' %}
@@ -42,7 +42,7 @@
 							mx-2" 
 							href="{{ path('app_logout') }}">Deconnexion</a>
 						{% else %}
-							<a class=" btn btn-sm 
+							<a class=" btn btn-sm text-uppercase
 							{% if app.request.get('_route') starts with 'home'%}
 								btn-outline-secondary 
 								{% elseif app.request.get('_route') starts with 'investisseur' or 'intraday' %}

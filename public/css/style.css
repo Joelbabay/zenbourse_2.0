@@ -68,14 +68,29 @@ input::placeholder {
     border-bottom: 3px solid #183d3d;
 }
 
+.active-investisseur {
+    color: #00a8b4;
+    border-bottom: 3px solid #00a8b4;
+}
+
 .active-intraday {
     color: #dc6a19;
     border-bottom: 3px solid #dc6a19;
 }
 
-.active-investisseur {
+.menu-home:hover {
+    color: #183d3d;
+    border-bottom: 3px solid #183d3d;
+}
+
+.menu-investisseur a:hover {
     color: #00a8b4;
     border-bottom: 3px solid #00a8b4;
+}
+
+.menu-intraday a:hover {
+    color: #dc6a19;
+    border-bottom: 3px solid #dc6a19;
 }
 
 .text-zen-primary {
@@ -88,6 +103,11 @@ input::placeholder {
 
 .methode-section a {
     font-size: 15px;
+}
+
+.l-sidebar {
+    position: relative;
+    top: 10px;
 }
 
 .blog-footer {

@@ -1,8 +1,33 @@
-<div class="position-sticky" style="top:88px; z-index:1000">
-	<div class="nav-scroller blog-nav-second">
-    <div class="container-fluid blog-nav">
-        <!-- Menu Principal -->
-        <nav class="nav d-flex justify-content-center text-uppercase">
+<div class="position-sticky menu-investisseur" style="top:88px; z-index:1000">
+    <div class="nav-scroller blog-nav-second">
+        <div class="container-fluid blog-nav">
+            <!-- Menu Principal -->
+            <nav class="nav d-flex justify-content-center text-uppercase">
+                {% for item in get_menu('INVESTISSEUR') %}
+                    {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
+                    {% set child_active = false %}
+
+                    {% if item.children|length > 0 %}
+                        {% for child in item.children %}
+                            {% if app.request.attributes.get('_route') == child.route %}
+                                {% set child_active = true %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+
+                    {% set is_active = parent_active or child_active %}
+
+                    <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ is_active ? 'active-investisseur' : '' }}" href="{{ path(item.route) }}">
+                        {{ item.label }}
+                    </a>
+                {% endfor %}
+            </nav>
+        </div>
+    </div>
+
+    <!-- Sous-menu dans une nouvelle div -->
+    <div class="sub-menu-container bg-light">
+        <div class="container-fluid">
             {% for item in get_menu('INVESTISSEUR') %}
                 {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
                 {% set child_active = false %}
@@ -17,42 +42,17 @@
 
                 {% set is_active = parent_active or child_active %}
 
-                <a class="px-4 py-3 link-secondary nav-link {{ is_active ? 'active-investisseur' : '' }}" href="{{ path(item.route) }}">
-                    {{ item.label }}
-                </a>
+                {% if is_active and item.children|length > 0 %}
+                    <nav class="nav d-flex justify-content-center text-uppercase">
+                        {% for child in item.children %}
+                            <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ app.request.attributes.get('_route') == child.route ? 'active-investisseur' : '' }}" href="{{ path(child.route) }}">
+                                {{ child.label }}
+                            </a>
+                        {% endfor %}
+                    </nav>
+                {% endif %}
             {% endfor %}
-        </nav>
+        </div>
     </div>
-</div>
-
-<!-- Sous-menu dans une nouvelle div -->
-<div class="sub-menu-container bg-light">
-    <div class="container-fluid">
-        {% for item in get_menu('INVESTISSEUR') %}
-            {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
-            {% set child_active = false %}
-
-            {% if item.children|length > 0 %}
-                {% for child in item.children %}
-                    {% if app.request.attributes.get('_route') == child.route %}
-                        {% set child_active = true %}
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-
-            {% set is_active = parent_active or child_active %}
-
-            {% if is_active and item.children|length > 0 %}
-                <nav class="nav d-flex justify-content-center text-uppercase">
-                    {% for child in item.children %}
-                        <a class="px-4 py-3 link-secondary nav-link {{ app.request.attributes.get('_route') == child.route ? 'active-investisseur' : '' }}" href="{{ path(child.route) }}">
-                            {{ child.label }}
-                        </a>
-                    {% endfor %}
-                </nav>
-            {% endif %}
-        {% endfor %}
-    </div>
-</div>
 
 </div>
