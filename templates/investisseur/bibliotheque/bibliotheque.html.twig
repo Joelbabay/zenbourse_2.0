@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}
+    Zenbourse - Méthode Investisseur - Bibliothèque
+{% endblock %}
+
 {% block body %}
     {% include 'investisseur/partials/menu.html.twig' %}
     {% set subMenu = get_sub_menus(url_investisseur, "bibliotheque") %}
@@ -30,10 +35,6 @@
 
     </div>
 
-{% endblock %}
-
-{% block title %}
-    Zenbourse - Investisseur - La méthode
 {% endblock %}
 
 
