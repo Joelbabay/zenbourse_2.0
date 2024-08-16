@@ -46,7 +46,7 @@ security:
     # - { path: ^/profile, roles: ROLE_USER }
     - { path: ^/investisseur, roles: ROLE_INVESTISSEUR }
     - { path: ^/intraday, roles: ROLE_INTRADAY }
-    # - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
   security:
