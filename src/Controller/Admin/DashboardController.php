@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Contact;
 use App\Entity\Menu;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -18,7 +19,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        return $this->redirect($adminUrlGenerator->setController(UserCrudController::class)->generateUrl());
+        return $this->redirect($adminUrlGenerator->setController(ContactCrudController::class)->generateUrl());
     }
 
     public function configureDashboard(): Dashboard
@@ -30,6 +31,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToCrud('Boîte de réception', 'fa fa-inbox', Contact::class);
         yield MenuItem::subMenu('Compte', 'fas fa-user')->setSubItems(
             [
                 MenuItem::linkToCrud('Utilisateurs', 'fas fa-user-friends', User::class),

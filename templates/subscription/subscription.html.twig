@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Zenbourse - Demande d'adhésion
+{% endblock %}
+
+{% block body %}
+    {% include 'partials/header.html.twig' %}
+    <main class="custom-container">
+        <div class="row">
+            <div class="col-md-9 mt-4">
+                <h2 class="fst-italic border-bottom pb-4 mb-3">Achat et paiement de la méthode Investisseur</h2>
+                <p class="fw-bolder bg-warning text-center">
+                     zone de texte libre ...
+                </p>
+                <p>
+                    La méthode n'est pas actuellement disponible à la vente. La société ZENBOURSE n'étant pas crée.
+                    Avant de la créer, nous souhaiterions savoir si elle intéresserait suffisamment de personnes.
+                </p>
+                <p>
+                    Le prix serait très abordable, maximum 300 €uros. Un tel prix serait de nature à une large diffusion.
+                    <br>(2 positions de 1000 €uros avec une plus-value de 15%)
+                </p>
+                <p>
+                    Si vous êtes intéressé, nous vous remercions de nous retourner le formulaire ci-dessous
+                </p>
+
+                <div class="from-investisseur bg-light rounded">
+                    <div class="row col-md-8 mx-auto p-3">
+                        {{ form(form) }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                {% include 'home/widgets/sidebar.html.twig' %}
+            </div>
+
+        </div>
+
+    </main>
+{% endblock %}
