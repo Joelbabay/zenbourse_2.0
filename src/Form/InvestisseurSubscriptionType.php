@@ -47,6 +47,12 @@ class InvestisseurSubscriptionType extends AbstractType
                         'placeholder' => 'Entrez votre nom',
                     ]
                 ])
+                ->add('lastname', TextType::class, [
+                    'label' => 'Prénom',
+                    'attr' => [
+                        'placeholder' => 'Entrez votre prenom',
+                    ]
+                ])
                 ->add('email', EmailType::class, [
                     'label' => 'Email',
                     'attr' => [

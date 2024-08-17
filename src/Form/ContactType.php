@@ -22,6 +22,12 @@ class ContactType extends AbstractType
                     'placeholder' => 'Entrez votre nom',
                 ]
             ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Prénom',
+                'attr' => [
+                    'placeholder' => 'Entrez votre prénom',
+                ]
+            ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
@@ -30,7 +36,7 @@ class ContactType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
-                'attr' =>[
+                'attr' => [
                     'placeholder' => 'Entrez votre message',
                     'cols' => 50,
                     'rows' => 6,
@@ -41,7 +47,7 @@ class ContactType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-light btn-block zen-button text-light btn-lg w-100 mt-4'
                 ]
-                ]);
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
