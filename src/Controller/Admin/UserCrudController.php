@@ -114,13 +114,23 @@ class UserCrudController extends AbstractCrudController
         }
         $entityInstance->setRoles(array_unique(array_values($roles)));
 
+        $originalUser = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
+
+        if ($originalUser['password'] !== $user->getPassword()) {
+            // Hash the new password before persisting
+            $encodedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $entityInstance->getPassword()
+            );
+            $entityInstance->setPassword($encodedPassword);
+        }
+
         // Encoder le mot de passe s'il a été modifié
         /*if ($password = $user->getPassword()) {
             $encodedPassword = $this->passwordHasher->hashPassword($user, $password);
             $user->setPassword($encodedPassword);
         }*/
 
-        $entityManager->persist($user);
-        $entityManager->flush();
+        parent::updateEntity($entityManager, $entityInstance);
     }
 }
