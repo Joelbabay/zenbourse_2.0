@@ -115,10 +115,10 @@ class UserCrudController extends AbstractCrudController
         $entityInstance->setRoles(array_unique(array_values($roles)));
 
         // Encoder le mot de passe s'il a été modifié
-        if ($password = $user->getPassword()) {
+        /*if ($password = $user->getPassword()) {
             $encodedPassword = $this->passwordHasher->hashPassword($user, $password);
             $user->setPassword($encodedPassword);
-        }
+        }*/
 
         $entityManager->persist($user);
         $entityManager->flush();
