@@ -21,6 +21,7 @@ class ContactCrudController extends AbstractCrudController
     {
         return [
             TextField::new('firstname', 'Nom'),
+            TextField::new('lastname', 'Prénom'),
             TextField::new('email'),
             TextEditorField::new('content', 'Contenu'),
             DateField::new('createdAt', 'Reçu le')
