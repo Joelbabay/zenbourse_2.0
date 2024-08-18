@@ -72,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isIntraday = false;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $downloadRequestSubmitted = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -317,6 +320,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsIntraday(bool $isIntraday): static
     {
         $this->isIntraday = $isIntraday;
+
+        return $this;
+    }
+
+    public function isDownloadRequestSubmitted(): ?bool
+    {
+        return $this->downloadRequestSubmitted;
+    }
+
+    public function setIsDownloadRequestSubmitted(?bool $downloadRequestSubmitted): static
+    {
+        $this->downloadRequestSubmitted = $downloadRequestSubmitted;
 
         return $this;
     }

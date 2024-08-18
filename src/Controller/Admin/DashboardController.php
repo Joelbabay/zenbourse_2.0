@@ -34,10 +34,14 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Boîte de réception', 'fa fa-inbox', Contact::class);
         yield MenuItem::subMenu('Compte', 'fas fa-user')->setSubItems(
             [
-                MenuItem::linkToCrud('Utilisateurs', 'fas fa-user-friends', User::class),
-                MenuItem::linkToCrud('Ajouter', 'fas fa-plus', User::class)->setAction(Crud::PAGE_NEW),
+                MenuItem::linkToCrud('Utilisateurs', 'fas fa-user-friends', User::class)
+                    ->setController(UserCrudController::class),
+                MenuItem::linkToCrud('Ajouter', 'fas fa-plus', User::class)->setAction(Crud::PAGE_NEW)
+                    ->setController(UserCrudController::class),
             ]
         );
         yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
+        yield MenuItem::linkToCrud('Liste des 300 valeurs', 'fa fa-download', User::class)
+            ->setController(UserDownloadCrudController::class);
     }
 }

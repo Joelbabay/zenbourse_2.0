@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Zenbourse - Liste des valeurs
+{% endblock %}
+
+{% block body %}
+    {% include 'partials/header.html.twig' %}
+
+    <main class="custom-container">
+        <div class="row">
+            <div class="col-md-9 mt-4">
+                <h2 class="fst-italic border-bottom pb-4 mb-3">Les valeurs de l'étude statistique</h2>
+                <p class="fw-bolder bg-warning text-center">
+                     zone de texte libre ...
+                </p>
+                <p>
+                    Nous mettons cette liste de 300 valeurs à votre disposition, peut être un peu plus, pour vous permettre de constater qu'il s'agit d'une méthode élaborée à partir d'une étude statistique et non pas d'un backtest automatisé sur des marchés. Comme il s'agit d'un travail manuel qui a demandé de nombreuses heures de travail, il se peut que vous constaterez quelques anomalies mineures. Nous vous remercions de bien vouloir nous en excuser.
+                </p>
+                <p>
+                    Nous rappelons que l'étude statistique est basée sur la théorie de DARVAS, méthode très facile à appréhender. Malheureusement trop négligée car elle ne repose pas sur l'analyse d'indicateurs traditionnels tels que le RSI, le stochastique, etc.
+                </p>
+                <p>
+                    Nous espérons que l'analyse de ces valeurs vous amènera à considérer que les décisions à prendre doivent être de votre ressort sans influence extérieure, sans le conseil de qui que ce soit. Conditions indispensables pour acquérir la confiance absolue.
+                </p>
+                <p>
+                    N'hésitez pas à nous demander les graphiques des valeurs qui vous intéresseraient par mail.
+                </p>
+                <p>
+                    Les graphiques ne seront pas commentés, mais comporterons le signal de notre méthode. Il vous appartiendra de faire votre propre analyse sans influence comme si vous avez acquis méthode.
+                </p>
+                {% if app.user %}
+                    <div class="row col-md-6 m-auto p-4">
+                        <a href="{{ path('file_download') }}" class="btn btn-lg btn-light text-light zen-button">Je télécharge la liste des 300 valeurs</a>
+                    </div>
+                {% else %}
+                    <div class="bg-light rounded">
+                        <div class="row col-md-8 mx-auto p-3 ">
+                            {{ form(form) }}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="col-md-3">
+                {% include 'home/widgets/sidebar.html.twig' %}
+            </div>
+
+        </div>
+
+    </main>
+
+{% endblock %}

@@ -3,21 +3,30 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @method User getUser()
+ */
 class UserCrudController extends AbstractCrudController
 {
-    public function __construct(private UserPasswordHasherInterface $passwordHasher, private RequestStack $requestStack) {}
+    private $userRepository;
+    private $entityRepository;
+
+    public function __construct(OrmEntityRepository $entityRepository, UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher, private RequestStack $requestStack)
+    {
+        $this->userRepository = $userRepository;
+        $this->entityRepository = $entityRepository;
+    }
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -28,9 +37,9 @@ class UserCrudController extends AbstractCrudController
         return $crud
             ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs')
             ->setEntityLabelInSingular('Utilisateur')
-            ->setEntityLabelInPlural('Utilisateurs');
+            ->setEntityLabelInPlural('Utilisateurs')
+            ->setDefaultSort(['createdAt' => 'DESC']);
     }
-
 
     public function configureFields(string $pageName): iterable
     {
@@ -124,11 +133,6 @@ class UserCrudController extends AbstractCrudController
             );
             $entityInstance->setPassword($encodedPassword);
         }
-
-        /*if ($password = $user->getPassword()) {
-            $encodedPassword = $this->passwordHasher->hashPassword($user, $password);
-            $user->setPassword($encodedPassword);
-        }*/
 
         parent::updateEntity($entityManager, $entityInstance);
     }
