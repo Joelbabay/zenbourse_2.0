@@ -66,9 +66,9 @@ class UserDownloadCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            TextField::new('lastname', 'Non'),
+            TextField::new('firstname', 'Prénom'),
             TextField::new('email'),
-            TextField::new('firstname', 'Nom'),
-            TextField::new('lastname', 'Prénom'),
             DateTimeField::new('createdAt', 'Date de téléchargement'),
         ];
     }

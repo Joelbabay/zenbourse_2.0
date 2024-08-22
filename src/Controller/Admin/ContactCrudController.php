@@ -3,9 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Contact;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -16,15 +16,24 @@ class ContactCrudController extends AbstractCrudController
         return Contact::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setPageTitle(Crud::PAGE_INDEX, 'Messages')
+            ->setEntityLabelInSingular('Message')
+            ->setEntityLabelInPlural('Messages')
+            ->setDefaultSort(['createdAt' => 'DESC']);
+    }
+
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('firstname', 'Nom'),
-            TextField::new('lastname', 'Prénom'),
+            TextField::new('lastname', 'Nom'),
+            TextField::new('firstname', 'Prénom'),
             TextField::new('email'),
             TextEditorField::new('content', 'Contenu'),
-            DateField::new('createdAt', 'Reçu le')
+            DateTimeField::new('createdAt', 'Reçu le')
         ];
     }
 }

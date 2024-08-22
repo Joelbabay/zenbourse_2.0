@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @method User getUser()
+ */
 class SubscriptionController extends AbstractController
 {
     private $entityManager;
@@ -33,6 +36,11 @@ class SubscriptionController extends AbstractController
             return $this->redirectToRoute('investisseur_home');
         }
 
+        if ($user && $user->isInterestedInInvestorMethod()) {
+            $this->addFlash('info', 'Votre demande est en cours de validation');
+            return $this->redirectToRoute('investisseur_home');
+        }
+
         if ($user) {
             $form = $this->createForm(InvestisseurSubscriptionType::class, $user, [
                 'existing_user' => true,
@@ -49,6 +57,7 @@ class SubscriptionController extends AbstractController
             if (!$user->getId()) {
                 $user->setCreatedAt(new \DateTime());
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
+                $user->setInterestedInInvestorMethod(true);
                 $this->entityManager->persist($user);
             }
 

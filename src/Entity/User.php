@@ -73,7 +73,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isIntraday = false;
 
     #[ORM\Column(nullable: true)]
+    //dfault false
     private ?bool $downloadRequestSubmitted = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $isInterestedInInvestorMethod = false;
 
     public function __construct()
     {
@@ -332,6 +336,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsDownloadRequestSubmitted(?bool $downloadRequestSubmitted): static
     {
         $this->downloadRequestSubmitted = $downloadRequestSubmitted;
+
+        return $this;
+    }
+
+    public function isInterestedInInvestorMethod(): ?bool
+    {
+        return $this->isInterestedInInvestorMethod;
+    }
+
+    public function setInterestedInInvestorMethod(?bool $isInterestedInInvestorMethod): static
+    {
+        $this->isInterestedInInvestorMethod = $isInterestedInInvestorMethod;
 
         return $this;
     }

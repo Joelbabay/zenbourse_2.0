@@ -44,11 +44,11 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('email'),
-            TextField::new('firstname', 'Prénom'),
             TextField::new('lastname', 'Nom'),
-            TextField::new('password')->onlyOnForms(),
+            TextField::new('firstname', 'Prénom'),
+            TextField::new('email'),
             TextField::new('phone', 'Téléphone'),
+            TextField::new('password')->onlyOnForms(),
             TextField::new('city', 'Ville'),
             BooleanField::new('isInvestisseur', 'Investisseur')->setFormTypeOptions([
                 'mapped' => true,
@@ -108,6 +108,7 @@ class UserCrudController extends AbstractCrudController
         }
 
         if ($user->isInvestisseur()) {
+            $user->setInterestedInInvestorMethod(false);
             if (!in_array('ROLE_INVESTISSEUR', $roles)) {
                 $roles[] = 'ROLE_INVESTISSEUR';
             }

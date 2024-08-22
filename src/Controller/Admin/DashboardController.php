@@ -40,8 +40,10 @@ class DashboardController extends AbstractDashboardController
                     ->setController(UserCrudController::class),
             ]
         );
-        yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
         yield MenuItem::linkToCrud('Liste des 300 valeurs', 'fa fa-download', User::class)
             ->setController(UserDownloadCrudController::class);
+        yield MenuItem::linkToCrud('intéressé Méthode Investisseur', 'fa fa-star', User::class)
+            ->setController(InterestedUsersCrudController::class);
+        yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
     }
 }

@@ -8,8 +8,10 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -36,8 +38,21 @@ class FileDownloadController extends AbstractController
             }
             $this->entityManager->flush();
         }
+
         $filePath = $this->fileDirectory;
-        return $this->file($filePath);
+
+        if (file_exists($filePath)) {
+            $response = new BinaryFileResponse($filePath);
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                basename($filePath)
+            );
+
+            dd($filePath);
+            return $response;
+        } else {
+            throw $this->createNotFoundException('The file does not exist');
+        }
     }
 
     #[Route('/download', name: 'home_download_page')]
@@ -56,6 +71,8 @@ class FileDownloadController extends AbstractController
                 $user->setFirstname($data->getFirstname());
                 $user->setLastname($data->getLastname());
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
+                $user->setCreatedAt(new \DateTime());
+            } else {
                 $user->setCreatedAt(new \DateTime());
             }
             $user->setIsDownloadRequestSubmitted(true);
