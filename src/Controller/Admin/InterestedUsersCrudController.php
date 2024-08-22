@@ -65,8 +65,8 @@ class InterestedUsersCrudController extends AbstractCrudController
         return [
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
-            TextField::new('email'),
-            DateTimeField::new('createdAt', 'Date de demande'),
+            TextField::new('email', 'E-mail'),
+            DateTimeField::new('createdAt', 'Date'),
         ];
     }
 }

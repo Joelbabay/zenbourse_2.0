@@ -68,7 +68,7 @@ class UserDownloadCrudController extends AbstractCrudController
         return [
             TextField::new('lastname', 'Non'),
             TextField::new('firstname', 'Prénom'),
-            TextField::new('email'),
+            TextField::new('email', 'E-mail'),
             DateTimeField::new('createdAt', 'Date de téléchargement'),
         ];
     }
