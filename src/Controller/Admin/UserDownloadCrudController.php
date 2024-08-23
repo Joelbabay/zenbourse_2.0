@@ -69,7 +69,7 @@ class UserDownloadCrudController extends AbstractCrudController
             TextField::new('lastname', 'Non'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
-            DateTimeField::new('createdAt', 'Date de téléchargement'),
+            DateTimeField::new('createdAt', 'Date de téléchargement')->setFormat('dd/MM/YYYY'),
         ];
     }
 }

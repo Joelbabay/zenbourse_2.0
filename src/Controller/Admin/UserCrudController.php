@@ -9,6 +9,7 @@ use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,12 +57,14 @@ class UserCrudController extends AbstractCrudController
                     'class' => 'js-investisseur-checkbox'
                 ]
             ]),
+            DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY'),
             BooleanField::new('isIntraday', 'Intraday')->setFormTypeOptions([
                 'mapped' => true,
                 'attr' => [
                     'class' => 'js-intraday-checkbox'
                 ]
             ]),
+            DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY'),
         ];
     }
 
@@ -81,9 +84,11 @@ class UserCrudController extends AbstractCrudController
         $roles[] = 'ROLE_USER';
         if (!empty($formData['User']['isInvestisseur'])) {
             $roles[] = 'ROLE_INVESTISSEUR';
+            $user->setInvestorAccessDate(new \DateTime());
         }
-        if (!empty($formData['User']['isIntraday'])) {
+        if ($user->isInvestisseur() && !empty($formData['User']['isIntraday'])) {
             $roles[] = 'ROLE_INTRADAY';
+            $user->setIntradayAccessDate(new \DateTime());
         }
         $user->setRoles($roles);
 
@@ -109,6 +114,7 @@ class UserCrudController extends AbstractCrudController
 
         if ($user->isInvestisseur()) {
             $user->setInterestedInInvestorMethod(false);
+            $user->setInvestorAccessDate(new \DateTime());
             if (!in_array('ROLE_INVESTISSEUR', $roles)) {
                 $roles[] = 'ROLE_INVESTISSEUR';
             }
@@ -116,6 +122,7 @@ class UserCrudController extends AbstractCrudController
             $roles = array_diff($roles, ['ROLE_INVESTISSEUR']);
         }
         if ($user->isIntraday()) {
+            $user->setIntradayAccessDate(new \DateTime());
             if (!in_array('ROLE_INTRADAY', $roles)) {
                 $roles[] = 'ROLE_INTRADAY';
             }

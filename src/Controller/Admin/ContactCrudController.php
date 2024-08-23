@@ -33,7 +33,7 @@ class ContactCrudController extends AbstractCrudController
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
             TextEditorField::new('content', 'Contenu'),
-            DateTimeField::new('createdAt', 'Reçu le')
+            DateTimeField::new('createdAt', 'Reçu le')->setFormat('dd/MM/YYYY')
         ];
     }
 }

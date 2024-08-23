@@ -66,7 +66,7 @@ class InterestedUsersCrudController extends AbstractCrudController
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
-            DateTimeField::new('createdAt', 'Date'),
+            DateTimeField::new('createdAt', 'Date')->setFormat('dd/MM/YYYY'),
         ];
     }
 }

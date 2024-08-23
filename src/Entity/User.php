@@ -79,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isInterestedInInvestorMethod = false;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $investorAccessDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $intradayAccessDate = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -348,6 +354,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setInterestedInInvestorMethod(?bool $isInterestedInInvestorMethod): static
     {
         $this->isInterestedInInvestorMethod = $isInterestedInInvestorMethod;
+
+        return $this;
+    }
+
+    public function getInvestorAccessDate(): ?\DateTimeInterface
+    {
+        return $this->investorAccessDate;
+    }
+
+    public function setInvestorAccessDate(?\DateTimeInterface $investorAccessDate): static
+    {
+        $this->investorAccessDate = $investorAccessDate;
+
+        return $this;
+    }
+
+    public function getIntradayAccessDate(): ?\DateTimeInterface
+    {
+        return $this->intradayAccessDate;
+    }
+
+    public function setIntradayAccessDate(?\DateTimeInterface $intradayAccessDate): static
+    {
+        $this->intradayAccessDate = $intradayAccessDate;
 
         return $this;
     }
