@@ -5,8 +5,10 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/investisseur')]
+#[IsGranted('ROLE_INVESTISSEUR')]
 class InvestisseurController extends AbstractController
 {
     #[Route('/accueil', name: 'investisseur_home')]

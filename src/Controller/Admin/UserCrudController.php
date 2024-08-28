@@ -57,14 +57,14 @@ class UserCrudController extends AbstractCrudController
                     'class' => 'js-investisseur-checkbox'
                 ]
             ]),
-            DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY'),
+            DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex(),
             BooleanField::new('isIntraday', 'Intraday')->setFormTypeOptions([
                 'mapped' => true,
                 'attr' => [
                     'class' => 'js-intraday-checkbox'
                 ]
             ]),
-            DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY'),
+            DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex(),
         ];
     }
 
