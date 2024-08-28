@@ -48,7 +48,7 @@ class FileDownloadController extends AbstractController
                 basename($filePath)
             );
 
-            dd($filePath);
+            //dd($filePath);
             return $response;
         } else {
             throw $this->createNotFoundException('The file does not exist');
