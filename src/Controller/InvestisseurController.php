@@ -58,8 +58,7 @@ class InvestisseurController extends AbstractController
     #[Route('/bibliotheque', name: 'investisseur_bibliotheque')]
     public function bibliotheque(): Response
     {
-        return $this->redirectToRoute('investisseur_bibliotheque_pics_volumes');
-        //return $this->render('investisseur/bibliotheque.html.twig');
+        return $this->render('investisseur/bibliotheque.html.twig');
     }
 
     #[Route('/bibliotheque/pics-de-volume', name: 'investisseur_bibliotheque_pics_volumes')]
