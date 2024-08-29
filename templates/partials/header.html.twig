@@ -29,9 +29,11 @@
 							{% endif %}
 						{% endif %}
 						{% if app.request.get('_route') starts with 'investisseur'%}
-							<div class="p-3">
-								<a class="link-light" href="{{ path('intraday') }}">METHODE INTRADAY</a>
-							</div>
+							{% if app.user.isIntraday %}
+									<div class="p-3">
+										<a class="link-light" href="{{ path('intraday') }}">METHODE INTRADAY</a>
+									</div>
+							{% endif %}
 						{% endif %}
 						{% if app.request.get('_route') starts with 'intraday'%}
 							<div class="p-3">
