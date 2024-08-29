@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
@@ -39,7 +41,31 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs')
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
-            ->setDefaultSort(['createdAt' => 'DESC']);
+            ->setDefaultSort(['createdAt' => 'DESC'])
+            ->showEntityActionsInlined();
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
+                return $action->setIcon('fa fa-plus')->setLabel('Ajouter un nouveau utilisateur');
+            })
+
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
+                return $action
+                    ->setIcon('fas fa-edit')
+                    ->setLabel(false)
+                    ->addCssClass('btn btn-link');
+            })
+            // Mise à jour de l'action de suppression pour utiliser une icône spécifique
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action
+                    ->setIcon('fas fa-trash')
+                    ->setLabel(false)
+                    ->addCssClass('btn btn-link text-danger');
+            });
     }
 
     public function configureFields(string $pageName): iterable
