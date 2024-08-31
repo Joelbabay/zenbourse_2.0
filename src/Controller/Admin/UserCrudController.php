@@ -91,6 +91,7 @@ class UserCrudController extends AbstractCrudController
                 ]
             ]),
             DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex(),
+            DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm(),
         ];
     }
 
