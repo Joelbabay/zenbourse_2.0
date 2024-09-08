@@ -86,7 +86,7 @@ class UserCrudController extends AbstractCrudController
             ChoiceField::new('roles')
                 ->renderAsBadges([
                     'ROLE_ADMIN' => 'danger',
-                    'ROLE_INVITE' => 'primary',
+                    'ROLE_INVITE' => 'warning',
                     'ROLE_CLIENT' => 'success',
                     'ROLE_PROSPECT' => 'info'
                 ])
