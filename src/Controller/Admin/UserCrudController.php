@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
@@ -38,7 +39,9 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Les utilisateurs')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Informations utilisateur')
+            ->setPageTitle(Crud::PAGE_NEW, 'Créer un utilisateur')
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
             ->setDefaultSort(['createdAt' => 'DESC'])
@@ -50,7 +53,7 @@ class UserCrudController extends AbstractCrudController
 
         return $actions
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
-                return $action->setIcon('fa fa-plus')->setLabel('Ajouter un nouveau utilisateur');
+                return $action->setIcon('fa fa-plus')->setLabel('Créer un utilisateur');
             })
 
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
@@ -71,9 +74,39 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            ChoiceField::new('civility')
+                ->setLabel('Civilité')
+                ->setChoices([
+                    'Mr' => 'Mr',
+                    'Mme' => 'Mme',
+                ]),
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
+            ChoiceField::new('roles')
+                ->renderAsBadges([
+                    'ROLE_ADMIN' => 'danger',
+                    'ROLE_INVITE' => 'primary',
+                    'ROLE_CLIENT' => 'success',
+                    'ROLE_PROSPECT' => 'info'
+                ])
+                ->setChoices([
+                    'Admin' => 'ROLE_ADMIN',
+                    'Client' => 'ROLE_CLIENT',
+                    'Invité' => 'ROLE_INVITE',
+                    'Prospect' => 'ROLE_PROSPECT',
+                ])
+                ->allowMultipleChoices()->setRequired(false),
+            ChoiceField::new('note')
+                ->setLabel('Étoile')
+                ->setChoices([
+                    '1' => 1,
+                    '2' => 2,
+                    '3' => 3,
+                    '4' => 4,
+                    '5' => 5
+                ])
+                ->setHelp('Choisissez une note de 1 à 5'),
             TextField::new('phone', 'Téléphone'),
             TextField::new('password')->onlyOnForms(),
             TextField::new('city', 'Ville'),
@@ -141,20 +174,27 @@ class UserCrudController extends AbstractCrudController
 
         if ($user->isInvestisseur()) {
             $user->setInterestedInInvestorMethod(false);
-            $user->setInvestorAccessDate(new \DateTime());
+            if ($user->getInvestorAccessDate() === null || !in_array('ROLE_INVESTISSEUR', $roles)) {
+                $user->setInvestorAccessDate(new \DateTime());
+            }
             if (!in_array('ROLE_INVESTISSEUR', $roles)) {
                 $roles[] = 'ROLE_INVESTISSEUR';
             }
         } else {
             $roles = array_diff($roles, ['ROLE_INVESTISSEUR']);
+            $user->setIntradayAccessDate(null);
         }
+
         if ($user->isIntraday()) {
-            $user->setIntradayAccessDate(new \DateTime());
+            if ($user->getIntradayAccessDate() === null || !in_array('ROLE_INTRADAY', $roles)) {
+                $user->setIntradayAccessDate(new \DateTime());
+            }
             if (!in_array('ROLE_INTRADAY', $roles)) {
                 $roles[] = 'ROLE_INTRADAY';
             }
         } else {
             $roles = array_diff($roles, ['ROLE_INTRADAY']);
+            $user->setIntradayAccessDate(null);
         }
         $entityInstance->setRoles(array_unique(array_values($roles)));
 

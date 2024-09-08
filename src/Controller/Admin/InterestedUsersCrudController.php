@@ -39,15 +39,22 @@ class InterestedUsersCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs intéressés par la méthode investisseur')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes intéressées par la méthode investisseur')
             //->setEntityPermission('ROLE_ADMIN')
-            ->setDefaultSort(['createdAt' => 'DESC']);
+            ->setDefaultSort(['createdAt' => 'DESC'])
+            ->showEntityActionsInlined();;
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable(Action::NEW, Action::DELETE, Action::EDIT);
+            ->disable(Action::NEW, Action::EDIT)
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action
+                    ->setIcon('fas fa-trash')
+                    ->setLabel(false)
+                    ->addCssClass('btn btn-link text-danger');
+            });
     }
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder

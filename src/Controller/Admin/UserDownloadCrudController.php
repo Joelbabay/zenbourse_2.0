@@ -37,19 +37,25 @@ class UserDownloadCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Liste des Utilisateurs Ayant Téléchargé le Fichier')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes ayant téléchargé la liste')
             ->setEntityLabelInSingular('Liste des Utilisateurs Ayant Téléchargé le Fichier')
             ->setEntityLabelInPlural('Liste des Utilisateurs Ayant Téléchargé le Fichier')
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->setDateFormat("EEE, MMM d, ''yy")
             ->setTimeFormat("h:mm a")
-        ;
+            ->showEntityActionsInlined();
     }
 
     public function configureActions(Actions $actions): Actions
     {
         return $actions
-            ->disable(Action::NEW, Action::DELETE, Action::EDIT);
+            ->disable(Action::NEW, Action::EDIT)
+            ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
+                return $action
+                    ->setIcon('fas fa-trash')
+                    ->setLabel(false)
+                    ->addCssClass('btn btn-link text-danger');
+            });
     }
 
     public function createIndexQueryBuilder(\EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto $searchDto, \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto $entityDto, \EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection $fields, \EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection $filters): QueryBuilder

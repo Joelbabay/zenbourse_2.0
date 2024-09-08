@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -85,9 +87,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $intradayAccessDate = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $note = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $civility = null;
+
+    /**
+     * @var Collection<int, Role>
+     */
+    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'users')]
+    private Collection $userRole;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->userRole = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -378,6 +393,61 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIntradayAccessDate(?\DateTimeInterface $intradayAccessDate): static
     {
         $this->intradayAccessDate = $intradayAccessDate;
+
+        return $this;
+    }
+
+    public function getNote(): ?int
+    {
+        return $this->note;
+    }
+
+    public function setNote(?int $note): static
+    {
+        if ($note >= 1 && $note <= 5) {
+            $this->note = $note;
+        }
+
+        $this->note = $note;
+
+        return $this;
+    }
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(string $civility): static
+    {
+        $this->civility = $civility;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Role>
+     */
+    public function getUserRole(): Collection
+    {
+        return $this->userRole;
+    }
+
+    public function addUserRole(Role $userRole): static
+    {
+        if (!$this->userRole->contains($userRole)) {
+            $this->userRole->add($userRole);
+            $userRole->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(Role $userRole): static
+    {
+        if ($this->userRole->removeElement($userRole)) {
+            $userRole->removeUser($this);
+        }
 
         return $this;
     }

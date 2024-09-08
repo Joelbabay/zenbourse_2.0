@@ -1,0 +1,16 @@
+.sidebar {
+  position: fixed !important;
+  left: 0;
+}
+
+.content-header {
+  position: sticky;
+  top: -10px;
+  z-index: 99;
+}
+
+thead {
+  position: sticky;
+  top: 70px;
+  z-index: 99;
+}

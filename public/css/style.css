@@ -105,6 +105,10 @@ input::placeholder {
     font-size: 15px;
 }
 
+.nav-scroller a {
+    transition: all 0.2s ease-out;
+}
+
 .l-sidebar {
     position: relative;
     top: 10px;

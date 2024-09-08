@@ -22,7 +22,7 @@ class ContactCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Messages de Contact')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Messages des contacts')
             ->setPageTitle(Crud::PAGE_DETAIL, 'Détails du Message')
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->showEntityActionsInlined();;
