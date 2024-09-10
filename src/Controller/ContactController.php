@@ -39,8 +39,7 @@ class ContactController extends AbstractController
                 $user->setEmail($email);
                 $user->setFirstname($data['contact']['firstname']);
                 $user->setLastname($data['contact']['lastname']);
-                $prospectRole = $entityManager->getRepository(Role::class)->findOneBy(['name' => 'ROLE_PROSPECT']);
-                $user->setRoles(['ROLE_PROSPECT']);
+                $user->setStatut('PROSPECT');
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
                 $entityManager->persist($user);
             }

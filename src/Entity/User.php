@@ -93,16 +93,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $civility = null;
 
-    /**
-     * @var Collection<int, Role>
-     */
-    #[ORM\ManyToMany(targetEntity: Role::class, mappedBy: 'users')]
-    private Collection $userRole;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $statut = '';
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->userRole = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -425,29 +421,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Role>
-     */
-    public function getUserRole(): Collection
+    public function getStatut(): ?string
     {
-        return $this->userRole;
+        return $this->statut;
     }
 
-    public function addUserRole(Role $userRole): static
+    public function setStatut(?string $statut): static
     {
-        if (!$this->userRole->contains($userRole)) {
-            $this->userRole->add($userRole);
-            $userRole->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRole(Role $userRole): static
-    {
-        if ($this->userRole->removeElement($userRole)) {
-            $userRole->removeUser($this);
-        }
+        $this->statut = $statut;
 
         return $this;
     }

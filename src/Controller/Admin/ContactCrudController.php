@@ -22,7 +22,7 @@ class ContactCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Messages des contacts')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Messages reçus')
             ->setPageTitle(Crud::PAGE_DETAIL, 'Détails du Message')
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->showEntityActionsInlined();;
@@ -35,7 +35,7 @@ class ContactCrudController extends AbstractCrudController
             ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
                 return $action->setLabel('Retour à la liste')->setIcon('fas fa-list');
             })
-            ->add(Crud::PAGE_INDEX, Action::new('Show', 'Voir', 'fas fa-eye')->linkToCrudAction(Action::DETAIL))
+            ->add(Crud::PAGE_INDEX, Action::new('Show', 'Consulter le message', 'fas fa-eye')->linkToCrudAction(Action::DETAIL))
 
             ->disable(Action::NEW, Action::EDIT)
             // Mise à jour de l'action de suppression pour utiliser une icône spécifique

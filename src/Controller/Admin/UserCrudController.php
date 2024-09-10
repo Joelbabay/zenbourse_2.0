@@ -4,8 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Trait\NullValueFormatterTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -23,6 +23,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UserCrudController extends AbstractCrudController
 {
+    use NullValueFormatterTrait;
     private $userRepository;
     private $entityRepository;
 
@@ -79,24 +80,25 @@ class UserCrudController extends AbstractCrudController
                 ->setChoices([
                     'Mr' => 'Mr',
                     'Mme' => 'Mme',
-                ]),
+                    'Mlle' => 'Mlle'
+                ])->formatValue(function ($value, $entity) {
+                    return $value ?? ' '; // Affiche une chaîne vide si la valeur est nulle
+                }),
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
-            ChoiceField::new('roles')
+            ChoiceField::new('statut')
                 ->renderAsBadges([
-                    'ROLE_ADMIN' => 'danger',
-                    'ROLE_INVITE' => 'warning',
-                    'ROLE_CLIENT' => 'success',
-                    'ROLE_PROSPECT' => 'info'
+                    'INVITE' => 'warning',
+                    'CLIENT' => 'success',
+                    'PROSPECT' => 'info'
                 ])
                 ->setChoices([
-                    'Admin' => 'ROLE_ADMIN',
-                    'Client' => 'ROLE_CLIENT',
-                    'Invité' => 'ROLE_INVITE',
-                    'Prospect' => 'ROLE_PROSPECT',
+                    'CLIENT' => 'CLIENT',
+                    'INVITE' => 'INVITE',
+                    'PROSPECT' => 'PROSPECT',
                 ])
-                ->allowMultipleChoices()->setRequired(false),
+                ->allowMultipleChoices(false)->setRequired(true)->renderExpanded(),
             ChoiceField::new('note')
                 ->setLabel('Étoile')
                 ->setChoices([
@@ -159,6 +161,7 @@ class UserCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
+        $formattedValue = $this->formatNullValue($entityInstance->getPhone());
 
         if (!$entityInstance instanceof User) {
             return;
