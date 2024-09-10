@@ -63,10 +63,20 @@ class ContactCrudController extends AbstractCrudController
         return [
             FormField::addColumn(4),
             FormField::addFieldset('Informations')->setIcon('fa fa-info-circle'),
-            TextField::new('lastname', 'Nom'),
-            TextField::new('firstname', 'Prénom'),
+            TextField::new('lastname', 'Nom')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
+            TextField::new('firstname', 'Prénom')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
             TextField::new('email', 'E-mail'),
-            DateTimeField::new('createdAt', 'Reçu le')->setFormat('dd/MM/YYYY'),
+            DateTimeField::new('createdAt', 'Reçu le')->setFormat('d F Y - H:i:s')
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
+                    return $value ? $formatter->format($value) : ' ';
+                }),
             FormField::addColumn(8),
             FormField::addPanel('Message')->setIcon('fa fa-comment'),
             TextEditorField::new('content', '')->hideOnIndex()->setColumns(6),

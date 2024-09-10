@@ -41,6 +41,8 @@ class ContactController extends AbstractController
                 $user->setLastname($data['contact']['lastname']);
                 $user->setStatut('PROSPECT');
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
+
+                //dd($user);
                 $entityManager->persist($user);
             }
 

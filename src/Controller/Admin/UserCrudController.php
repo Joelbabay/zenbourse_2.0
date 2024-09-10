@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,6 +48,7 @@ class UserCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Utilisateurs')
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->showEntityActionsInlined();
+        //->overrideTemplates(['label/null' => 'admin/labels/null_label.html.twig']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -82,7 +84,7 @@ class UserCrudController extends AbstractCrudController
                     'Mme' => 'Mme',
                     'Mlle' => 'Mlle'
                 ])->formatValue(function ($value, $entity) {
-                    return $value ?? ' '; // Affiche une chaîne vide si la valeur est nulle
+                    return $value ?? ' ';
                 }),
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
@@ -108,25 +110,53 @@ class UserCrudController extends AbstractCrudController
                     '4' => 4,
                     '5' => 5
                 ])
-                ->setHelp('Choisissez une note de 1 à 5'),
-            TextField::new('phone', 'Téléphone'),
+                ->setHelp('Choisissez une note de 1 à 5')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
+            TelephoneField::new('phone', 'Téléphone')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                })
+                ->setFormTypeOptions([
+                    'attr' => [
+                        'maxlength' => 15,
+                        'pattern' => '^\+?[0-9]{8,15}$',
+                        'title' => 'Veuillez entrer un numéro de téléphone valide (entre 8 et 15 chiffres, avec un code international optionnel).',
+                    ]
+                ]),
             TextField::new('password')->onlyOnForms(),
-            TextField::new('city', 'Ville'),
+            TextField::new('city', 'Ville')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
             BooleanField::new('isInvestisseur', 'Investisseur')->setFormTypeOptions([
                 'mapped' => true,
                 'attr' => [
                     'class' => 'js-investisseur-checkbox'
                 ]
             ]),
-            DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex(),
+            DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
+                    return $value ? $formatter->format($value) : ' ';
+                }),
             BooleanField::new('isIntraday', 'Intraday')->setFormTypeOptions([
                 'mapped' => true,
                 'attr' => [
                     'class' => 'js-intraday-checkbox'
                 ]
             ]),
-            DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex(),
-            DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm(),
+            DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
+                    return $value ? $formatter->format($value) : ' ';
+                }),
+            DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm()
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
+                    return $value ? $formatter->format($value) : ' ';
+                }),
         ];
     }
 

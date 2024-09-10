@@ -1,5 +1,5 @@
 console.log("hello");
-document.addEventListener("DOMContentLoaded", function() {
+/*document.addEventListener("DOMContentLoaded", function() {
     const investisseurCheckbox = document.querySelector(
         '.js-investisseur-checkbox input[type="checkbox"]'
     );
@@ -21,4 +21,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Add event listener
     investisseurCheckbox.addEventListener("change", toggleIntradayCheckbox);
+});*/
+
+$(document).ready(function () {
+  $("input[type='tel']").inputmask({
+    mask: "+99 999 999 9999", // Exemple de masque international, à adapter pour chaque pays
+    placeholder: "_",
+  });
 });

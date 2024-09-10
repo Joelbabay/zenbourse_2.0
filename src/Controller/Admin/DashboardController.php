@@ -29,6 +29,12 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('Zenbourse 50');
     }
 
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            ->setPaginatorPageSize(15);
+    }
+
     public function configureAssets(): Assets
     {
         return Assets::new()
