@@ -29,6 +29,12 @@ class Contact
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastname = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isRead = false;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $civility = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +96,30 @@ class Contact
     public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function isRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setRead(?bool $isRead): static
+    {
+        $this->isRead = $isRead;
+
+        return $this;
+    }
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?string $civility): static
+    {
+        $this->civility = $civility;
 
         return $this;
     }

@@ -38,7 +38,7 @@ class SubscriptionController extends AbstractController
 
         if ($user && $user->isInterestedInInvestorMethod()) {
             $this->addFlash('info', 'Votre demande est en cours de validation');
-            return $this->redirectToRoute('investisseur_home');
+            return $this->redirectToRoute('home');
         }
 
         if ($user) {

@@ -70,6 +70,10 @@ class InterestedUsersCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            TextField::new('civility', 'Civilité')->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),

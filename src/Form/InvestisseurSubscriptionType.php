@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -18,6 +19,16 @@ class InvestisseurSubscriptionType extends AbstractType
 
         if ($existingUser) {
             $builder
+                ->add('civility', ChoiceType::class, [
+                    'label' => 'Civilité',
+                    'placeholder' => 'Sélectionnez une option',
+                    'required' => false,
+                    'choices'  => [
+                        'Mr' => 'Mr',
+                        'Mme' => 'Mme',
+                        'Mlle' => 'Mlle',
+                    ]
+                ])
                 ->add('firstname', TextType::class, [
                     'label' => 'Nom',
                     'attr' => [
@@ -41,6 +52,16 @@ class InvestisseurSubscriptionType extends AbstractType
 
         if (!$existingUser) {
             $builder
+                ->add('civility', ChoiceType::class, [
+                    'label' => 'Civilité',
+                    'placeholder' => 'Sélectionnez une option',
+                    'required' => false,
+                    'choices'  => [
+                        'Mr' => 'Mr',
+                        'Mme' => 'Mme',
+                        'Mlle' => 'Mlle',
+                    ]
+                ])
                 ->add('firstname', TextType::class, [
                     'label' => 'Nom',
                     'attr' => [

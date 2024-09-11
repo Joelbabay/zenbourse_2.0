@@ -67,6 +67,7 @@ class FileDownloadController extends AbstractController
             $user = $userRepository->findOneBy(['email' => $data->getEmail()]);
             if (!$user) {
                 $user = new User();
+                $user->setCivility($data->getCivility());
                 $user->setEmail($data->getEmail());
                 $user->setFirstname($data->getFirstname());
                 $user->setLastname($data->getLastname());

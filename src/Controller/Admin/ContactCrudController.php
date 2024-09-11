@@ -3,17 +3,30 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Contact;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ContactCrudController extends AbstractCrudController
 {
+    private $entityManager;
+    private $adminUrlGenerator;
+
+    public function __construct(EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, private UrlGeneratorInterface $urlGenerator)
+    {
+        $this->entityManager = $entityManager;
+        $this->adminUrlGenerator = $adminUrlGenerator;
+    }
     public static function getEntityFqcn(): string
     {
         return Contact::class;
@@ -25,7 +38,8 @@ class ContactCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, 'Messages reçus')
             ->setPageTitle(Crud::PAGE_DETAIL, 'Détails du Message')
             ->setDefaultSort(['createdAt' => 'DESC'])
-            ->showEntityActionsInlined();;
+            ->showEntityActionsInlined()
+            ->overrideTemplate('crud/index', 'admin/contact_list.html.twig');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -35,7 +49,7 @@ class ContactCrudController extends AbstractCrudController
             ->update(Crud::PAGE_DETAIL, Action::INDEX, function (Action $action) {
                 return $action->setLabel('Retour à la liste')->setIcon('fas fa-list');
             })
-            ->add(Crud::PAGE_INDEX, Action::new('Show', 'Consulter le message', 'fas fa-eye')->linkToCrudAction(Action::DETAIL))
+            ->add(Crud::PAGE_INDEX, Action::new('Show', 'Consulter le message', 'fas fa-eye')->linkToCrudAction('markAsRead'))
 
             ->disable(Action::NEW, Action::EDIT)
             // Mise à jour de l'action de suppression pour utiliser une icône spécifique
@@ -57,10 +71,31 @@ class ContactCrudController extends AbstractCrudController
         ;
     }
 
+    public function markAsRead(AdminContext $context,)
+    {
+        $contact = $context->getEntity()->getInstance();
+
+        if ($contact instanceof Contact && !$contact->isRead()) {
+            $contact->setRead(true);
+            $this->entityManager->flush();
+        }
+
+        $url = $this->urlGenerator->generate('admin', [
+            'action' => ACTION::DETAIL,
+            'crudControllerFqcn' => self::class,
+            'entityId' => $contact->getId(),
+        ]);
+
+        return $this->redirect($url);
+    }
 
     public function configureFields(string $pageName): iterable
     {
         return [
+            TextField::new('civility', 'Civilité')->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
+                }),
             FormField::addColumn(4),
             FormField::addFieldset('Informations')->setIcon('fa fa-info-circle'),
             TextField::new('lastname', 'Nom')

@@ -89,6 +89,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
+            TextField::new('password')->onlyOnForms(),
             ChoiceField::new('statut')
                 ->renderAsBadges([
                     'INVITE' => 'warning',
@@ -125,7 +126,6 @@ class UserCrudController extends AbstractCrudController
                         'title' => 'Veuillez entrer un numéro de téléphone valide (entre 8 et 15 chiffres, avec un code international optionnel).',
                     ]
                 ]),
-            TextField::new('password')->onlyOnForms(),
             TextField::new('city', 'Ville')
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
