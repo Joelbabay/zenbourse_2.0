@@ -4,201 +4,198 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/
-    ;
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    line-height: 1.2;
+  font-family: "Playfair Display", Georgia, "Times New Roman",
+    serif /*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 html {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 body {
-    background-color: #ecf0f1 !important;
+  background-color: #e2e2e2 !important;
 }
 
 .custom-container {
-    max-width: 1700px;
-    /* Définis la largeur maximale souhaitée */
-    margin: 0 auto;
-    /* Centrer le conteneur */
-    padding-right: 15px;
-    padding-left: 15px;
+  max-width: 1700px;
+  /* Définis la largeur maximale souhaitée */
+  margin: 0 auto;
+  /* Centrer le conteneur */
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 a {
-    color: #183d3d;
+  color: #183d3d;
 }
 
-input {
-    border: none !important;
-    border-bottom: 1px solid #183d3d !important;
-    background: none !important;
-    border-radius: 1px !important;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+/*input {
+  border: none !important;
+  border-bottom: 1px solid #183d3d !important;
+  background: none !important;
+  border-radius: 1px !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 input:focus {
-    border-bottom: 3px solid #183d3d !important;
+  border-bottom: 3px solid #183d3d !important;
 }
 
 input::placeholder {
-    font-size: 14px;
-    color: rgba(175, 175, 175, 0.87) !important;
-}
+  font-size: 14px;
+  color: rgba(175, 175, 175, 0.87) !important;
+}*/
 
 .bg-zen-primary {
-    background-color: #183d3d;
+  background-color: #183d3d;
 }
 
 .bg-zen-investisseur {
-    background-color: #00a8b4;
+  background-color: #00a8b4;
 }
 
 .bg-zen-intraday {
-    background-color: #dc6a19;
+  background-color: #dc6a19;
 }
 
 .active {
-    color: #183d3d;
-    border-bottom: 3px solid #183d3d;
+  color: #183d3d;
+  border-bottom: 3px solid #183d3d;
 }
 
 .active-investisseur {
-    color: #00a8b4;
-    border-bottom: 3px solid #00a8b4;
+  color: #00a8b4;
+  border-bottom: 3px solid #00a8b4;
 }
 
 .active-intraday {
-    color: #dc6a19;
-    border-bottom: 3px solid #dc6a19;
+  color: #dc6a19;
+  border-bottom: 3px solid #dc6a19;
 }
 
 .menu-home:hover {
-    color: #183d3d;
-    border-bottom: 3px solid #183d3d;
+  color: #183d3d;
+  border-bottom: 3px solid #183d3d;
 }
 
 .menu-investisseur a:hover {
-    color: #00a8b4;
-    border-bottom: 3px solid #00a8b4;
+  color: #00a8b4;
+  border-bottom: 3px solid #00a8b4;
 }
 
 .menu-intraday a:hover {
-    color: #dc6a19;
-    border-bottom: 3px solid #dc6a19;
+  color: #dc6a19;
+  border-bottom: 3px solid #dc6a19;
 }
 
 .text-zen-primary {
-    color: #183d3d;
+  color: #183d3d;
 }
 
 .bg-zen-primary a {
-    color: #fff !important;
+  color: #fff !important;
 }
 
 .methode-section a {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .nav-scroller a {
-    transition: all 0.2s ease-out;
+  transition: all 0.1s ease-out;
 }
 
 .l-sidebar {
-    position: relative;
-    top: 10px;
+  position: relative;
+  top: 10px;
 }
 
 .blog-footer {
-    padding: 2.5rem 0;
-    color: #727272;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-top: 0.05rem solid #e5e5e5;
+  padding: 2.5rem 0;
+  color: #727272;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-top: 0.05rem solid #e5e5e5;
 }
 
-.blog-header-top {}
+.blog-header-top {
+}
 
 .blog-header-logo {
-    font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/
-    ;
-    font-size: 2rem;
-    text-decoration: none;
+  font-family: "Playfair Display", Georgia, "Times New Roman",
+    serif /*rtl:Amiri, Georgia, "Times New Roman", serif*/;
+  font-size: 2rem;
+  text-decoration: none;
 }
 
 .blog-post-title {
-    margin-bottom: 0.25rem;
-    font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 2.5rem;
 }
 
 .blog-post {
-    margin-bottom: 4rem;
+  margin-bottom: 4rem;
 }
 
 .blog-post-meta {
-    margin-bottom: 1.25rem;
-    color: #727272;
+  margin-bottom: 1.25rem;
+  color: #727272;
 }
 
 .blog-nav-second {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 .blog-nav {
-    line-height: 1;
-    border-bottom: 1px solid rgb(229, 229, 229);
+  line-height: 1;
+  border-bottom: 1px solid rgb(229, 229, 229);
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .zen-button {
-    background-color: #183d3d;
-    border: #183d3d;
-    border-radius: 0px;
+  background-color: #183d3d;
+  border: #183d3d;
+  border-radius: 0px;
 }
 
 .zen-button:hover {
-    background-color: #235858;
-    color: #fff !important;
+  background-color: #235858;
+  color: #fff !important;
 }
 
 .form-control:focus {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .dropdown-menu a {
-    color: #000 !important;
+  color: #000 !important;
 }
-
 
 /* padding-bottom and top for image */
 
 .mfp-no-margins img.mfp-img {
-    padding: 0;
+  padding: 0;
 }
-
 
 /* position of shadow behind the image */
 
 .mfp-no-margins .mfp-figure:after {
-    top: 0;
-    bottom: 0;
+  top: 0;
+  bottom: 0;
 }
-
 
 /* padding for main container */
 
 .mfp-no-margins .mfp-container {
-    padding: 0;
+  padding: 0;
 }
-
 
 /*
 
@@ -209,23 +206,37 @@ uncomment this part if you haven't added this code anywhere else
 
 .mfp-with-zoom .mfp-container,
 .mfp-with-zoom.mfp-bg {
-    opacity: 0;
-    -webkit-backface-visibility: hidden;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+  opacity: 0;
+  -webkit-backface-visibility: hidden;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .mfp-with-zoom.mfp-ready .mfp-container {
-    opacity: 1;
+  opacity: 1;
 }
 
 .mfp-with-zoom.mfp-ready.mfp-bg {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .mfp-with-zoom.mfp-removing .mfp-container,
 .mfp-with-zoom.mfp-removing.mfp-bg {
-    opacity: 0;
+  opacity: 0;
+}
+
+label.required:after {
+  background: red;
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  filter: opacity(75%);
+  height: 4px;
+  position: relative;
+  right: -2px;
+  top: -8px;
+  width: 4px;
+  z-index: 99;
 }

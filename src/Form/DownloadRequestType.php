@@ -19,7 +19,7 @@ class DownloadRequestType extends AbstractType
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
                 'placeholder' => 'Sélectionnez une option',
-                'required' => false,
+                'required' => true,
                 'choices'  => [
                     'Mr' => 'Mr',
                     'Mme' => 'Mme',

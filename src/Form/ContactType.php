@@ -20,7 +20,7 @@ class ContactType extends AbstractType
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
                 'placeholder' => 'Sélectionnez une option',
-                'required' => false,
+                'required' => true,
                 'choices'  => [
                     'Mr' => 'Mr',
                     'Mme' => 'Mme',
@@ -30,25 +30,26 @@ class ContactType extends AbstractType
             ->add('firstname', TextType::class, [
                 'label' => 'Nom',
                 'attr' => [
-                    'placeholder' => 'Entrez votre nom',
+                    //'placeholder' => 'Entrez votre nom',
+                    'class' => 'required',
                 ]
             ])
             ->add('lastname', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => [
-                    'placeholder' => 'Entrez votre prénom',
+                    //'placeholder' => 'Entrez votre prénom',
                 ]
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
-                    'placeholder' => 'exemple@exemple.com',
+                    //'placeholder' => 'exemple@exemple.com',
                 ]
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Contenu',
                 'attr' => [
-                    'placeholder' => 'Entrez votre message',
+                    //'placeholder' => 'Entrez votre message',
                     'cols' => 50,
                     'rows' => 6,
                 ],

@@ -57,6 +57,9 @@ class SubscriptionController extends AbstractController
             if (!$user->getId()) {
                 $user->setCreatedAt(new \DateTime());
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
+                if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'])) {
+                    $user->setStatut('PROSPECT');
+                }
                 $user->setInterestedInInvestorMethod(true);
                 $this->entityManager->persist($user);
             }

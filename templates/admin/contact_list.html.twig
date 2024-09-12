@@ -5,7 +5,7 @@
         {% block table_body %}
             {% for entity in entities %}
                 {% if entity.isAccessible %}
-                    <tr data-id="{{ entity.primaryKeyValueAsString }}" class="{% if entity.instance.isRead == false %}fw-bold{% endif %}">
+                    <tr data-id="{{ entity.primaryKeyValueAsString }}" class="background-grey {% if entity.instance.isRead == false %}fw-bold{% endif %}">
                         {% if has_batch_actions %}
                             <td class="batch-actions-selector">
                                 <div class="form-check">

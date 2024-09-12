@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\DownloadRequestType;
 use App\Repository\UserRepository;
+use App\Service\StatutService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -22,8 +23,12 @@ class FileDownloadController extends AbstractController
 {
     private $fileDirectory;
     private $passwordHasher;
-    public function __construct(private EntityManagerInterface $entityManager, ParameterBagInterface $parameterBag, UserPasswordHasherInterface $passwordHasher)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        ParameterBagInterface $parameterBag,
+        UserPasswordHasherInterface $passwordHasher,
+        private StatutService $statutService
+    ) {
         $this->fileDirectory = $parameterBag->get('download_directory') . '/file.pdf';
         $this->passwordHasher = $passwordHasher;
     }
@@ -65,21 +70,8 @@ class FileDownloadController extends AbstractController
             $data = $form->getData();
 
             $user = $userRepository->findOneBy(['email' => $data->getEmail()]);
-            if (!$user) {
-                $user = new User();
-                $user->setCivility($data->getCivility());
-                $user->setEmail($data->getEmail());
-                $user->setFirstname($data->getFirstname());
-                $user->setLastname($data->getLastname());
-                $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
-                $user->setCreatedAt(new \DateTime());
-            } else {
-                $user->setCreatedAt(new \DateTime());
-            }
-            $user->setIsDownloadRequestSubmitted(true);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->statutService->statutService($data->getEmail(), $data);
 
             return $this->redirectToRoute('file_download');
         }

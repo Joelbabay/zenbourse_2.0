@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -156,6 +157,10 @@ class UserCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
+                }),
+            TextareaField::new('comment', 'Commentaire')
+                ->formatValue(function ($value, $entity) {
+                    return $value ?? ' ';
                 }),
         ];
     }

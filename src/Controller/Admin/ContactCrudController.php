@@ -71,6 +71,8 @@ class ContactCrudController extends AbstractCrudController
         ;
     }
 
+    // Fonction pour gérer les vues des message dans contact 
+    // et ensuite faire la redirection dans ACTION::DETAIL
     public function markAsRead(AdminContext $context,)
     {
         $contact = $context->getEntity()->getInstance();
@@ -80,11 +82,10 @@ class ContactCrudController extends AbstractCrudController
             $this->entityManager->flush();
         }
 
-        $url = $this->urlGenerator->generate('admin', [
-            'action' => ACTION::DETAIL,
-            'crudControllerFqcn' => self::class,
-            'entityId' => $contact->getId(),
-        ]);
+        $url = $this->container->get(AdminUrlGenerator::class)
+            ->setAction(Action::DETAIL)
+            ->setEntityId($context->getEntity()->getPrimaryKeyValue())
+            ->generateUrl();
 
         return $this->redirect($url);
     }

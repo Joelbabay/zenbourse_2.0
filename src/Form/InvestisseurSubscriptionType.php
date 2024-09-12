@@ -22,7 +22,7 @@ class InvestisseurSubscriptionType extends AbstractType
                 ->add('civility', ChoiceType::class, [
                     'label' => 'Civilité',
                     'placeholder' => 'Sélectionnez une option',
-                    'required' => false,
+                    'required' => true,
                     'choices'  => [
                         'Mr' => 'Mr',
                         'Mme' => 'Mme',
@@ -32,19 +32,19 @@ class InvestisseurSubscriptionType extends AbstractType
                 ->add('firstname', TextType::class, [
                     'label' => 'Nom',
                     'attr' => [
-                        'placeholder' => 'Entrez votre nom',
+                        //'placeholder' => 'Entrez votre nom',
                     ]
                 ])
                 ->add('lastname', TextType::class, [
                     'label' => 'Prénom',
                     'attr' => [
-                        'placeholder' => 'Entrez votre prenom',
+                        //'placeholder' => 'Entrez votre prenom',
                     ]
                 ])
                 ->add('address', TextType::class, [
                     'label' => 'Adresse',
                     'attr' => [
-                        'placeholder' => 'Entrez votre adresse',
+                        //'placeholder' => 'Entrez votre adresse',
                     ]
                 ])
             ;
@@ -55,7 +55,7 @@ class InvestisseurSubscriptionType extends AbstractType
                 ->add('civility', ChoiceType::class, [
                     'label' => 'Civilité',
                     'placeholder' => 'Sélectionnez une option',
-                    'required' => false,
+                    'required' => true,
                     'choices'  => [
                         'Mr' => 'Mr',
                         'Mme' => 'Mme',
@@ -65,19 +65,19 @@ class InvestisseurSubscriptionType extends AbstractType
                 ->add('firstname', TextType::class, [
                     'label' => 'Nom',
                     'attr' => [
-                        'placeholder' => 'Entrez votre nom',
+                        //'placeholder' => 'Entrez votre nom',
                     ]
                 ])
                 ->add('lastname', TextType::class, [
                     'label' => 'Prénom',
                     'attr' => [
-                        'placeholder' => 'Entrez votre prenom',
+                        //'placeholder' => 'Entrez votre prenom',
                     ]
                 ])
                 ->add('email', EmailType::class, [
                     'label' => 'Email',
                     'attr' => [
-                        'placeholder' => 'Entrez votre email',
+                        //'placeholder' => 'Entrez votre email',
                     ]
                 ]);
         }

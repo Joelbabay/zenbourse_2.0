@@ -96,6 +96,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $statut = '';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $comment = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -429,6 +432,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStatut(?string $statut): static
     {
         $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
 
         return $this;
     }
