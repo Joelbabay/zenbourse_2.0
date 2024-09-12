@@ -115,7 +115,7 @@ class ContactCrudController extends AbstractCrudController
                 }),
             FormField::addColumn(8),
             FormField::addPanel('Message')->setIcon('fa fa-comment'),
-            TextEditorField::new('content', '')->hideOnIndex()->setColumns(6),
+            TextEditorField::new('content', 'Contenu')->hideOnIndex()->setColumns(6),
         ];
     }
 }
