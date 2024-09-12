@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -112,10 +113,15 @@ class ContactCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
-                }),
+                })->hideOnIndex(),
             FormField::addColumn(8),
             FormField::addPanel('Message')->setIcon('fa fa-comment'),
-            TextEditorField::new('content', 'Contenu')->hideOnIndex()->setColumns(6),
+            TextareaField::new('content', 'Contenu')->setColumns(6),
+            DateTimeField::new('createdAt', 'Reçu le')->setFormat('d F Y - H:i:s')
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
+                    return $value ? $formatter->format($value) : ' ';
+                })->hideOnDetail(),
         ];
     }
 }
