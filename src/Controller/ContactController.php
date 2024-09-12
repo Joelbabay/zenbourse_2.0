@@ -37,10 +37,12 @@ class ContactController extends AbstractController
                 // Crée un nouvel utilisateur prospect
                 $user = new User();
                 $user->setEmail($email);
+                $user->setCivility($data['contact']['civility']);
                 $user->setFirstname($data['contact']['firstname']);
                 $user->setLastname($data['contact']['lastname']);
                 $user->setStatut('PROSPECT');
                 $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
+                $user->setCreatedAt(new \DateTimeImmutable());
 
                 //dd($user);
                 $entityManager->persist($user);
