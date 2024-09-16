@@ -2,18 +2,18 @@
 
 namespace App\Form;
 
-use App\Entity\InvestisseurRequest;
+use App\Entity\IntradayRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InvestisseurSubscriptionType extends AbstractType
+class IntradayRequestType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $existingUser = $options['existing_user'];
 
@@ -77,20 +77,18 @@ class InvestisseurSubscriptionType extends AbstractType
         }
 
         $builder->add('submit', SubmitType::class, [
-            'label' => 'S\'abonner à la méthode investisseur',
+            'label' => 'S\'abonner à la méthode intraday',
             'attr' => [
                 'class' => 'btn btn-light btn-block zen-button text-light btn-lg w-100 mt-4'
             ]
         ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => InvestisseurRequest::class,
+            'data_class' => IntradayRequest::class,
             'existing_user' => false,
         ]);
-
-        $resolver->setAllowedTypes('existing_user', 'bool');
     }
 }

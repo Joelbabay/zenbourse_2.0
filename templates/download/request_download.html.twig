@@ -6,9 +6,10 @@
 
 {% block body %}
     {% include 'partials/header.html.twig' %}
+	{% include 'partials/menu_home.html.twig' %}
 
-    <main class="custom-container">
-        <div class="row">
+    <main class="custom-container mt-4">
+        <div class="row g-5">
             <div class="col-md-9 mt-4">
                 <h2 class="fst-italic border-bottom pb-4 mb-3">Les valeurs de l'étude statistique</h2>
                 <p class="fw-bolder bg-warning text-center">
@@ -39,17 +40,12 @@
                             {{ form(form) }}
                         </div>
                     </div>
-
                 {% endif %}
-
             </div>
-
             <div class="col-md-3">
                 {% include 'home/widgets/sidebar.html.twig' %}
             </div>
-
         </div>
-
     </main>
 
 {% endblock %}

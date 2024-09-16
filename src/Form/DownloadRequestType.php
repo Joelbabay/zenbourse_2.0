@@ -2,7 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Download;
+//use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -18,7 +19,7 @@ class DownloadRequestType extends AbstractType
         $builder
             ->add('civility', ChoiceType::class, [
                 'label' => 'Civilité',
-                'placeholder' => 'Sélectionnez une option',
+                'placeholder' => 'Mr, Mme, Mlle',
                 'required' => true,
                 'choices'  => [
                     'Mr' => 'Mr',
@@ -26,14 +27,26 @@ class DownloadRequestType extends AbstractType
                     'Mlle' => 'Mlle',
                 ]
             ])
-            ->add('firstname', TextType::class, [
-                'label' => 'Nom',
-            ])
             ->add('lastname', TextType::class, [
+                'label' => 'Nom',
+                'attr' => [
+                    'placeholder' => 'Entrez votre nom',
+                    'class' => 'required',
+                ]
+            ])
+            ->add('firstname', TextType::class, [
                 'label' => 'Prénom',
+                'attr' => [
+                    'placeholder' => 'Entrez votre prénom',
+                    'class' => 'required',
+                ]
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+                'attr' => [
+                    'placeholder' => 'Entrez votre email',
+                    'class' => 'required',
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Je télécharge la liste des 300 valeurs',
@@ -46,7 +59,7 @@ class DownloadRequestType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Download::class,
         ]);
     }
 }

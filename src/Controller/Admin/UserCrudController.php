@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -16,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -75,6 +77,19 @@ class UserCrudController extends AbstractCrudController
             });
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(
+                ChoiceFilter::new('statut', 'Statut')
+                    ->setChoices([
+                        'Prospect' => 'PROSPECT',
+                        'Client' => 'CLIENT',
+                        'Invité' => 'INVITE',
+                    ])
+            );
+    }
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -104,7 +119,7 @@ class UserCrudController extends AbstractCrudController
                 ])
                 ->allowMultipleChoices(false)->setRequired(true)->renderExpanded(),
             ChoiceField::new('note')
-                ->setLabel('Étoile')
+                ->setLabel('CAT')
                 ->setChoices([
                     '1' => 1,
                     '2' => 2,

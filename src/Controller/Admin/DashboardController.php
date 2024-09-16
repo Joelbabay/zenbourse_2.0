@@ -3,6 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Contact;
+use App\Entity\Download;
+use App\Entity\IntradayRequest;
+use App\Entity\InvestisseurRequest;
 use App\Entity\Menu;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
@@ -46,10 +49,12 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
         yield MenuItem::linkToCrud('Boîte de réception', 'fa fa-inbox', Contact::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user-friends', User::class)->setController(UserCrudController::class);
-        yield MenuItem::linkToCrud('Téléchargement liste valeurs 2020', 'fa fa-download', User::class)
+        yield MenuItem::linkToCrud('Téléchargement liste valeurs 2020', 'fa fa-download', Download::class)
             ->setController(UserDownloadCrudController::class);
-        yield MenuItem::linkToCrud('Méthode Investisseur', 'fa fa-star', User::class)
+        yield MenuItem::linkToCrud('Méthode Investisseur', 'fa fa-star', InvestisseurRequest::class)
             ->setController(InterestedUsersCrudController::class);
+        yield MenuItem::linkToCrud('Méthode Intraday', 'fa fa-star', IntradayRequest::class)
+            ->setController(IntradayRequestCrudController::class);
         yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
     }
 }

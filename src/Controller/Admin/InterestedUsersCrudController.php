@@ -3,7 +3,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
+use App\Entity\InvestisseurRequest;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -33,13 +33,13 @@ class InterestedUsersCrudController extends AbstractCrudController
     }
     public static function getEntityFqcn(): string
     {
-        return User::class;
+        return InvestisseurRequest::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes intéressées par la méthode investisseur')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes intéressées par la méthode Investisseur')
             //->setEntityPermission('ROLE_ADMIN')
             ->setDefaultSort(['createdAt' => 'DESC'])
             ->showEntityActionsInlined();;
@@ -57,6 +57,7 @@ class InterestedUsersCrudController extends AbstractCrudController
             });
     }
 
+    /*
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
         $qb = $this->entityRepository->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
@@ -66,6 +67,7 @@ class InterestedUsersCrudController extends AbstractCrudController
 
         return $qb;
     }
+    */
 
     public function configureFields(string $pageName): iterable
     {
@@ -77,7 +79,11 @@ class InterestedUsersCrudController extends AbstractCrudController
             TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
-            DateTimeField::new('createdAt', 'Date')->setFormat('dd/MM/YYYY'),
+            DateTimeField::new('createdAt', 'Date')->setFormat('dd/MM/YYYY')
+                ->formatValue(function ($value, $entity) {
+                    $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
+                    return $value ? $formatter->format($value) : ' ';
+                }),
         ];
     }
 }

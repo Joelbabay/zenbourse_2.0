@@ -99,6 +99,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isInterestedInIntradayMethode = false;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -444,6 +447,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function isInterestedInIntradayMethode(): ?bool
+    {
+        return $this->isInterestedInIntradayMethode;
+    }
+
+    public function setInterestedInIntradayMethode(?bool $isInterestedInIntradayMethode): static
+    {
+        $this->isInterestedInIntradayMethode = $isInterestedInIntradayMethode;
 
         return $this;
     }

@@ -2,34 +2,30 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Download;
+use App\Entity\IntradayRequest;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
-/**
- * @method Download getDownload()
- */
-class UserDownloadCrudController extends AbstractCrudController
+class IntradayRequestCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Download::class;
+        return IntradayRequest::class;
     }
 
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes ayant téléchargé la liste')
-            ->setEntityLabelInSingular('Liste des Utilisateurs Ayant Téléchargé le Fichier')
-            ->setEntityLabelInPlural('Liste des Utilisateurs Ayant Téléchargé le Fichier')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes intéressées par la méthode Intraday')
+            //->setEntityPermission('ROLE_ADMIN')
             ->setDefaultSort(['createdAt' => 'DESC'])
-            ->setDateFormat("EEE, MMM d, ''yy")
-            ->setTimeFormat("h:mm a")
-            ->showEntityActionsInlined();
+            ->showEntityActionsInlined();;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -44,6 +40,7 @@ class UserDownloadCrudController extends AbstractCrudController
             });
     }
 
+
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -51,10 +48,10 @@ class UserDownloadCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
-            TextField::new('lastname', 'Non'),
+            TextField::new('lastname', 'Nom'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
-            DateTimeField::new('createdAt', 'Date de téléchargement')->setFormat('d F Y - H:i:s')
+            DateTimeField::new('createdAt', 'Date')->setFormat('dd/MM/YYYY')
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
