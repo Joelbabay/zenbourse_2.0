@@ -82,9 +82,9 @@ class UserCrudController extends AbstractCrudController
             ->add(
                 ChoiceFilter::new('statut', 'Statut')
                     ->setChoices([
-                        'Prospect' => 'PROSPECT',
-                        'Client' => 'CLIENT',
-                        'Invité' => 'INVITE',
+                        'PROSPECT' => 'PROSPECT',
+                        'CLIENT' => 'CLIENT',
+                        'INVITE' => 'INVITE',
                     ])
             )
             ->add(
