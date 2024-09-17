@@ -6,8 +6,7 @@
 
 {% block body %}
     {% include 'partials/header.html.twig' %}
-	{% include 'partials/menu_home.html.twig' %}
-
+	
     <main class="custom-container mt-4">
         <div class="row g-5">
             <div class="col-md-9 mt-4">
@@ -37,7 +36,7 @@
                 {% else %}
                     <div class="bg-light rounded">
                         <div class="row col-md-8 mx-auto p-3 ">
-                            {{ form(form) }}
+                            {{ form(form, {'attr': {'data-turbo': 'false'}}) }}
                         </div>
                     </div>
                 {% endif %}

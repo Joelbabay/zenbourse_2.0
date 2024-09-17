@@ -87,6 +87,16 @@ class UserCrudController extends AbstractCrudController
                         'Client' => 'CLIENT',
                         'Invité' => 'INVITE',
                     ])
+            )
+            ->add(
+                ChoiceFilter::new('note', 'Catégorie (CAT)')
+                    ->setChoices([
+                        '1' => 1,
+                        '2' => 2,
+                        '3' => 3,
+                        '4' => 4,
+                        '5' => 5
+                    ]) //->setFormTypeOption('multiple', true)
             );
     }
 

@@ -83,4 +83,13 @@
 			</header>
 		</div>
 	</div>
+	{% if app.request.get('_route') starts with 'home'%}
+		{% include 'partials/menu_home.html.twig' %}
+	{% endif %}
+	{% if app.request.get('_route') starts with 'investisseur'%}
+		{% include 'partials/menu_investisseur.html.twig' %}
+	{% endif %}
+	{% if app.request.get('_route') starts with 'intraday'%}		
+		{% include 'partials/menu_intraday.html.twig' %}
+	{% endif %}
 </div>
