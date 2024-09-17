@@ -52,8 +52,22 @@ class FileDownloadController extends AbstractController
             $downloadEntity->setEmail($user->getEmail());
             $downloadEntity->setCreatedAt(new \Datetime());
             $this->entityManager->persist($downloadEntity);
+            $this->entityManager->flush();
+
+            $filePath = $this->fileDirectory;
+
+            if (file_exists($filePath)) {
+                $response = new BinaryFileResponse($filePath);
+                $response->setContentDisposition(
+                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                    basename($filePath)
+                );
+                return $response;
+            } else {
+                throw $this->createNotFoundException('The file does not exist');
+            }
         }
-        $this->entityManager->flush();
+
         return $this->redirectToRoute('home_download_page');
     }
 
