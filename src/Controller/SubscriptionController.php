@@ -36,7 +36,8 @@ class SubscriptionController extends AbstractController
             'investisseur',
             new InvestisseurRequest(),
             'Votre demande d\'adhésion à la méthode investisseur a été soumise avec succès.',
-            'investisseur_home'
+            'investisseur_home',
+            'subscription/investisseur-subscription.html.twig'
         );
     }
 
@@ -49,6 +50,7 @@ class SubscriptionController extends AbstractController
             new IntradayRequest(),
             'Votre demande d\'adhésion à la méthode intraday a été soumise avec succès.',
             'intraday_home',
+            'subscription/intraday-subscription.html.twig',
             true
         );
     }
@@ -58,6 +60,7 @@ class SubscriptionController extends AbstractController
         object $subscriptionRequest, // Instance de InvestisseurRequest ou IntradayRequest
         string $successMessage, // Message de succès à afficher
         string $redirectRoute, // Route de redirection après succès
+        string $template,
         bool $isIntraday = false // Booléen pour différencier les types d'abonnement
     ): Response {
         $user = $this->getUser();
@@ -125,7 +128,7 @@ class SubscriptionController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('subscription/subscription.html.twig', [
+        return $this->render($template, [
             'form' => $form
         ]);
     }
