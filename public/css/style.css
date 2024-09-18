@@ -64,32 +64,26 @@ input::placeholder {
     background-color: #dc6a19;
 }
 
-.active {
+.zen-menu a {
+    display: inline-block;
+    box-sizing: border-box;
+    border-bottom: 3px solid transparent;
+}
+
+.menu-home a:hover,
+.menu-home a.active {
     color: #183d3d;
     border-bottom: 3px solid #183d3d;
 }
 
-.active-investisseur {
+.menu-investisseur a:hover,
+.menu-investisseur a.active {
     color: #00a8b4;
     border-bottom: 3px solid #00a8b4;
 }
 
-.active-intraday {
-    color: #dc6a19;
-    border-bottom: 3px solid #dc6a19;
-}
-
-.menu-home:hover {
-    color: #183d3d;
-    border-bottom: 3px solid #183d3d;
-}
-
-.menu-investisseur a:hover {
-    color: #00a8b4;
-    border-bottom: 3px solid #00a8b4;
-}
-
-.menu-intraday a:hover {
+.menu-intraday a:hover,
+.menu-intraday a.active {
     color: #dc6a19;
     border-bottom: 3px solid #dc6a19;
 }
@@ -122,8 +116,6 @@ input::placeholder {
     background-color: #f9f9f9;
     border-top: 0.05rem solid #e5e5e5;
 }
-
-.blog-header-top {}
 
 .blog-header-logo {
     font-family: "Playfair Display", Georgia, "Times New Roman", serif/*rtl:Amiri, Georgia, "Times New Roman", serif*/

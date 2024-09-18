@@ -1,8 +1,8 @@
-<div class="nav-scroller mb-2 blog-nav-second position-sticky" style="top:89px; z-index:1000">
+<div class="nav-scroller zen-menu mb-2 blog-nav-second menu-home">
 	<div class="container-fluid blog-nav ">
 		<nav class="nav d-flex justify-content-center text-uppercase">
 			{% for item in get_menu('HOME')  %}
-				<a class="px-4 py-3 link-secondary nav-link fw-semibold menu-home {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
+				<a class="px-4 py-3 link-secondary nav-link fw-semibold {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
 			{% endfor %}
 		</nav>
 	</div>
