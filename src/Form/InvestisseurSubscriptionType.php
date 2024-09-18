@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\InvestisseurRequest;
+use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -92,7 +93,7 @@ class InvestisseurSubscriptionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => InvestisseurRequest::class,
+            'data_class' => User::class,
             'existing_user' => false,
         ]);
 

@@ -64,6 +64,7 @@ class SubscriptionController extends AbstractController
         bool $isIntraday = false // Booléen pour différencier les types d'abonnement
     ): Response {
         $user = $this->getUser();
+
         $formType = $isIntraday ? IntradayRequestType::class : InvestisseurSubscriptionType::class;
 
         if ($user && ($isIntraday ? $user->isIntraday() : $user->isInvestisseur())) {
@@ -76,7 +77,7 @@ class SubscriptionController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        $form = $this->createForm($formType, $subscriptionRequest, [
+        $form = $this->createForm($formType, $user, [
             'existing_user' => (bool) $user,
         ]);
 
@@ -120,6 +121,14 @@ class SubscriptionController extends AbstractController
                 $this->entityManager->persist($user);
             }
 
+
+            $subscriptionRequest->setCivility($data->getCivility());
+            $subscriptionRequest->setLastname($data->getLastname());
+            $subscriptionRequest->setFirstname($data->getFirstname());
+            $subscriptionRequest->setEmail($data->getEmail());
+            $subscriptionRequest->setCreatedAt(new \DateTime());
+
+            //dd($subscriptionRequest);
             $this->entityManager->persist($subscriptionRequest);
             $this->entityManager->flush();
 
