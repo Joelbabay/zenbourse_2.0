@@ -37,6 +37,7 @@ class FileDownloadController extends AbstractController
     #[Route('/file/download', name: 'file_download')]
     public function index(): Response
     {
+        dd('test');
         $user = $this->getUser();
         if ($user) {
             if (!$user->isDownloadRequestSubmitted()) {
@@ -45,27 +46,18 @@ class FileDownloadController extends AbstractController
             if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'])) {
                 $user->setStatut('PROSPECT');
             }
+
+            dd($user);
             $downloadEntity = new Download();
             $downloadEntity->setCivility($user->getCivility());
             $downloadEntity->setLastname($user->getLastname());
             $downloadEntity->setFirstname($user->getFirstname());
             $downloadEntity->setEmail($user->getEmail());
             $downloadEntity->setCreatedAt(new \Datetime());
+
             $this->entityManager->persist($downloadEntity);
+
             $this->entityManager->flush();
-
-            $filePath = $this->fileDirectory;
-
-            if (file_exists($filePath)) {
-                $response = new BinaryFileResponse($filePath);
-                $response->setContentDisposition(
-                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                    basename($filePath)
-                );
-                return $response;
-            } else {
-                throw $this->createNotFoundException('The file does not exist');
-            }
         }
 
         return $this->redirectToRoute('home_download_page');

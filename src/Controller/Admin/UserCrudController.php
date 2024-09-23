@@ -88,7 +88,7 @@ class UserCrudController extends AbstractCrudController
                     ])
             )
             ->add(
-                ChoiceFilter::new('note', 'Catégorie (CAT)')
+                ChoiceFilter::new('note', 'Catégorie (Cat.)')
                     ->setChoices([
                         '1' => 1,
                         '2' => 2,
@@ -128,7 +128,7 @@ class UserCrudController extends AbstractCrudController
                 ])
                 ->allowMultipleChoices(false)->setRequired(true)->renderExpanded(),
             ChoiceField::new('note')
-                ->setLabel('CAT')
+                ->setLabel('Cat.')
                 ->setChoices([
                     '1' => 1,
                     '2' => 2,
@@ -182,7 +182,7 @@ class UserCrudController extends AbstractCrudController
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
                 }),
-            TextareaField::new('comment', 'Commentaire')
+            TextareaField::new('comment', 'Notes')
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),

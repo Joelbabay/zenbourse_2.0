@@ -49,9 +49,9 @@ class DownloadRequestType extends AbstractType
                 ]
             ])
             ->add('submit', SubmitType::class, [
-                'label' => 'Je télécharge la liste des 300 valeurs',
+                'label' => 'Je téléharge la liste des valeurs de l’étude statistique',
                 'attr' => [
-                    'class' => 'btn btn-light zen-button btn-lg text-light mt-4 w-100',
+                    'class' => 'btn btn-light zen-button text-light mt-4 w-100',
                 ]
             ]);
     }

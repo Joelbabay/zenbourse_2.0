@@ -8,11 +8,11 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
-		<link href="/css/style.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
 		<script src="/js/bootstrap.bundle.js"></script>
+		<link href="/css/style.css" rel="stylesheet"/>
 
 		{% block stylesheets %}{% endblock %}
 
@@ -27,5 +27,33 @@
 		{% include 'partials/footer.html.twig' %}
 		<script src="/js/jquery.magnific-popup.js"></script>
 		<script src="{{ asset('js/app.js') }}"></script>
+		<script>
+			function populateH2List() {
+				const h2Elements = document.querySelectorAll('h2');
+				const h2List = document.getElementById('h2-list');
+
+				h2List.innerHTML = '';
+
+				h2Elements.forEach((h2, index) => {
+					if (!h2.id) {
+						h2.id = `section-${index + 1}`;
+					}
+
+					const listItem = document.createElement('li');
+					const link = document.createElement('a');
+					link.href = `#${h2.id}`;
+					link.textContent = h2.textContent;
+
+					link.style.cursor = 'pointer';
+					link.style.textDecoration = 'none';
+					link.style.color = 'black';
+
+					listItem.appendChild(link);
+					h2List.appendChild(listItem);
+				});
+			}
+			document.addEventListener('DOMContentLoaded', populateH2List);
+			document.addEventListener('turbo:load', populateH2List);
+		</script>
 	</body>
 </html>

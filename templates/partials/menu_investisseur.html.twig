@@ -17,7 +17,7 @@
 
                     {% set is_active = parent_active or child_active %}
 
-                    <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ is_active ? 'active-investisseur' : '' }}" href="{{ path(item.route) }}">
+                    <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
                         {{ item.label }}
                     </a>
                 {% endfor %}
@@ -45,7 +45,7 @@
                 {% if is_active and item.children|length > 0 %}
                     <nav class="nav d-flex justify-content-center text-uppercase">
                         {% for child in item.children %}
-                            <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ app.request.attributes.get('_route') == child.route ? 'active-investisseur' : '' }}" href="{{ path(child.route) }}">
+                            <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
                                 {{ child.label }}
                             </a>
                         {% endfor %}

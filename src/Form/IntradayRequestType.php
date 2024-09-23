@@ -84,9 +84,9 @@ class IntradayRequestType extends AbstractType
         }
 
         $builder->add('submit', SubmitType::class, [
-            'label' => 'S\'abonner à la méthode intraday',
+            'label' => 'Je suis intéressé par la méthode Intraday et souhaite être informé de sa disponibilité.',
             'attr' => [
-                'class' => 'btn btn-light btn-block zen-button text-light btn-lg w-100 mt-4'
+                'class' => 'btn btn-light btn-block zen-button text-light p-2 w-100 mt-4'
             ]
         ]);
     }
