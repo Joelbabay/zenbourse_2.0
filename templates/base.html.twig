@@ -28,6 +28,35 @@
 		<script src="/js/jquery.magnific-popup.js"></script>
 		<script src="{{ asset('js/app.js') }}"></script>
 		<script>
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        const navbarHeight = document.querySelector('.sticky-top').offsetHeight;
+
+        if (targetElement) {
+            window.scrollTo({
+                top: targetElement.offsetTop - navbarHeight,
+                behavior: 'smooth'
+            });
+
+            // Vérifier la position après l'animation de scroll
+            setTimeout(() => {
+                const currentScrollPosition = window.pageYOffset;
+                const targetPosition = targetElement.offsetTop - navbarHeight;
+
+                if (Math.abs(currentScrollPosition - targetPosition) > 10) {
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 500); // Ajuster le délai si nécessaire
+        }
+    });
+});
+
 			function populateH2List() {
 				const h2Elements = document.querySelectorAll('h2');
 				const h2List = document.getElementById('h2-list');
@@ -54,6 +83,7 @@
 			}
 			document.addEventListener('DOMContentLoaded', populateH2List);
 			document.addEventListener('turbo:load', populateH2List);
+
 		</script>
 	</body>
 </html>

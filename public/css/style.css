@@ -1,3 +1,4 @@
+@import url("https://fonts.cdnfonts.com/css/agency-fb");
 h1,
 h2,
 h3,
@@ -8,6 +9,15 @@ h4 {
   margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
+}
+
+[id]::before {
+  content: "";
+  display: block;
+  height: 160px;
+  /* Ajuste cette valeur à la hauteur de ta barre sticky */
+  margin-top: -160px;
+  /* Décale vers le haut pour compenser le scroll */
 }
 
 input::-webkit-input-placeholder {
@@ -265,12 +275,15 @@ label.required:after {
 }
 
 .quote-container {
-  background-image: url("../images/home.jpg");
-  background-size: cover;
-  background-position: center;
-  min-height: 300px;
+  background-image: url("../images/ban2.png");
+  background-size: 100% auto;
+  /* Ajuste la largeur à 100% et la hauteur automatiquement */
+  min-height: 441px;
+  background-repeat: no-repeat;
   width: 100%;
   padding: 50px 20px;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .quote-text {
@@ -283,7 +296,7 @@ label.required:after {
 .quote-author {
   font-style: italic;
   font-size: 1rem;
-  color: #000000;
+  color: #6c6c6c;
   /* Couleur pour le nom de l'auteur */
 }
 
@@ -291,7 +304,7 @@ label.required:after {
   font-size: 1.5rem;
   font-style: italic;
   margin-top: 20px;
-  margin-left: 10%;
+  margin-left: 7%;
   color: #000000;
   /* Couleur pour le texte bleu foncé */
 }
@@ -300,18 +313,23 @@ label.required:after {
   font-size: 1.5rem;
   font-style: italic;
   margin-top: 30px;
-  margin-left: 20%;
+  margin-left: 12%;
   color: #3faf45;
   /* Couleur verte pour Zenbourse */
 }
 
 .left-section {
-  font-size: 8rem;
+  font-family: "Agency FB", sans-serif;
+  font-size: 10rem;
   font-weight: bold;
-  color: #3faf45;
-  /* Vert similaire à l'image */
+  color: #ff0000;
   line-height: 1;
   text-align: center;
+}
+
+.r-title {
+  color: #ff0000;
+  font-weight: 600;
 }
 
 .content-wrapper {
