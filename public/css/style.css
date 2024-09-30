@@ -53,6 +53,10 @@ body {
   padding-left: 15px;
 }
 
+.custom-container h2 {
+  font-style: italic;
+}
+
 a {
   color: #183d3d;
 }
@@ -275,10 +279,10 @@ label.required:after {
 }
 
 .quote-container {
-  background-image: url("../images/ban2.png");
+  background-image: url("../images/ban3.jpg");
   background-size: 100% auto;
   /* Ajuste la largeur à 100% et la hauteur automatiquement */
-  min-height: 441px;
+  min-height: 410px;
   background-repeat: no-repeat;
   width: 100%;
   padding: 50px 20px;
@@ -287,7 +291,7 @@ label.required:after {
 }
 
 .quote-text {
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   font-style: italic;
   color: #000000;
   /* Couleur pour le texte bleu foncé */
@@ -301,35 +305,52 @@ label.required:after {
 }
 
 .middle-quote {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-style: italic;
   margin-top: 20px;
-  margin-left: 7%;
+  margin-left: 3%;
   color: #000000;
   /* Couleur pour le texte bleu foncé */
 }
 
 .right-quote {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-style: italic;
   margin-top: 30px;
-  margin-left: 12%;
+  margin-left: 7%;
   color: #3faf45;
   /* Couleur verte pour Zenbourse */
 }
 
+@font-face {
+  font-family: "Agency FB Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Agency FB Bold"), url("../font/AgencyFBBold.ttf") format("ttf");
+}
+
 .left-section {
-  font-family: "Agency FB", sans-serif;
+  font-family: "Agency FB Bold", sans-serif;
   font-size: 10rem;
-  font-weight: bold;
-  color: #ff0000;
+  color: #ca0101;
   line-height: 1;
   text-align: center;
 }
 
+.right-section {
+  font-size: 23px;
+}
+
 .r-title {
-  color: #ff0000;
-  font-weight: 600;
+  font-size: 4rem;
+  font-family: "Agency FB Bold", sans-serif;
+  color: #ca0101;
+}
+
+.s-title {
+  font-size: 4rem;
+  font-family: "Agency FB Bold", sans-serif;
+  color: #3b9e40;
 }
 
 .content-wrapper {
@@ -344,7 +365,7 @@ label.required:after {
 }
 
 .important-text {
-  color: #3faf45;
+  color: #3b9e40;
   font-size: 1.5rem;
   text-align: center;
 }
