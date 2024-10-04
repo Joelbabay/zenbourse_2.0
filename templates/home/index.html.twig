@@ -6,7 +6,7 @@
 
 {% block body %}
 	{% include 'partials/header.html.twig' %}
-	<main class="custom-container">
+	<main class="custom-container mt-4">
 		{% for label, messages in  app.flashes%}
 			{% for message in messages %}
 				<div class="alert alert-{{ label }} text-center fw-bold">
