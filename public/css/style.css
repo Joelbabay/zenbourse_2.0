@@ -375,3 +375,7 @@ label.required:after {
     font-size: 1.5rem;
     text-align: center;
 }
+
+#h2-list li {
+    padding-top: 13px;
+}
