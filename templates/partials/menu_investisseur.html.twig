@@ -44,6 +44,9 @@
 
                 {% if is_active and item.children|length > 0 %}
                     <nav class="nav d-flex justify-content-center text-uppercase">
+                        <!-- titre parent -->
+                        <span class="px-4 py-3 link-secondary fw-semibold nav-link fw-bold">{{ item.label }} -></span>
+                        <!-- titre parent -->    
                         {% for child in item.children %}
                             <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
                                 {{ child.label }}

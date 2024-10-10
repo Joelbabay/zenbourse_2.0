@@ -7,13 +7,13 @@
 {% block body %}
 	{% include 'partials/header.html.twig' %}
 	<main class="custom-container mt-4">
-		{% for label, messages in  app.flashes%}
+		{#{% for label, messages in  app.flashes%}
 			{% for message in messages %}
 				<div class="alert alert-{{ label }} text-center fw-bold">
 					{{ message }}
 				</div>
 			{% endfor %}
-		{% endfor %}
+		{% endfor %}#}
 
 		<div class="row g-5">
 			<div class="col-md-9">
