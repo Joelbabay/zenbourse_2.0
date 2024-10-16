@@ -17,12 +17,23 @@
 
 		<div class="row g-5">
 			<div class="col-md-9">
-
-				<div class="container-fluid quote-container border mb-4">
+				{#<div class="container-fluid quote-container border mb-4">
 					<h1 class="quote-text">« Se simplifier la vie, c’est le luxe suprême ! » <span class="quote-author blockquote-footer">Léonard de Vinci</span></h1>
 					<p class="middle-quote">Une méthode simple, c’est le luxe suprême !</p>
 					<p class="right-quote">Zenbourse, la méthode qui vous simplifie la vie !</p>
+				</div>#}
+
+				<div id="carouselExampleSlidesOnly" class="carousel slide mb-4" data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<div class="carousel-item active">
+							<img src="{{ asset('images/ban-test.png') }}" class="d-block w-100" alt="bannière-1">
+						</div>
+						<div class="carousel-item">
+							<img src="{{ asset('images/ban-test.png') }}" class="d-block w-100" alt="bannière-1">
+						</div>
+					</div>
 				</div>
+
 
 				<div class="container-fluid bg-light mb-4">
 					<div class="content-wrapper row">

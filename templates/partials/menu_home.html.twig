@@ -7,8 +7,8 @@
     <div class="collapse navbar-collapse menu-home" id="navbarNav">
       <ul class="navbar-nav">
         {% for item in get_menu('HOME')  %}
-			<li class="nav-item">
-				<a class="px-4 py-1 nav-link {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
+			<li class="nav-item px-3">
+				<a class="py-1 nav-link {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
 			</li>
 		{% endfor %}
       </ul>

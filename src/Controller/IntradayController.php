@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_INTRADAY')]
 class IntradayController extends AbstractController
 {
-    #[Route('/', name: 'intraday')]
+    #[Route('/', name: 'intraday_home')]
     public function index(): Response
     {
         return $this->redirectToRoute('intraday_presentation');
