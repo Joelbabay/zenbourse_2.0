@@ -34,31 +34,43 @@ class InvestisseurController extends AbstractController
     #[Route('/la-methode/vagues-elliot', name: 'investisseur_methode_vagues_elliot')]
     public function investisseur_methode_vagues_elliot(): Response
     {
-        return $this->render('investisseur/methodes-vagues-elliot.html.twig');
+        return $this->render('investisseur/methode/methodes-vagues-elliot.html.twig');
     }
 
     #[Route('/la-methode/cycles-boursiers', name: 'investisseur_methode_cycles_boursiers')]
     public function investisseur_methode_cycles_boursiers(): Response
     {
-        return $this->render('investisseur/methodes-cycles-boursiers.html.twig');
+        return $this->render('investisseur/methode/methodes-cycles-boursiers.html.twig');
     }
 
     #[Route('/la-methode/boites-bulles', name: 'investisseur_methode_boites_bulles')]
     public function investisseur_methode_boites_bulles(): Response
     {
-        return $this->render('investisseur/methodes-boites-bulles.html.twig');
+        return $this->render('investisseur/methode/methodes-boites-bulles.html.twig');
     }
 
     #[Route('/la-methode/indicateurs', name: 'investisseur_methode_indicateurs')]
     public function investisseur_methode_indicateurs(): Response
     {
-        return $this->render('investisseur/methodes-indicateurs.html.twig', []);
+        return $this->render('investisseur/methode/methodes-indicateurs.html.twig', []);
     }
 
     #[Route('/bibliotheque', name: 'investisseur_bibliotheque')]
     public function bibliotheque(): Response
     {
         return $this->render('investisseur/bibliotheque.html.twig');
+    }
+
+    #[Route('/bibliotheque/bulles', name: 'investisseur_bibliotheque_bulles')]
+    public function investisseur_bibliotheque_bulles(): Response
+    {
+        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
+    }
+
+    #[Route('/bibliotheque/bulles-range', name: 'investisseur_bibliotheque_bulles_range')]
+    public function investisseur_bibliotheque_bulles_range(): Response
+    {
+        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
     }
 
     #[Route('/bibliotheque/pics-de-volume', name: 'investisseur_bibliotheque_pics_volumes')]

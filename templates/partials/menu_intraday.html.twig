@@ -1,33 +1,40 @@
-<div class="position-sticky zen-menu menu-intraday" style="top:88px; z-index:1000">
-	<div class="nav-scroller blog-nav-second">
-        <div class="container-fluid blog-nav">
-            <!-- Menu Principal -->
-            <nav class="nav d-flex justify-content-center text-uppercase">
-                {% for item in get_menu('INTRADAY') %}
-                    {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
-                    {% set child_active = false %}
-
-                    {% if item.children|length > 0 %}
-                        {% for child in item.children %}
-                            {% if app.request.attributes.get('_route') == child.route %}
-                                {% set child_active = true %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-
-                    {% set is_active = parent_active or child_active %}
-
-                    <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
-                        {{ item.label }}
-                    </a>
-                {% endfor %}
-            </nav>
-        </div>
-    </div>
-
-<!-- Sous-menu dans une nouvelle div -->
-    <div class="sub-menu-container bg-light">
+<div class="zen-menu menu-intraday">
+    <nav class="navbar navbar-expand-lg text-uppercase main-nav-intraday" style="font-weight: 400;">
         <div class="container-fluid">
+            <a class="navbar-text me-3 fw-bold" href="#">ZENBOURSE 50 -></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% set sorted_menu = get_menu('INTRADAY')|sort((a, b) => a.menuorder <=> b.menuorder) %}
+                    {% for item in sorted_menu %}
+                        {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
+                        {% set child_active = false %}
+
+                        {% if item.children|length > 0 %}
+                            {% for child in item.children %}
+                                {% if app.request.attributes.get('_route') == child.route %}
+                                    {% set child_active = true %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% set is_active = parent_active or child_active %}
+                        <li class="nav-item px-3">
+                            <a class="py-1 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
+                                {{ item.label }}
+                            </a>
+                        </li>        
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Sous-menu dans une nouvelle div -->
+    <div class="sub-menu-container bg-light">
+        <div class="sub">
             {% for item in get_menu('INTRADAY') %}
                 {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
                 {% set child_active = false %}
@@ -43,16 +50,28 @@
                 {% set is_active = parent_active or child_active %}
 
                 {% if is_active and item.children|length > 0 %}
-                    <nav class="nav d-flex justify-content-center text-uppercase">
-                        {% for child in item.children %}
-                            <a class="px-4 py-3 link-secondary fw-semibold nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
-                                {{ child.label }}
-                            </a>
-                        {% endfor %}
+                    <nav class="navbar navbar-expand-lg text-uppercase" style="font-weight: 400;">
+                        <div class="container-fluid text-black">
+                            <span class="me-3 fw-bold" href="#">{{ item.label }} -></span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav-{{ item.route }}">
+                                <ul class="navbar-nav">
+                                    {% set sorted_children = item.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
+                                    {% for child in sorted_children %}
+                                    <li class="nav-item px-3">
+                                        <a class="py-1 nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
+                                            {{ child.label }}
+                                        </a>
+                                    </li>  
+                                    {% endfor %}      
+                                </ul>
+                            </div>
+                        </div>
                     </nav>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
-
 </div>

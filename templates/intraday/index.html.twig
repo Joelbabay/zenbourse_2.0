@@ -1,10 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Zenbourse - Intraday
+{% block title %}
+	Zenbourse - Méthode Intraday - Introduction
 {% endblock %}
 
 {% block body %}
 	{% include 'partials/header.html.twig' %}
-
+		<main class="custom-container">
+			<div class="row g-5 mt-1">
+				<div class="col-md-9 mt-3">
+				</div>
+				<div class="col-md-3 mt-3">
+					{% include 'intraday/widgets/sidebar.html.twig' %}
+				</div>
+			</div>
+		</main>
 {% endblock %}
-

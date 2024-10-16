@@ -1,13 +1,5 @@
 <div class="position-sticky" style="top: 10rem;">
-	<div class="sidebar mb-3 
-		 {% if app.request.get('_route') starts with 'home' %}
-			home
-		{% elseif app.request.get('_route') starts with 'investisseur_' %}
-			investisseur
-		{% elseif app.request.get('_route') starts with 'intraday_' %}
-			intraday
-		{% endif %}
-	 rounded">
+	<div class="sidebar mb-3 home rounded">
 	 	<div class="box-title py-3">
 			<h4 class="fst-italic sidebar-title text-center m-0">Dans cette page</h4>
 		</div>
@@ -15,21 +7,21 @@
 		</ul>
 	</div>
 
-	<div class="p-4 rounded bg-light mb-3 border-black">
+	<div class="sidebar p-4 rounded bg-light mb-3 border-black">
 		<p>Je suis intéressé par</p>
 		<a href="{{ path('home_investisseur_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			la méthode Investisseur
 		</a>
 	</div>
 
-	<div class="p-4 rounded bg-light mb-3">
+	<div class="sidebar p-4 rounded bg-light mb-3">
 		<p>Je suis intéressé par</p>
 		<a href="{{ path('home_intraday_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			la méthode Intraday
 		</a>
 	</div>
 
-	<div class="p-4 rounded bg-light">
+	<div class="sidebar p-4 rounded bg-light">
 		<p>Les valeurs de</p>
 		<a href="{{ path('home_download_page') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			L'etude statistique
