@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet"/>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
+		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 		<script src="/js/bootstrap.bundle.js"></script>
 		<link href="/css/style.css" rel="stylesheet"/>
 
@@ -83,6 +84,12 @@
 
 			document.addEventListener('DOMContentLoaded', populateH2List);
 			document.addEventListener('turbo:load', populateH2List);
+
+		document.querySelectorAll('.clickable-div').forEach(function(div) {
+			div.addEventListener('click', function() {
+				window.location = div.getAttribute('data-href');
+			});
+		});
 
 		</script>
 	</body>

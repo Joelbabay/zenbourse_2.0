@@ -1,6 +1,6 @@
 <div class="sticky-top">
 	<div class="bg-zen-primary">
-		<div class="container-fluid blog-header-top px-4">
+		<div class="blog-header-top px-4 custom-container">
 			<header class="blog-header py-3 ">
 				<div class="row flex-nowrap justify-content-between align-items-center">
 					<div class="col-3 ps-0">
@@ -10,22 +10,22 @@
 						</a>
 					</div>
 					<div class="col-4 pt-1">
-						<h5 class="fst-italic text-light" style="font-size: 25px">Les méthodes qui simplifient la vie</h5>
+						<h5 class="fst-italic text-light text-nowrap" style="font-size: 25px">Les méthodes qui simplifient la vie</h5>
 					</div>
 
-					<div class="col-5 d-flex align-items-center  justify-content-end methode-section">
+					<div class="col-5 pe-0 d-flex align-items-center  justify-content-end methode-section">
 						{% if app.request.get('_route') starts with 'home'%}
 						 	{% if app.user %}
 								{% if app.user.isInvestisseur %}
 									<div class="mr-3">
 										<button class="btn btn-sm">
-											<a class="btn-investisseur px-3 py-2 rounded-1" href="{{ path('investisseur_presentation') }}">METHODE INVESTISSEUR</a>
+											<a class="btn-investisseur px-3 py-2 rounded-1 text-nowrap" href="{{ path('investisseur_presentation') }}">METHODE INVESTISSEUR</a>
 										</button>
 									</div>
 								{% endif %}
 								{% if app.user.isIntraday %}
 										<button class="btn btn-sm">
-											<a class="btn-intraday px-3 py-2 rounded-1" href="{{ path('intraday_home') }}">METHODE INTRADAY</a>
+											<a class="btn-intraday px-3 py-2 rounded-1 text-nowrap" href="{{ path('intraday_home') }}">METHODE INTRADAY</a>
 										</button>
 								{% endif %}
 							{% endif %}
@@ -85,13 +85,13 @@
 			</header>
 		</div>
 	</div>
-	{% if app.request.get('_route') starts with 'home'%}
-		{% include 'partials/menu_home.html.twig' %}
-	{% endif %}
-	{% if app.request.get('_route') starts with 'investisseur'%}
-		{% include 'partials/menu_investisseur.html.twig' %}
-	{% endif %}
-	{% if app.request.get('_route') starts with 'intraday'%}		
-		{% include 'partials/menu_intraday.html.twig' %}
-	{% endif %}
+			{% if app.request.get('_route') starts with 'home'%}
+				{% include 'partials/menu_home.html.twig' %}
+			{% endif %}
+			{% if app.request.get('_route') starts with 'investisseur'%}
+				{% include 'partials/menu_investisseur.html.twig' %}
+			{% endif %}
+			{% if app.request.get('_route') starts with 'intraday'%}		
+				{% include 'partials/menu_intraday.html.twig' %}
+			{% endif %}
 </div>
