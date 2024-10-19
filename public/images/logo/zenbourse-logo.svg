@@ -5,13 +5,15 @@
 	 style="enable-background:new 0 0 108.8 201.8;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#F72121;}
-	.st1{fill:#C2FF02;}
+	.st1{fill:#02FD40;}
 </style>
 <circle class="st0" cx="17.5" cy="46.1" r="11.5"/>
 <circle class="st0" cx="92.5" cy="46.1" r="11.5"/>
 <g>
-	<polygon class="st1" points="57.7,62.8 6.7,0 108.8,0 	"/>
-	<polygon class="st1" points="0,190.2 0,74.8 104.1,74.8 	"/>
-	<polygon class="st1" points="0,201.8 46,156.2 91.8,201.8 	"/>
+	<g>
+		<polygon class="st1" points="57.7,62.8 6.7,0 108.8,0 		"/>
+		<polygon class="st1" points="0,190.2 0,74.8 104.1,74.8 		"/>
+		<polygon class="st1" points="0,201.8 46,156.2 91.8,201.8 		"/>
+	</g>
 </g>
 </svg>
