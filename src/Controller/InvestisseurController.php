@@ -46,7 +46,7 @@ class InvestisseurController extends AbstractController
     #[Route('/la-methode/boites-bulles', name: 'investisseur_methode_boites_bulles')]
     public function investisseur_methode_boites_bulles(): Response
     {
-        return $this->render('investisseur/methode/methodes-boites-bulles.html.twig');
+        return $this->render('investisseur/methode/methodes-bulles.html.twig');
     }
 
     #[Route('/la-methode/indicateurs', name: 'investisseur_methode_indicateurs')]
