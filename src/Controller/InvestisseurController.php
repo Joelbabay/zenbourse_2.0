@@ -22,7 +22,7 @@ class InvestisseurController extends AbstractController
     #[Route('/presentation', name: 'investisseur_presentation')]
     public function presentation(): Response
     {
-        return $this->render('investisseur/index.html.twig');
+        return $this->render('investisseur/presentation.html.twig');
     }
 
     #[Route('/la-methode', name: 'investisseur_methode')]
@@ -64,7 +64,7 @@ class InvestisseurController extends AbstractController
     #[Route('/bibliotheque/bulles', name: 'investisseur_bibliotheque_bulles')]
     public function investisseur_bibliotheque_bulles(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles.html.twig', []);
     }
 
     #[Route('/bibliotheque/bulles-range', name: 'investisseur_bibliotheque_bulles_range')]

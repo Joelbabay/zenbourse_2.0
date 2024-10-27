@@ -448,3 +448,22 @@ label.required:after {
 .intraday li a {
   color: #0a63fc;
 }
+
+.text-justify {
+  text-align: justify;
+}
+
+.bg-light-green {
+  background-color: #e2f4e2;
+}
+
+.bg-light-yellow {
+  background-color: #f9f5e3;
+}
+.bg-light-blue {
+  background-color: #e7ffff;
+}
+
+.bg-light-green-2 {
+  background-color: #e9ffea;
+}

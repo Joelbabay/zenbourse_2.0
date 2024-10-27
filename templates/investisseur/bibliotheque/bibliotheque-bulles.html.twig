@@ -1,0 +1,322 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Zenbourse - Méthode Investisseur - Bibliothèque - Introduction
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+
+		<div class="custom-container">
+			<div class="row g-5">
+				<div class="col-md-9 mt-3">
+					<div class="container my-5">
+                        <div class="col px-0 text-center">
+						    <h1 class="display-5 fst-italic"><strong>La bulle</strong></h1>
+					    </div>
+                        <h2 class="pb-4 fst-italic">Comparons la boite et la bulle</h2>
+                        <div class="row">
+                            <!-- La théorie de la boîte -->
+                            <div class="col-md-6 d-flex">
+                                <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                    <div>
+                                        <h4 class="text-success text-center fst-italic mb-3">La théorie de la boîte</h4>
+                                        <p class="text-justify">
+                                            Le principe consiste à rechercher des actions qui atteignent un <strong>NOUVEAU PLUS HAUT</strong> au cours des 52 semaines précédentes et à retenir celles qui effectuent ensuite un retrait pendant au moins 3 jours consécutifs. Pour ces
+                                            valeurs, le plus haut devient le sommet de la boîte.
+                                        </p>
+                                        <p class="text-justify">
+                                            Après la formation du <strong>BAS</strong>, les cours ne doivent pas casser
+                                            ce minimum pendant au moins 3 jours. Ce minimum
+                                            devient le bas de la boîte.
+                                        </p>
+                                        <p class="text-justify">
+                                            Comme le plus haut précède le bas de la boîte, la sortie se
+                                            fera logiquement par le haut. On achète la cassure du haut
+                                            de la boîte, c’est à dire la cassure du plus haut.
+                                        </p>
+                                        <p class="text-justify fw-bold">
+                                            La cassure accompagnée de FORTS VOLUMES sur l’unité
+                                            de temps journalière est un gage d’un début de rush
+                                            haussier PUISSANT.
+                                        </p>
+                                        <p class="text-justify">
+                                            Les 52 semaines constituent une ligne de résistance que
+                                            Nicolas DARVAS s’imposait.
+                                        </p>
+                                        <p class="text-danger fw-bold text-center">
+                                            La boîte de DARVAS est une zone de faible volatilité <br><br>
+                                            C’est également la vague 2 du cycle élémentaire d’ELLIOTT
+                                        </p>
+                                    </div>
+                                    <div class="mt-3">
+                                        <h4 class="text-success text-center mb-3">La boîte de DARVAS</h4>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/cassure.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La boîte de DARVAS">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- La théorie de la bulle -->
+                            <div class="col-md-6 d-flex">
+                                <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                    <div class="text-justify">
+                                        <h4 class="text-success text-center fst-italic mb-3">La théorie de la bulle</h4>
+                                        <p class="text-justify">
+                                            La théorie de ZenBourse n’est pas vraiment différente de la théorie de DARVAS
+                                        </p>
+                                        <p>
+                                            Avec la théorie de la boîte de DARVAS, vous devez tracer la
+                                            boîte.
+                                        </p>
+                                        <p>
+                                            Avec la théorie de la bulle de ZenBourse, vous ne tracer pas
+                                            la bulle, elle est dessinée automatiquement avec les bandes
+                                            de Bollinger.
+                                        </p>
+                                        <p>
+                                            Visuellement, elle est très facile à identifier.
+                                        </p>
+                                        <p>
+                                            On achète les hauts de 52 semaines dès qu’il y a une hausse
+                                            significative des volumes et une hausse impulsive des
+                                            cours.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <h4 class="text-success text-center mb-3">La bulle de ZenBourse</h4>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container my-5">
+                        <h2 class="pb-4 fst-italic">La construction de la bulle</h2>
+                        <div class="row">
+                            <!-- Colonne de l'image -->
+                            <div class="col-md-6 text-center">
+                                <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/bulle.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/bulle.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                            </div>
+                            
+                            <!-- Colonne du texte -->
+                            <div class="col-md-6 d-flex flex-column justify-content-between">
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center p-3 bg-light-green">
+                                    <h5>Phase 1 - 10/11/2020 au 27/11/2020</h5>
+                                    <p>
+                                        Les bandes de Bollinger s’écartent par l’effet de la hausse des prix.<br>
+                                        Les cours évoluent sur la bande de Bollinger supérieure.
+                                    </p>
+                                </div>
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center p-3 bg-light-yellow">
+                                    <h5>Phase 2 – du 27/11/2020 au 28/12/2020</h5>
+                                    <p>
+                                        Les cours s’installent à l’intérieur des bandes de Bollinger pour évoluer horizontalement dans un range.
+                                        Les bandes de Bollinger convergent. C’est à ce moment que l’on peut tracer la boîte de Darvas et attendre la sortie de la boîte ou de la bulle.
+                                    </p>
+                                    <p class="fw-bold text-danger text-center">Nous avons bien les 2 signaux de l’indicateur ZEN</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Les volumes</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p>Les volumes sont très importants pour la validation de la bulle ou de la boîte :</p>
+                        <p>Nous rencontrons les situations suivantes :</p>
+                        <ul>
+                            <li>Le pic de volumes le jour du signal d’achat</li>
+                            <li>Le pic de volumes le jour du signal d’achat précédé d’un ramassage significatif pendant la construction de la bulle</li>
+                            <li>Le pic de volumes au premier signal suivi d’un ramassage significatif pendant la construction de la bulle</li>
+                            <li>Ramassage pendant la construction de la bulle</li>
+                        </ul>
+                        <p>Les volumes sont présentés dans les valeurs analysées dans la bibliothèque.</p>
+                    </div>
+
+                    <h2>La ligne du plus haut de 52 semaines</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p>C’est une ligne horizontale que l’on trace lorsque les cours atteignent un plus haut depuis 52 semaines. Il s’agit d’une ligne de résistance.</p>
+                        <p>Lorsqu’un signal intervient le jour d’un nouveau plus haut de 52 semaines, c’est un excellent signal.</p>
+                    </div>
+                    <div class="row mb-4">
+                        <!-- Colonne de l'image -->
+                        <div class="col-md-6 text-center">
+                            <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/ecartement.PNG') }}">
+                                <img src="{{ asset('images/investisseur/bibliotheque/ecartement.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                            </a>
+                        </div> 
+                        <!-- Colonne du texte -->
+                        <div class="col-md-6 d-flex flex-column justify-content-between">
+                            <div class="flex-grow-1 d-flex flex-column p-3 bg-light">
+                                <h5 class="text-center mb-4">La ligne de nouveau plus haut de 52 semaines</h5>
+                                <p class="text-justify">
+                                    La notion de plus haut de 52 semaines fait partie de la
+                                    théorie de Nicolas Darvas, c’est une résistance sur une
+                                    période significative de 52 semaines.
+                                </p>
+                                <p class="text-justify">
+                                    Pour l’affichage complet sur les graphiques, il convient de
+                                    la tracer sur le graphique de l’unité de temps de la
+                                    Semaine.
+                                </p>
+                            </div>
+                        </div>    
+                    </div>
+
+                    <h2>La validation de la bulle</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p>Pour faciliter l’analyse graphique, il convient de reporter sur le graphique Semaine la période de construction de la bulle sur le graphique Jour.</p>
+                        <p>Si vous constatez sur le graphique Semaine un écartement des bandes de Bollinger, vous avez détecté un GAGNANT.</p>
+                        <div class="section text-center important-text text-success">
+						    <p>L’écartement des bandes de Bollinger valide la boîte de Darvas ou la bulle de Zenbourse.</p>
+					    </div>
+                    </div>
+
+                    <div class="row mb-4">
+                            <!-- La théorie de la boîte -->
+                            <div class="col-md-6 d-flex">
+                                <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                    <div>
+                                        <h4 class="text-success text-center fst-italic mb-3">Graphique Jour</h4>
+                                        <p class="text-justify">
+                                            Les signaux de l’indicateur ZEN sont présents sur le graphique.
+                                        </p>
+                                        <p class="text-justify">
+                                            Vous remarquez un ramassage de titres pendant la construction de la boite ou de la bulle.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <div class="d-flex justify-content-between bg-light-blue p-2">
+                                            <span>Nom de la valeur</span>
+                                            <span>Période 1 Jour</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/ramassage.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                    <div class="text-justify">
+                                        <h4 class="text-success text-center fst-italic mb-3">Graphique Semaine</h4>
+                                        <p class="text-justify">
+                                            La ligne d’un nouveau plus haut de 52 semaines montre l’absence de cotations au-dessus
+                                        </p>
+                                        <p>
+                                            Également un très bel écartement des bandes de Bollinger.
+                                        </p>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <div class="d-flex justify-content-between bg-light-green-2 p-2">
+                                            <span>Nom de la valeur</span>
+                                            <span>Période 1 Semaine</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/ramassage-2.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2>Les différentes bulles</h2>
+                        <div class="container bg-light mb-4 p-3">
+                            <p>On distingue 2 types de bulle qui se différencient par la longueur du range c&#39;est-à-dire de la boîte de Darvas.</p>
+                        </div>
+                        <div class="row mb-4">
+                                <!-- La théorie de la boîte -->
+                                <div class="col-md-6 d-flex">
+                                    <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                        <div>
+                                            <h4 class="text-center fst-italic mb-3">La bulle de type 1</h4>
+                                            <p class="text-justify">
+                                                La mma 20 périodes est orientée à la hausse pendant la
+                                                formation de la bulle jusqu’à la sortie des cours de la bulle.
+                                                Le range est contenu à l’intérieur de la bulle.
+                                            </p>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/bulle-3.PNG') }}">
+                                                <img src="{{ asset('images/investisseur/bibliotheque/bulle-3.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 d-flex">
+                                    <div class="card p-4 d-flex flex-column justify-content-between border-0">
+                                        <div class="text-justify">
+                                            <h4 class="text-center fst-italic mb-3">La bulle de type 1</h4>
+                                            <p class="text-justify">
+                                                Lorsque le range se prolonge en dehors de la bulle, la
+                                                mma20 périodes alterne entre hausse et baisse jusqu’à la
+                                                sortie du range.
+                                            </p>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/bulle-range.PNG') }}">
+                                                <img src="{{ asset('images/investisseur/bibliotheque/bulle-range.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <h2>Les 2 graphiques de la méthode</h2>
+                        <div class="container bg-light mb-4 p-3">
+                            <p>Sur cet exemple ci-après nous avons :</p>
+                            <ul>
+                                <li>Une superbe bulle sur le graphique Jour</li>
+                                <li>Un bel écartement des bandes de Bollinger sur le graphique Semaine</li>
+                            </ul>
+                        </div>
+                        <div class="row mb-4 ustify-content-between">
+                            <div class="col-md-6 d-flex justify-content-center">
+                                <div class="card d-flex flex-column justify-content-between border-0">
+                                    <div class="text-center">
+                                        <div class="d-flex justify-content-between bg-light-blue p-2">
+                                            <span>PACIFIC</span>
+                                            <span>Période 1 Jour</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between bg-light-blue p-2">
+                                            <span>Jour</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/pacific-jour.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/pacific-jour.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle deZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 justify-content-center d-flex">
+                                <div class="card d-flex flex-column border-0">
+                                    <div class="text-center">
+                                        <div class="d-flex justify-content-between bg-light-green-2 p-2">
+                                            <span>Nom de la valeur</span>
+                                            <span>Période 1 Semaine</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between bg-light-green-2 p-2">
+                                            <span>Semaine</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/pacific-semaine.PNG') }}">
+                                                <img src="{{ asset('images/investisseur/bibliotheque/pacific-semaine.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle deZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+
+				</div>
+		
+				<div class="col-md-3 mt-3">
+					{% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+				</div>	
+			</div>
+		</div>
+
+{% endblock %}

@@ -6,7 +6,7 @@
 
 {% block body %}
 	{% include 'partials/header.html.twig' %}
-	<main class="custom-container mt-4">
+	<main class="custom-container mt-4" >
 		{#{% for label, messages in  app.flashes%}
 			{% for message in messages %}
 				<div class="alert alert-{{ label }} text-center fw-bold">
@@ -15,7 +15,7 @@
 			{% endfor %}
 		{% endfor %}#}
 
-		<div class="row g-5">
+		<div class="row g-5" data-turbo="false">
 			<div class="col-md-9">
 				{#<div class="container-fluid quote-container border mb-4">
 					<h1 class="quote-text">« Se simplifier la vie, c’est le luxe suprême ! » <span class="quote-author blockquote-footer">Léonard de Vinci</span></h1>

@@ -85,11 +85,11 @@
 			document.addEventListener('DOMContentLoaded', populateH2List);
 			document.addEventListener('turbo:load', populateH2List);
 
-		document.querySelectorAll('.clickable-div').forEach(function(div) {
-			div.addEventListener('click', function() {
-				window.location = div.getAttribute('data-href');
+			document.querySelectorAll('.clickable-div').forEach(function(div) {
+				div.addEventListener('click', function() {
+					window.location = div.getAttribute('data-href');
+				});
 			});
-		});
 
 		</script>
 	</body>
