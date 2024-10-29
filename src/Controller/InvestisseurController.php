@@ -43,7 +43,7 @@ class InvestisseurController extends AbstractController
         return $this->render('investisseur/methode/methodes-cycles-boursiers.html.twig');
     }
 
-    #[Route('/la-methode/boites-bulles', name: 'investisseur_methode_boites_bulles')]
+    #[Route('/la-methode/la-bulle', name: 'investisseur_methode_boites_bulles')]
     public function investisseur_methode_boites_bulles(): Response
     {
         return $this->render('investisseur/methode/methodes-bulles.html.twig');
@@ -61,13 +61,13 @@ class InvestisseurController extends AbstractController
         return $this->render('investisseur/bibliotheque.html.twig');
     }
 
-    #[Route('/bibliotheque/bulles', name: 'investisseur_bibliotheque_bulles')]
+    #[Route('/bibliotheque/bulles-type-1', name: 'investisseur_bibliotheque_bulles')]
     public function investisseur_bibliotheque_bulles(): Response
     {
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles.html.twig', []);
     }
 
-    #[Route('/bibliotheque/bulles-range', name: 'investisseur_bibliotheque_bulles_range')]
+    #[Route('/bibliotheque/bulles-type-2', name: 'investisseur_bibliotheque_bulles_range')]
     public function investisseur_bibliotheque_bulles_range(): Response
     {
         return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
