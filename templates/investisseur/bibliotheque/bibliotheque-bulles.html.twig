@@ -10,72 +10,23 @@
 		<div class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-					<div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
-						<span class="fi fi-fr" style="font-size: 30px"></span>
-						<span class="mx-3">
-							DRONE VOLT - ALDVR
-						</span>
+					<div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Les bulles de type 1</strong></h1>
 					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE JOUR
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										RANGE
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE SEMAINE
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										VALIDATION
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La caractéristique de la bulle de type 1 consiste en la formation d’’une bulle ovale formée par
+						les bandes de Bollinger, dont la ressemblance est très proche d’un ballon de Rugby. La bulle
+						est toujours inclinée vers le haut.</p>
+						<p class="text-justify">Toutes les bulles ne sont pas parfaites, de nombreuses bulles ont une forme baroque.</p>
+						<p>Les bulles doivent toujours être validées par un écartement des bandes de Bollinger sur l’unité de temps Semaine.</p>
+                        <div class="section text-center important-text text-success">
+						    <p>Vous pouvez consulter les 5 valeurs présentées</p>
+					    </div>
+                    </div>
 				</div>
 		
 				<div class="col-md-3 mt-3">
-					{% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+					{% include 'investisseur/widgets/sidebar-bibliotheque-value.html.twig' with {'bullesType1Data': bullesType1Data} %}
 				</div>	
 			</div>
 		</div>

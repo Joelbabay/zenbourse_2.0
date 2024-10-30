@@ -1,247 +1,243 @@
 @import url("https://fonts.cdnfonts.com/css/agency-fb");
 body {
-    font-family: "Segoe UI", arial, helvetica, sans-serif;
+  font-family: "Segoe UI", arial, helvetica, sans-serif;
 }
 
 h1,
 h2,
 h3,
 h4 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 input::-webkit-input-placeholder {
-    color: lightgray !important;
-    /* Pour Chrome, Safari et Opera */
+  color: lightgray !important;
+  /* Pour Chrome, Safari et Opera */
 }
 
 input::-moz-placeholder {
-    color: lightgray lightgray;
-    /* Pour Firefox 19+ */
+  color: lightgray lightgray;
+  /* Pour Firefox 19+ */
 }
 
 .form-select option[selected] {
-    color: lightgray !important;
-    /* Couleur du placeholder */
+  color: lightgray !important;
+  /* Couleur du placeholder */
 }
 
 html,
 body {
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    background-color: #ececec !important;
-    height: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background-color: #ececec !important;
+  height: 100%;
 }
 
 .custom-container {
-    max-width: 1700px;
-    margin: 0 auto;
-    padding-right: 12px;
-    padding-left: 12px;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding-right: 12px;
+  padding-left: 12px;
 }
 
 .limited-width {
-    max-width: 1700px;
+  max-width: 1700px;
 }
 
 .custom-container h2 {
-    font-style: italic;
-    font-weight: 700;
-    font-size: 32px;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 32px;
 }
 
 .clickable-div {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .clickable-div:hover {
-    background-color: #f0f0f0;
-    /* Changement de couleur au survol */
+  background-color: #f0f0f0;
+  /* Changement de couleur au survol */
 }
 
 a {
-    /*color: #183d3d;*/
+  /*color: #183d3d;*/
 }
 
 :root {
-    --bs-primary: #ff5733;
-    /* Remplacez #ff5733 par la couleur de votre choix */
+  --bs-primary: #ff5733;
+  /* Remplacez #ff5733 par la couleur de votre choix */
 }
 
 .bg-zen-primary {
-    background-color: #370028;
+  background-color: #370028;
 }
 
 .menu-home a {
-    color: #370028;
-    border-bottom: 3px solid transparent;
-    /* Bordure transparente par défaut */
-    padding-bottom: 3px;
-    text-align: center;
-    /* Transition douce pour éviter le clignotement */
+  color: #370028;
+  border-bottom: 3px solid transparent;
+  /* Bordure transparente par défaut */
+  padding-bottom: 3px;
+  text-align: center;
+  /* Transition douce pour éviter le clignotement */
 }
 
 @media (max-width: 768px) {
-    .menu-home {
-        gap: 5px;
-        /* Réduit l'espacement entre les éléments pour les petits écrans */
-    }
+  .menu-home {
+    gap: 5px;
+    /* Réduit l'espacement entre les éléments pour les petits écrans */
+  }
 }
 
 .menu-home a.active {
-    color: #370028 !important;
-    font-weight: bold;
-    border-bottom-color: #370028;
-    /* Changer uniquement la couleur de la bordure au survol ou actif */
+  color: #370028 !important;
+  font-weight: bold;
+  border-bottom-color: #370028;
+  /* Changer uniquement la couleur de la bordure au survol ou actif */
 }
 
 .menu-investisseur a {
-    color: #000;
+  color: #000;
 }
 
 .menu-investisseur a.active {
-    color: #000 !important;
-    font-weight: bold;
-    border-bottom: 3px solid #257d43;
+  color: #000 !important;
+  font-weight: bold;
+  border-bottom: 3px solid #257d43;
 }
 
 .main-nav {
-    background-color: #cbdfd1;
+  background-color: #cbdfd1;
 }
 
 .main-nav-g {
-    font-size: 14px;
-    font-weight: bold;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .sub {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 .main-nav-intraday {
-    background-color: #b3edff;
+  background-color: #b3edff;
 }
 
 .menu-intraday a {
-    color: #000 !important;
+  color: #000 !important;
 }
 
 .menu-intraday a.active {
-    color: #000;
-    font-weight: bold;
-    border-bottom: 3px solid #0a63fc;
+  color: #000;
+  font-weight: bold;
+  border-bottom: 3px solid #0a63fc;
 }
 
 .text-zen-primary {
-    color: #183d3d;
+  color: #183d3d;
 }
 
 .bg-zen-primary a {
-    color: #fff;
+  color: #fff;
 }
 
 .methode-section a {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 .l-sidebar {
-    position: relative;
-    top: 10px;
+  position: relative;
+  top: 10px;
 }
 
 .btn-investisseur {
-    color: #000 !important;
-    background-color: #cbdfd1;
+  color: #000 !important;
+  background-color: #cbdfd1;
 }
 
 .btn-intraday {
-    color: #000 !important;
-    background-color: #b3edff;
+  color: #000 !important;
+  background-color: #b3edff;
 }
 
 .blog-footer {
-    padding: 2.5rem 0;
-    color: #727272;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-top: 0.05rem solid #e5e5e5;
+  padding: 2.5rem 0;
+  color: #727272;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-top: 0.05rem solid #e5e5e5;
 }
 
 .header-logo {
-    font-size: 1.7rem;
-    text-decoration: none;
+  font-size: 1.7rem;
+  text-decoration: none;
 }
 
 .blog-post-title {
-    margin-bottom: 0.25rem;
-    font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 2.5rem;
 }
 
 .blog-post {
-    margin-bottom: 4rem;
+  margin-bottom: 4rem;
 }
 
 .blog-post-meta {
-    margin-bottom: 1.25rem;
-    color: #727272;
+  margin-bottom: 1.25rem;
+  color: #727272;
 }
 
 .blog-nav-second {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 .blog-nav {
-    line-height: 1;
-    border-bottom: 1px solid rgb(229, 229, 229);
+  line-height: 1;
+  border-bottom: 1px solid rgb(229, 229, 229);
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .zen-button {
-    background-color: #370028;
-    border: #370028;
+  background-color: #370028;
+  border: #370028;
 }
 
 .zen-button:hover {
-    background-color: #7e025d;
-    color: #fff !important;
+  background-color: #7e025d;
+  color: #fff !important;
 }
 
 .form-control:focus {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 .dropdown-menu a {
-    color: #000 !important;
+  color: #000 !important;
 }
-
 
 /* padding-bottom and top for image */
 
 .mfp-no-margins img.mfp-img {
-    padding: 0;
+  padding: 0;
 }
-
 
 /* position of shadow behind the image */
 
 .mfp-no-margins .mfp-figure:after {
-    top: 0;
-    bottom: 0;
+  top: 0;
+  bottom: 0;
 }
-
 
 /* padding for main container */
 
 .mfp-no-margins .mfp-container {
-    padding: 0;
+  padding: 0;
 }
-
 
 /*
 
@@ -252,27 +248,26 @@ uncomment this part if you haven't added this code anywhere else
 
 .mfp-with-zoom .mfp-container,
 .mfp-with-zoom.mfp-bg {
-    opacity: 0;
-    -webkit-backface-visibility: hidden;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+  opacity: 0;
+  -webkit-backface-visibility: hidden;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
 }
 
 .mfp-with-zoom.mfp-ready .mfp-container {
-    opacity: 1;
+  opacity: 1;
 }
 
 .mfp-with-zoom.mfp-ready.mfp-bg {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 .mfp-with-zoom.mfp-removing .mfp-container,
 .mfp-with-zoom.mfp-removing.mfp-bg {
-    opacity: 0;
+  opacity: 0;
 }
-
 
 /*label.required:after {
     background: red;
@@ -289,192 +284,200 @@ uncomment this part if you haven't added this code anywhere else
 }*/
 
 label.required:after {
-    content: "*";
-    color: red;
-    display: inline-block;
-    filter: opacity(75%);
-    height: 4px;
-    position: relative;
-    right: -2px;
-    top: -6px;
-    width: 4px;
-    z-index: 99;
+  content: "*";
+  color: red;
+  display: inline-block;
+  filter: opacity(75%);
+  height: 4px;
+  position: relative;
+  right: -2px;
+  top: -6px;
+  width: 4px;
+  z-index: 99;
 }
 
 .quote-container {
-    background-image: url("../images/ban3.jpg");
-    background-size: 100% auto;
-    /* Ajuste la largeur à 100% et la hauteur automatiquement */
-    min-height: 410px;
-    background-repeat: no-repeat;
-    width: 100%;
-    padding: 50px 20px;
-    z-index: 1;
-    overflow: hidden;
+  background-image: url("../images/ban3.jpg");
+  background-size: 100% auto;
+  /* Ajuste la largeur à 100% et la hauteur automatiquement */
+  min-height: 410px;
+  background-repeat: no-repeat;
+  width: 100%;
+  padding: 50px 20px;
+  z-index: 1;
+  overflow: hidden;
 }
 
 .quote-text {
-    font-size: 1.9rem;
-    font-style: italic;
-    color: #000000;
+  font-size: 1.9rem;
+  font-style: italic;
+  color: #000000;
 }
 
 .quote-author {
-    font-style: italic;
-    font-size: 1rem;
-    color: #6c6c6c;
+  font-style: italic;
+  font-size: 1rem;
+  color: #6c6c6c;
 }
 
 .middle-quote {
-    font-size: 1.7rem;
-    font-style: italic;
-    margin-top: 20px;
-    margin-left: 3%;
-    color: #000000;
+  font-size: 1.7rem;
+  font-style: italic;
+  margin-top: 20px;
+  margin-left: 3%;
+  color: #000000;
 }
 
 .right-quote {
-    font-size: 1.7rem;
-    font-style: italic;
-    margin-top: 30px;
-    margin-left: 7%;
-    color: #3faf45;
+  font-size: 1.7rem;
+  font-style: italic;
+  margin-top: 30px;
+  margin-left: 7%;
+  color: #3faf45;
 }
 
 @font-face {
-    font-family: "Agency FB Bold";
-    font-style: normal;
-    font-weight: normal;
-    src: local("Agency FB Bold"), url("../font/AgencyFBBold.ttf") format("ttf");
+  font-family: "Agency FB Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Agency FB Bold"), url("../font/AgencyFBBold.ttf") format("ttf");
 }
 
 .left-section {
-    font-family: "Agency FB Bold", sans-serif;
-    font-size: 10rem;
-    color: #ca0101;
-    line-height: 1;
-    text-align: center;
+  font-family: "Agency FB Bold", sans-serif;
+  font-size: 10rem;
+  color: #ca0101;
+  line-height: 1;
+  text-align: center;
 }
 
 .right-section {
-    font-size: 23px;
+  font-size: 23px;
 }
 
 .r-title {
-    font-size: 4rem;
-    font-family: "Agency FB Bold", sans-serif;
-    color: #ca0101;
+  font-size: 4rem;
+  font-family: "Agency FB Bold", sans-serif;
+  color: #ca0101;
 }
 
 .s-title {
-    font-size: 4rem;
-    font-family: "Agency FB Bold", sans-serif;
-    color: #3b9e40;
+  font-size: 4rem;
+  font-family: "Agency FB Bold", sans-serif;
+  color: #3b9e40;
 }
 
 .content-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
 }
 
 .right-section p {
-    margin: 0;
+  margin: 0;
 }
 
 .important-text {
-    color: #3b9e40;
-    font-size: 1.5rem;
-    text-align: center;
+  color: #3b9e40;
+  font-size: 1.5rem;
+  text-align: center;
 }
 
 #h2-list li {
-    padding-top: 13px;
+  padding-top: 13px;
 }
 
 .sidebar {
-    border: 1px solid #a6a6a6;
-    background-color: #fff;
+  border: 1px solid #a6a6a6;
+  background-color: #fff;
 }
 
 .home .box-title {
-    background-color: #d9d9d9;
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
+  background-color: #d9d9d9;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
 }
 
 .home .sidebar-title {
-    font-size: 1.7rem;
-    color: #370028;
+  font-size: 1.7rem;
+  color: #370028;
 }
 
 .home li {
-    color: #370028;
+  color: #370028;
 }
 
 .home li a {
-    color: #370028;
+  color: #370028;
 }
 
 .investisseur .box-title {
-    background-color: #bdd0c3;
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
+  background-color: #bdd0c3;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
 }
 
 .investisseur .sidebar-title {
-    font-size: 1.7rem;
-    color: #257d43;
+  font-size: 1.7rem;
+  color: #257d43;
 }
 
 .investisseur li {
-    color: #257d43;
+  color: #257d43;
 }
 
 .investisseur li a {
-    color: #257d43;
+  color: #257d43;
 }
 
 .intraday .box-title {
-    background-color: #d3e0ef;
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
+  background-color: #d3e0ef;
+  border-top-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
 }
 
 .intraday .sidebar-title {
-    font-size: 1.7rem;
-    color: #0a63fc;
+  font-size: 1.7rem;
+  color: #0a63fc;
 }
 
 .intraday li {
-    color: #0a63fc;
+  color: #0a63fc;
 }
 
 .intraday li a {
-    color: #0a63fc;
+  color: #0a63fc;
 }
 
 .text-justify {
-    text-align: justify;
+  text-align: justify;
 }
 
 .bg-light-green {
-    background-color: #e2f4e2;
+  background-color: #e2f4e2;
+}
+
+.bg-green {
+  background-color: #cbdfd1;
+}
+
+.bg-blue {
+  background-color: #c5dbff;
 }
 
 .bg-light-yellow {
-    background-color: #f9f5e3;
+  background-color: #f9f5e3;
 }
 
 .bg-light-blue {
-    background-color: #e7ffff;
+  background-color: #e7ffff;
 }
 
 .bg-light-green-2 {
-    background-color: #e9ffea;
+  background-color: #e9ffea;
 }
 
 .bg-light {
-    background-color: #fff;
+  background-color: #fff;
 }
