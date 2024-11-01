@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Zenbourse - Méthode Investisseur - Méthode - Vague d'elliot
+	Zenbourse - Méthode Investisseur - Méthode - Les vagues d’ELLIOTT
 {% endblock %}
 
 {% block body %}
@@ -9,34 +9,124 @@
 		<main class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-                    <div class="col px-0 text-center">
-					    <h1 class="display-5 fst-italic"><strong>Titre</strong></h1>
+                    <div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Les vagues d’ELLIOTT</strong></h1>
 				    </div>
-                    <p>Text ...</p>
-                    <h2>Titre 1</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
-                    <h2>Titre 3</h2>
-                    <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
-                    <h2>Titre 4</h2>
-                    <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
+                        <div class="row">
+                            <!-- Colonne de l'image -->
+                            <div class="col-md-6 text-center">
+                                <a class="image-popup-no-margins" href="{{ asset('images/investisseur/methode/vague-elliott/vague-elliott.png') }}">
+                                    <img src="{{ asset('images/investisseur/methode/vague-elliott/vague-elliott.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="vague-elliott">
+                                </a>
+                            </div>
+                            
+                            <!-- Colonne du texte -->
+                            <div class="col-md-6 d-flex flex-column justify-content-between">
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center p-3">
+                                    <span class="text-success" style="font-size: 2rem;">Apprenez à jouer la vague <strong style="font-size: 4rem;">3</strong> </span>
+                                </div>
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center p-3">
+                                    <span class="text-success text-right" style="text-align: right;font-size: 2rem;">La vague la plus puissante</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container bg-light mb-4 p-3">
+                        <h5 class="text-center important-text text-success">Démystifions les vagues d’ELLIOTT</h5>
+                        <p class="text-justify">C’est la représentation graphique de la psychologie des investisseurs sur les marchés financiers. L’affrontement des partisans de la hausse et des partisans de la baisse.</p>
+                        <p class="text-justify">Il n’est pas nécessaire de descendre dans la frontalisation, mais de bien maitriser le cycle élémentaire en 5 vagues. Les 3
+                        vagues d’impulsion <b class="text-success">1, 3 et 5,</b> et les 2 vagues correctives <b class="text-danger">2 et 4.</b></p>
+                    </div>
+
+                    <h2 class="text-success">La vague 1</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La vague 1 correspond aux investisseurs qui disposent d’informations ou qui anticipent la fin de la baisse. Les nouveaux
+                        vendeurs à découvert devenant de plus en plus rares les anticipateurs déclanchent les stops des vendeurs. Ces achats
+                        agissent comme une accélération de la hausse.</p>
+                    </div>
+
+                    <h2 class="text-danger">La vague 2</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">Les vendeurs à découvert pensent que la hausse formée par la vague 1 n’est qu’une simple reprise technique. Lorsque la
+                        faiblir, les vendeurs à découvert reviennent.</p>
+                        <ul>
+                            <li>Le mouvement baissier enfonce le départ de la vague !, la baisse va continuer</li>
+                            <li>Le mouvement baissier n’est pas suffisamment puissant pour enfoncer le creux de marché, les haussiers reprennent la main</li>
+                        </ul>
+                        <p class="text-justify">La vague 2 ne doit pas retracer plus de 50% de la vague 1</p>
+                        <ul>
+                            <li>Un retracement de plus de 50% maintiendra une latéralisation des cours</li>
+                            <li>Un retracement jusqu’à 30% permet d’avoir une très belle boîte ou bulle</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-4 p-3">
+                        <p class="text-success important-text" style="font-size: 2.5rem;">Vague 1 + Vague 2 = Bulle de Zenbourse</p>
+                    </div>
+
+                    <h2 class="text-success">La vague 3</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La vague 3 est une vague de consensus.</p>
+                        <p class="text-justify">Arrivent des informations statistiques. Les statistiques macro-économiques s’améliorent. Les investisseurs anticipent une
+                        embellie de l’économie. Les volumes d’échanges augmentent. Les « grosses mains », institutionnels et hedge fund achètent.
+                        Les vendeurs s’avouent vaincus, s’empressent de racheter leurs positions pour limiter leurs pertes, provoquant une hausse
+                        des cours par la demande plus forte. Ils se portent aussitôt à l’achat pour bénéficier de la hausse des cours en espérant
+                        réduire leurs pertes. Cette forte demande a pour effet de faire monter les cours pour le bonheur des patients qui ont su
+                        attendre le départ de la vague 3.</p>
+                        <p class="text-success important-text">
+                            La sortie de la bulle de Zenbourse intervient au début de la vague 3
+                        </p>
+                    </div>
+
+                    <h2 class="text-danger">La vague 4</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">C’est le moment de la prise de bénéfice., le retour aux liquidités pour les prochanes positions.</p>
+                        <p class="text-justify">La vague 4 sera baissière et courte.</p>
+                    </div>
+
+                    <h2 class="text-success">La vague 5</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La vague 5 sera la vague « mania » celle des particuliers qui ont lu dans des parutions économiques que les résultats sont bons.</p>
+                        <p class="text-justify">La hausse sera d’une faible amplitude, le marché l’a déjà anticipé dans les cours. Le marché commence à anticipé les mauvaises nouvelles à venir.</p>
+                    </div>
+
+                    <div class="row mb-4">
+                        <!-- Colonne de l'image -->
+                        <div class="col-md-6 text-center">
+                            <a class="image-popup-no-margins" href="{{ asset('images/investisseur/methode/vague-elliott/vague-elliott-2.PNG') }}">
+                                <img src="{{ asset('images/investisseur/methode/vague-elliott/vague-elliott-2.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                            </a>
+                        </div> 
+                        <!-- Colonne du texte -->
+                        <div class="col-md-6 d-flex flex-column justify-content-between">
+                            <div class="flex-grow-1 d-flex flex-column p-3 bg-light">
+                                <h5 class="text-center mb-4 text-success">HIMAX TECHNOLOGIES</h5>
+                                <p class="text-justify">
+                                    Les 2 signaux de l’indicateur Zenbourse
+                                    encadrent la bulle formée par les
+                                    bandes de Bollinger.
+                                </p>
+                                <p class="text-justify">
+                                    La boîte de DARVAS s’inscrit à l’intérieur de la bulle.
+                                </p>
+                                <p class="text-justify">
+                                    Fort ramassage de titres pendant la construction de la bulle.
+                                </p>
+                                <p class="text-justify">
+                                    Pic de volumes le jour de la sortie de la bulle.
+                                </p>
+                                <p class="text-justify">
+                                    Sortie impulsive de la bulle avec une variation des cours de 20,74%.
+                                </p>
+                                <p class="text-justify">
+                                    Dans cet exemple, le retracement de la vague est d’environ 25%.
+                                </p>
+                            </div>
+                        </div>    
+                    </div>
+
 				</div>
 				<div class="col-md-3 mt-3">
 					{% include 'investisseur/widgets/sidebar.html.twig' %}

@@ -479,5 +479,5 @@ label.required:after {
 }
 
 .bg-light {
-  background-color: #fff;
+  background-color: #fff !important;
 }
