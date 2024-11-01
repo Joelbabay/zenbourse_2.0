@@ -14,23 +14,23 @@
 
                         {% if item.children|length > 0 %}
                             {% for child in item.children %}
-                                {% if app.request.attributes.get('_route') == child.route %}
+                                {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type1' and item.label == 'Bibliothèque') %}
                                     {% set child_active = true %}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
+
                         {% set is_active = parent_active or child_active %}
                         <li class="nav-item px-3">
                             <a class="py-1 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
                                 {{ item.label }}
                             </a>
-                        </li>        
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </nav>
-
 
     <!-- Sous-menu dans une nouvelle div -->
     <div class="sub-menu-container bg-light">
@@ -46,31 +46,41 @@
         {% endfor %}
     {% endif %}
     {% set is_active = parent_active or child_active %}
+                {% if item.children|length > 0 %}
+                    {% for child in item.children %}
+                        {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles', 'investisseur_bibliotheque_bulles_type1'] and child.label == 'bulles type 1') %}
+                            {% set child_active = true %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-    {% if is_active and item.children|length > 0 %}
-        <nav class="navbar navbar-expand-lg text-uppercase" style="font-weight: 400;">
-            <div class="container-fluid limited-width">
-                <span class="me-3 fw-bold">{{ item.label }} -></span>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav-{{ item.route }}">
-                    <ul class="navbar-nav">
-                        {% set sorted_children = item.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
-                        {% for child in sorted_children %}
-                            <li class="nav-item px-3">
-                                <a class="py-1 nav-link link-secondary {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
-                                    {{ child.label }}
-                                </a>
-                            </li>  
-                        {% endfor %}      
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    {% endif %}
-{% endfor %}
+                {% set is_active = parent_active or child_active %}
 
+                {% if is_active and item.children|length > 0 %}
+                    <!-- Affiche uniquement le sous-menu correspondant lorsqu'il est actif -->
+                    <nav class="navbar navbar-expand-lg text-uppercase" style="font-weight: 400;">
+                        <div class="container-fluid limited-width">
+                            <span class="me-3 fw-bold">{{ item.label }} -></span>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav-{{ item.route }}" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav-{{ item.route }}">
+                                <ul class="navbar-nav">
+                                    {% set sorted_children = item.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
+                                    {% for child in sorted_children %}
+                                        {% set child_is_active = app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type1' and child.label == 'bulles type 1') %}
+                                        <li class="nav-item px-3">
+                                            <a class="py-1 nav-link link-secondary {{ child_is_active ? 'active' : '' }}" href="{{ path(child.route) }}">
+                                                {{ child.label }}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 </div>

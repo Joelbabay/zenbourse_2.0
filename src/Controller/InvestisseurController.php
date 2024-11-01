@@ -72,10 +72,10 @@ class InvestisseurController extends AbstractController
     #[Route('/la-methode', name: 'investisseur_methode')]
     public function investisseur_methode(): Response
     {
-        return $this->render('investisseur/index.html.twig');
+        return $this->render('investisseur/methode.html.twig');
     }
 
-    #[Route('/la-methode/vagues-elliot', name: 'investisseur_methode_vagues_elliot')]
+    #[Route('/la-methode/vagues-elliott', name: 'investisseur_methode_vagues_elliot')]
     public function investisseur_methode_vagues_elliot(): Response
     {
         return $this->render('investisseur/methode/methodes-vagues-elliot.html.twig');
