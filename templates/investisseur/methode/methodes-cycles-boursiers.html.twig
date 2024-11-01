@@ -9,34 +9,58 @@
 		<main class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-                    <div class="col px-0 text-center">
-					    <h1 class="display-5 fst-italic"><strong>Titre</strong></h1>
+                    <div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Les cycles boursiers</strong></h1>
 				    </div>
-                    <p>Text ...</p>
-                    <h2>Titre 1</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
-                    <h2>Titre 3</h2>
-                    <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
-                    <h2>Titre 4</h2>
-                    <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-				    </div>
+                        <div class="row">
+                            <!-- Colonne du texte -->
+                            <div class="col-md-6 d-flex flex-column justify-content-between">
+                                <div class="flex-grow-1 d-flex flex-column justify-content-center p-3">
+                                    <p class="text-success text-center" style="font-size: 1.5rem;">Les 4 étapes <br>d’un cycle boursier</p>
+                                </div>
+                            </div>
+                            <!-- Colonne de l'image -->
+                            <div class="col-md-6 text-center">
+                                <a class="image-popup-no-margins" href="{{ asset('/images/investisseur/methode/cycle-boursier/cycles-boursier-1.png') }}">
+                                    <img src="{{ asset('images/investisseur/methode/cycle-boursier/cycles-boursier-1.png') }}" class="img-fluid rounded mx-auto d-block" alt="vague-elliott">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>L’accumulation</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La première étape du marché boursier est connue sous le nom d’accumulation. C’est le moment où les
+                        investisseurs financiers intelligents commencent à acheter des actions qu’ils estiment sous-évaluées. Ces
+                        investisseurs sont généralement des institutions ou des personnes fortunées ayant accès à des informations et à
+                        des ressources que l’investisseur moyen ne possède pas.</p>
+                    </div>
+
+                    <h2 class="text-success">La hausse</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La deuxième étape du marché boursier est connue sous le nom de “markup stage”. C’est à ce moment-là que les
+                        prix commencent à augmenter, car de plus en plus d’investisseurs prennent conscience de l’existence de l’action
+                        et veulent en profiter. C’est généralement à ce moment-là que le grand public commence à acheter des actions.</p>
+                    </div>
+
+                    <h2>La distribution</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">
+                            La troisième étape du marché boursier est connue sous le nom d’étape de distribution. C’est le moment où les
+                            institutions et les investisseurs financiers commencent à vendre leurs actions. Ils le font parce qu’ils pensent que
+                            l’action a atteint son sommet et qu’une correction s’impose.
+                        </p>
+                    </div>
+
+                    <h2 class="text-danger">Le déclin</h2>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">
+                            La quatrième et dernière phase du marché boursier est connue sous le nom de phase de déclin. C’est le moment
+                            où les prix commencent à baisser car de plus en plus d’investisseurs vendent leurs actions. Cela se produit
+                            généralement en cas de mauvaises nouvelles concernant l’entreprise ou de conditions générales de marché
+                            défavorables.
+                        </p>
+                    </div>
 				</div>
 				<div class="col-md-3 mt-3">
 					{% include 'investisseur/widgets/sidebar.html.twig' %}

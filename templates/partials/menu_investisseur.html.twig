@@ -36,16 +36,9 @@
     <div class="sub-menu-container bg-light">
         <div class="sub">
             {% for item in get_menu('INVESTISSEUR') %}
-    {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
-    {% set child_active = false %}
-    {% if item.children|length > 0 %}
-        {% for child in item.children %}
-            {% if app.request.attributes.get('_route') == child.route or app.request.attributes.get('_route') starts with 'investisseur_bibliotheque_bulles_type1' %}
-                {% set child_active = true %}
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-    {% set is_active = parent_active or child_active %}
+                {% set parent_active = (app.request.attributes.get('_route') == item.route) %}
+                {% set child_active = false %}
+
                 {% if item.children|length > 0 %}
                     {% for child in item.children %}
                         {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles', 'investisseur_bibliotheque_bulles_type1'] and child.label == 'bulles type 1') %}
