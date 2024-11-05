@@ -8,8 +8,8 @@
           <a class="navbar-text me-3 fw-bold" href="#" style="color: #370028;">ZENBOURSE 50 -></a>
           <ul class="navbar-nav">
             {% for item in get_menu('HOME')  %}
-              <li class="nav-item px-3">
-                <a class="py-3 nav-link {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
+              <li class="nav-item">
+                <a class="p-3 nav-link {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
               </li>
             {% endfor %}
           </ul>

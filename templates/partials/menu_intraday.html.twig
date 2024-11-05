@@ -20,8 +20,8 @@
                             {% endfor %}
                         {% endif %}
                         {% set is_active = parent_active or child_active %}
-                        <li class="nav-item px-3">
-                            <a class="py-3 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
+                        <li class="nav-item">
+                            <a class="p-3 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
                                 {{ item.label }}
                             </a>
                         </li>        
@@ -60,8 +60,8 @@
                                 <ul class="navbar-nav">
                                     {% set sorted_children = item.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
                                     {% for child in sorted_children %}
-                                    <li class="nav-item px-3">
-                                        <a class="py-2 nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
+                                    <li class="nav-item">
+                                        <a class="py-2 px-3 nav-link {{ app.request.attributes.get('_route') == child.route ? 'active' : '' }}" href="{{ path(child.route) }}">
                                             {{ child.label }}
                                         </a>
                                     </li>  
