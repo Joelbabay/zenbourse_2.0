@@ -1,5 +1,5 @@
 <div class="zen-menu menu-investisseur">
-    <nav class="navbar navbar-expand-lg text-uppercase main-nav main-nav-g">
+    <nav class="navbar navbar-expand-lg text-uppercase main-nav main-nav-g p-0">
         <div class="container-fluid limited-width">
             <a class="navbar-text me-3 fw-bold" href="#">ZENBOURSE 50 -></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,7 @@
 
                         {% set is_active = parent_active or child_active %}
                         <li class="nav-item px-3">
-                            <a class="py-1 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
+                            <a class="py-3 nav-link {{ is_active ? 'active' : '' }}" href="{{ path(item.route) }}">
                                 {{ item.label }}
                             </a>
                         </li>
@@ -51,7 +51,7 @@
 
                 {% if is_active and item.children|length > 0 %}
                     <!-- Affiche uniquement le sous-menu correspondant lorsqu'il est actif -->
-                    <nav class="navbar navbar-expand-lg text-uppercase" style="font-weight: 400;">
+                    <nav class="navbar navbar-expand-lg text-uppercase p-0" style="font-weight: 400;">
                         <div class="container-fluid limited-width">
                             <span class="me-3 fw-bold">{{ item.label }} -></span>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav-{{ item.route }}" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
                                     {% for child in sorted_children %}
                                         {% set child_is_active = app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type1' and child.label == 'bulles type 1') %}
                                         <li class="nav-item px-3">
-                                            <a class="py-1 nav-link link-secondary {{ child_is_active ? 'active' : '' }}" href="{{ path(child.route) }}">
+                                            <a class="py-2 nav-link link-secondary {{ child_is_active ? 'active' : '' }}" href="{{ path(child.route) }}">
                                                 {{ child.label }}
                                             </a>
                                         </li>

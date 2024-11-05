@@ -77,9 +77,9 @@ a {
 
 .menu-home a {
   color: #370028;
-  border-bottom: 3px solid transparent;
+  border-bottom: 4px solid transparent;
   /* Bordure transparente par défaut */
-  padding-bottom: 3px;
+  padding-bottom: 4px;
   text-align: center;
   /* Transition douce pour éviter le clignotement */
 }
@@ -105,7 +105,7 @@ a {
 .menu-investisseur a.active {
   color: #000 !important;
   font-weight: bold;
-  border-bottom: 3px solid #257d43;
+  border-bottom: 4px solid #257d43;
 }
 
 .main-nav {
@@ -115,6 +115,13 @@ a {
 .main-nav-g {
   font-size: 14px;
   font-weight: bold;
+}
+
+.main-nav-g a {
+  border-bottom: 4px solid transparent;
+}
+.sub-menu-container a {
+  border-bottom: 4px solid transparent;
 }
 
 .sub {
@@ -132,7 +139,7 @@ a {
 .menu-intraday a.active {
   color: #000;
   font-weight: bold;
-  border-bottom: 3px solid #0a63fc;
+  border-bottom: 4px solid #0a63fc;
 }
 
 .text-zen-primary {
