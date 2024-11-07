@@ -10,33 +10,90 @@
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
                     <div class="col px-0 text-center">
-					    <h1 class="display-5 fst-italic"><strong>Titre</strong></h1>
+					    <h1 class="display-5 fst-italic"><strong>Les outils</strong></h1>
 				    </div>
-                    <p>Text ...</p>
-                    <h2>Titre 1</h2>
+                    <p>Zenbourse met à votre disposition :</p>
+                    <ul>
+                        <li>Un Proscrenner permettant de d&#39;extraire d&#39;une base de donnée les valeurs que vous devez analyser avant de prendre position</li>
+                        <li>Un indicateur à installer dans votre espace de travail</li>
+                        <li>Un espace de travail que vous pouvez reproduire</li>
+                    </ul>
+                    <h2>Le proscreener</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <p class="text-justify">
+                            Le proscreener sélectionne les valeurs à analyser. Acheter une valeur de la liste sans
+                            analyse c&#39;est prendre un risque énorme. Un screener n&#39;est pas parfait. Aucun
+                            screener n&#39;est parfait.
+                        </p>
+                        <p class="text-justify">
+                            le screener doit extraire les valeurs qui correspondent à la méthode. Par conséquent il doit être souple.
+                        </p>
+                        <ul>
+                            <li>Critères trop exigeants, certaines valeurs intéressantes ne seront pas extraites pour un détail</li>
+                            <li>Critères trop souples, trop de valeurs extraites</li>
+                        </ul>
 				    </div>
-                    <h2>Titre 3</h2>
+
+                    <h2>L’indicateur ZEN</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <p class="text-justify">L&#39;indicateur ZEN est un indicateur créé par Zenbourse. Il s&#39;affiche sur les graphiques sous la forme d&#39;une barre histogramme</p>
+                        <p class="text-justify">
+                            Lorsqu&#39;une valeur est listée par le screener, un barre histogramme figure sur le graphique. Les graphiques affichent l&#39;historique des barres.
+                        </p>
 				    </div>
-                    <h2>Titre 4</h2>
+
+                    <h2>L’espace de travail</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <p>L&#39;espace de travail conseillé est très simple, 2 graphiques pour les unités de temps Jour et Semaine.</p>
 				    </div>
+                    <div class="mb-4">
+                        <div class="row justify-content-between">
+                            <div class="col-md-6 d-flex justify-content-start">
+                                <div class="card d-flex flex-column border-0">
+                                    <div class="text-center">
+                                        <div class="text-center bg-light-blue p-2">
+                                            <span>Graphique Jour</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/ramassage.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex justify-content-end">
+                                <div class="card d-flex flex-column border-0">
+                                    <div class="text-center">
+                                        <div class="text-center bg-light-green p-2">
+                                            <span>Graphique Semaine</span>
+                                        </div>
+                                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/bibliotheque/cassure-2.PNG') }}">
+                                            <img src="{{ asset('images/investisseur/bibliotheque/ramassage.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+				    </div>
+
+                    <h2>Particularité graphique Jour</h2>
+                    <div class="container-fluid bg-light mb-4 p-3">
+                        <p>Sur le graphique Jour, nous avons superposé 2 zones graphiques pour les cours, dans le but de mieux apprécier la bulle.</p>
+                        <ul>
+                            <li>La première zone graphique des prix représente les seules bandes de Bollinger. Le fait de réduire la hauteur permet de mieux apprécier la bulle</li>
+                            <li>La seconde zone graphique des prix beaucoup plus haute reprend toutes les informations</li>
+                        </ul>
+                        <p>Nous avons ensuite :</p>
+                        <ul>
+                            <li>L’indicateur ZEN</li>
+                            <li>Les volumes</li>
+                        </ul>
+				    </div>
+                    <div class="container-fluid bg-light mb-4 p-3">
+                        <a class="image-popup-no-margins" href="{{ asset('images/investisseur/outils/zenbourse-outils-img.PNG') }}">
+                            <img src="{{ asset('images/investisseur/outils/zenbourse-outils-img.PNG') }}" class="img-fluid rounded mx-auto d-block" alt="La bulle de ZenBourse">
+                        </a>
+				    </div>
+                    
 				</div>
 				<div class="col-md-3 mt-3">
 					{% include 'investisseur/widgets/sidebar.html.twig' %}

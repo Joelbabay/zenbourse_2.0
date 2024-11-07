@@ -7,7 +7,7 @@
 {% block body %}
 	{% include 'partials/header.html.twig' %}
 
-		<div class="custom-container">
+		<main class="custom-container">
 			<div class="row g-5">
 				<div class="col-md-9 mt-3">
 					<div class="container my-5">
@@ -224,7 +224,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                    </div>
 
                         <h2>Les différentes bulles</h2>
                         <div class="container bg-light mb-4 p-3">
@@ -276,8 +276,8 @@
                                 <li>Un bel écartement des bandes de Bollinger sur le graphique Semaine</li>
                             </ul>
                         </div>
-                        <div class="row mb-4 ustify-content-between">
-                            <div class="col-md-6 d-flex justify-content-center">
+                        <div class="row mb-4 justify-content-between">
+                            <div class="col-md-6 d-flex justify-content-start">
                                 <div class="card d-flex flex-column justify-content-between border-0">
                                     <div class="text-center">
                                         <div class="d-flex justify-content-between bg-light-blue p-2">
@@ -293,7 +293,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 justify-content-center d-flex">
+                            <div class="col-md-6 justify-content-end d-flex">
                                 <div class="card d-flex flex-column border-0">
                                     <div class="text-center">
                                         <div class="d-flex justify-content-between bg-light-green-2 p-2">
@@ -317,6 +317,6 @@
 					{% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
 				</div>	
 			</div>
-		</div>
+		</main>
 
 {% endblock %}
