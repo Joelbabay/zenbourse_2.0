@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Zenbourse - Méthode Investisseur - Bibliothèque - Bulle Type 2
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+
+		<div class="custom-container">
+			<div class="row g-5 mt-1">
+				<div class="col-md-9 mt-3">
+					<div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Les bulles de type 2</strong></h1>
+					</div>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La bulle de type 2 se différencie de la bulle de type 1 par un range plus ou moins long en continuité de la bulle.</p>
+						<p class="text-justify">Si la bulle est toujours inclinée vers le haut avec une MMA 20 haussière, pour la partie la MMA 20 oscille entre baisses et hausses jusqu’au qu’au signal donné par une impulsion haussière.</p>
+						<p class="text-justify">Toutes les bulles ne sont pas parfaites, de nombreuses bulles ont une forme baroque.</p>
+						<p class="text-justify">Pour les bulles de type 2, l’écartement des bandes de Bollinger sur l’unité de temps Semaine, in tervient le jour du signal sur l’unité de temps Jour.</p>
+                        <div class="section text-center important-text text-success">
+						    <p>Vous pouvez consulter les 5 valeurs présentées</p>
+					    </div>
+                    </div>
+				</div>
+		
+				<div class="col-md-3 mt-3">
+					{% include 'investisseur/widgets/sidebar-bibliotheque-value.html.twig' with {'bullesTypeData': bullesType2Data} %}
+				</div>	
+			</div>
+		</div>
+
+{% endblock %}

@@ -55,6 +55,49 @@ class InvestisseurController extends AbstractController
         ],
     ];
 
+    private array  $bullesType2Data = [
+        'amc-networks' => [
+            'title' => 'AMC NETWORKS INC',
+            'flag' => 'us',
+            'ticker' => 'AMCX',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/amc-networks-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/amc-networks-s.jpg',
+            'description' => 'Description spécifique pour AMC NETWORKS INC  -  AMCX.',
+        ],
+        'establishment' => [
+            'title' => 'ESTABLISHMENT LABS HLD',
+            'flag' => 'us',
+            'ticker' => 'ESTA',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/establishment-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/establishment-s.jpg',
+            'description' => 'Description spécifique pour ESTABLISHMENT LABS HLD  -  ESTA.',
+        ],
+        'fastned' => [
+            'title' => 'FASTNED',
+            'flag' => 'nl',
+            'ticker' => 'FAST',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/fastned-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/fastned-s.jpg',
+            'description' => 'Description spécifique pour FASTNED  -  FAST.',
+        ],
+        'futu' => [
+            'title' => 'FUTU HOLDINGS LTD',
+            'flag' => 'us',
+            'ticker' => 'FUTU',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/futu-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/futu-s.jpg',
+            'description' => 'Description spécifique pour FUTU HOLDINGS LTD  -  FUTU.',
+        ],
+        'witbe' => [
+            'title' => 'WITBE ',
+            'flag' => 'fr',
+            'ticker' => 'ALWIT',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-s.jpg',
+            'description' => 'Description spécifique pour WITBE  -  ALWIT.',
+        ],
+    ];
+
     #[Route('/', name: 'investisseur_home')]
     public function index(): Response
     {
@@ -105,15 +148,15 @@ class InvestisseurController extends AbstractController
         return $this->render('investisseur/bibliotheque.html.twig');
     }
 
-    #[Route('/bibliotheque/bulles-type-1', name: 'investisseur_bibliotheque_bulles')]
-    public function investisseur_bibliotheque_bulles(): Response
+    #[Route('/bibliotheque/bulles-type-1', name: 'investisseur_bibliotheque_bulles_type_1')]
+    public function investisseur_bibliotheque_bulles_type_1(): Response
     {
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles.html.twig', [
-            'bullesType1Data' => $this->bullesType1Data,
+            'bullesTypeData' => $this->bullesType1Data,
         ]);
     }
 
-    #[Route('/bibliotheque/bulles-type-1/{value}', name: 'investisseur_bibliotheque_bulles_type1')]
+    #[Route('/bibliotheque/bulles-type-1/{value}', name: 'investisseur_bibliotheque_bulles_type_1_value')]
     public function bullesType1(string $value, Request $request): Response
     {
         // Vérifie si la valeur sélectionnée existe dans les données
@@ -132,16 +175,43 @@ class InvestisseurController extends AbstractController
             'image_jour' => $data['image_jour'],
             'image_semaine' => $data['image_semaine'],
             'description' => $data['description'],
-            'bullesType1Data' => $this->bullesType1Data,
+            'bullesTypeData' => $this->bullesType1Data,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
         ]);
     }
 
-    #[Route('/bibliotheque/bulles-type-2', name: 'investisseur_bibliotheque_bulles_range')]
-    public function investisseur_bibliotheque_bulles_range(): Response
+    #[Route('/bibliotheque/bulles-type-2', name: 'investisseur_bibliotheque_bulles_type_2')]
+    public function investisseur_bibliotheque_bulles_type_2(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-type-2.html.twig', [
+            'bullesType2Data' => $this->bullesType2Data,
+        ]);
+    }
+
+    #[Route('/bibliotheque/bulles-type-2/{value}', name: 'investisseur_bibliotheque_bulles_type_2_value')]
+    public function bullesType2(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->bullesType2Data)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->bullesType2Data[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->bullesType2Data,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
     }
 
     #[Route('/bibliotheque/pics-de-volume', name: 'investisseur_bibliotheque_pics_volumes')]
