@@ -1,6 +1,6 @@
 <div class="position-sticky" style="top: 9.5rem;">
 	<div class="sidebar p-4 mb-3 bg-light rounded">
-		<h4 class="fst-italic text-center">Bulles type 1</h4>
+		<h4 class="fst-italic text-center">Bulles type {% if app.request.get('_route') starts with 'investisseur_bibliotheque_bulles_type_1'%} 1 {% else %} 2 {% endif %}</h4>
 			{% for key, data in bullesTypeData %}
 				{% if currentValue is defined  %}
 					{% set active = (key == currentValue) ? 'bg-green' : '' %}
@@ -9,9 +9,15 @@
 							<span class="fi fi-{{ data.flag }}" style="font-size: 30px"></span>
 						</div>
 						<div class="px-3">
-							<a href="{{ path('investisseur_bibliotheque_bullesType1_value', {'value': key}) }}" class="text-dark">
-								{{ data.title }}
-							</a>
+							{% if app.request.get('_route') starts with 'investisseur_bibliotheque_bulles_type_1' %}
+								<a href="{{ path('investisseur_bibliotheque_bulles_type_1_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% else %}
+								<a href="{{ path('investisseur_bibliotheque_bulles_type_2_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
 						</div>
 					</div>
 				{% else %}
@@ -20,9 +26,15 @@
 							<span class="fi fi-{{ data.flag }}" style="font-size: 30px"></span>
 						</div>
 						<div class="px-3">
-							<a href="{{ path('investisseur_bibliotheque_bullesType1_value', {'value': key}) }}" class="text-dark">
-								{{ data.title }}
-							</a>
+							{% if app.request.get('_route') starts with 'investisseur_bibliotheque_bulles_type_1' %}
+								<a href="{{ path('investisseur_bibliotheque_bulles_type_1_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% else %}
+								<a href="{{ path('investisseur_bibliotheque_bulles_type_2_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
 						</div>
 					</div>
 				{% endif %}
