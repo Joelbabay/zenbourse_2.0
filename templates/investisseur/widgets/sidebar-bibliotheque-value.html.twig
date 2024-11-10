@@ -1,7 +1,7 @@
 <div class="position-sticky" style="top: 9.5rem;">
 	<div class="sidebar p-4 mb-3 bg-light rounded">
 		<h4 class="fst-italic text-center">Bulles type 1</h4>
-			{% for key, data in bullesType1Data %}
+			{% for key, data in bullesTypeData %}
 				{% if currentValue is defined  %}
 					{% set active = (key == currentValue) ? 'bg-green' : '' %}
 					<div class="d-flex py-2 px-2 w-100 align-items-center {{ active }}">
@@ -9,7 +9,7 @@
 							<span class="fi fi-{{ data.flag }}" style="font-size: 30px"></span>
 						</div>
 						<div class="px-3">
-							<a href="{{ path('investisseur_bibliotheque_bulles_type1', {'value': key}) }}" class="text-dark">
+							<a href="{{ path('investisseur_bibliotheque_bullesType1_value', {'value': key}) }}" class="text-dark">
 								{{ data.title }}
 							</a>
 						</div>
@@ -20,7 +20,7 @@
 							<span class="fi fi-{{ data.flag }}" style="font-size: 30px"></span>
 						</div>
 						<div class="px-3">
-							<a href="{{ path('investisseur_bibliotheque_bulles_type1', {'value': key}) }}" class="text-dark">
+							<a href="{{ path('investisseur_bibliotheque_bullesType1_value', {'value': key}) }}" class="text-dark">
 								{{ data.title }}
 							</a>
 						</div>

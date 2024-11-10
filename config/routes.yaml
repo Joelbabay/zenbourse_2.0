@@ -3,3 +3,10 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+investisseur_bibliotheque_bulles_value:
+    path: /bibliotheque/{type}/{value}
+    controller: App\Controller\BibliothequeController::showBulleDetail
+    requirements:
+        type: bullesType1|bullesType2
+        value: .+

@@ -14,7 +14,7 @@
 
                         {% if item.children|length > 0 %}
                             {% for child in item.children %}
-                                {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type1' and item.label == 'Bibliothèque') %}
+                                {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bullesType1_value' and item.label == 'Bibliothèque') %}
                                     {% set child_active = true %}
                                 {% endif %}
                             {% endfor %}
@@ -41,7 +41,7 @@
 
                 {% if item.children|length > 0 %}
                     {% for child in item.children %}
-                        {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles', 'investisseur_bibliotheque_bulles_type1'] and child.label == 'bulles type 1') %}
+                        {% if app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles', 'investisseur_bibliotheque_bullesType1_value'] and child.label == 'bulles type 1') %}
                             {% set child_active = true %}
                         {% endif %}
                     {% endfor %}
@@ -61,7 +61,7 @@
                                 <ul class="navbar-nav">
                                     {% set sorted_children = item.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
                                     {% for child in sorted_children %}
-                                        {% set child_is_active = app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type1' and child.label == 'bulles type 1') %}
+                                        {% set child_is_active = app.request.attributes.get('_route') == child.route or (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bullesType1_value' and child.label == 'bulles type 1') %}
                                         <li class="nav-item">
                                             <a class="py-2 px-3 nav-link link-secondary {{ child_is_active ? 'active' : '' }}" href="{{ path(child.route) }}">
                                                 {{ child.label }}
