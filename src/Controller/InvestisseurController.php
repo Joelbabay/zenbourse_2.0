@@ -142,6 +142,12 @@ class InvestisseurController extends AbstractController
         return $this->render('investisseur/methode/methodes-indicateurs.html.twig', []);
     }
 
+    #[Route('/la-methode/chandeliers-japonais', name: 'investisseur_methode_chandeliers_japonais')]
+    public function investisseur_methode_chandeliers_japonais(): Response
+    {
+        return $this->render('investisseur/methode/methodes-chandeliers-japonais.html.twig', []);
+    }
+
     #[Route('/bibliotheque', name: 'investisseur_bibliotheque')]
     public function bibliotheque(): Response
     {
