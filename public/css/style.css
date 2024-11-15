@@ -478,6 +478,10 @@ label.required:after {
   background-color: #f9f5e3;
 }
 
+.bg-light-red {
+  background-color: #ffd9d9;
+}
+
 .bg-light-blue {
   background-color: #e7ffff;
 }
@@ -488,4 +492,23 @@ label.required:after {
 
 .bg-light {
   background-color: #fff !important;
+}
+
+.table-child-2 th:nth-of-type(n + 2):nth-of-type(-n + 5) {
+  background-color: #ffe4b5;
+}
+.table-child-3 th:nth-of-type(n + 2):nth-of-type(-n + 5) {
+  background-color: #fdd131;
+}
+.table-child-4 th:nth-of-type(n + 2):nth-of-type(-n + 5) {
+  background-color: #ff8c00;
+  color: #fff;
+}
+.table-child-5 th:nth-of-type(n + 2):nth-of-type(-n + 5) {
+  background-color: #fe5308;
+  color: #fff;
+}
+.table-child-6 th:nth-of-type(n + 2):nth-of-type(-n + 5) {
+  background-color: #ff0000;
+  color: #fff;
 }

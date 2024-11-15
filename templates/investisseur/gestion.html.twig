@@ -9,35 +9,147 @@
 		<main class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-                    <div class="col px-0 text-center">
-					    <h1 class="display-5 fst-italic"><strong>Titre</strong></h1>
+                    <div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>La gestion des positions</strong></h1>
 				    </div>
-                    <p>Text ...</p>
-                    <h2>Titre 1</h2>
+                    <h2>Tableau des pertes</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <p class="text-justify">
+                            La présentation d'un tableau de pertes permet de comprendre la nécessité impérative de protéger ses positions ouvertes.
+                        </p>
+                        <table class="table table-borderless text-center">
+                            <thead>
+                                <tr class="table-secondary">
+                                    <th scope="col">Position initiale</th>
+                                    <th scope="col">Montant perdu</th>
+                                    <th scope="col">Restant en compte</th>
+                                    <th scope="col">% de perte</th>
+                                    <th scope="col">% pour récupérer sa perte</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="table-child-1">
+                                    <th scope="col">1000 €</th>
+                                    <th scope="col">80 €</th>
+                                    <th scope="col">920 €</th>
+                                    <th scope="col">8 %</th>
+                                    <th scope="col">8,7 %</th>
+                                </tr>
+                                <tr class="table-child-2">
+                                    <th scope="col"></th>
+                                    <th scope="col">100 €</th>
+                                    <th scope="col">900 €</th>
+                                    <th scope="col">10 %</th>
+                                    <th scope="col">10,1 %</th>
+                                </tr>
+                                <tr class="table-child-3">
+                                    <th scope="col"></th>
+                                    <th scope="col">200 €</th>
+                                    <th scope="col">800 €</th>
+                                    <th scope="col">20 %</th>
+                                    <th scope="col">25 %</th>
+                                </tr>
+                                <tr class="table-child-4">
+                                    <th scope="col"></th>
+                                    <th scope="col">300 €</th>
+                                    <th scope="col">700 €</th>
+                                    <th scope="col">30 %</th>
+                                    <th scope="col">42,8 %</th>
+                                </tr>
+                                <tr class="table-child-5">
+                                    <th scope="col"></th>
+                                    <th scope="col">400 €</th>
+                                    <th scope="col">600 €</th>
+                                    <th scope="col">40 %</th>
+                                    <th scope="col">66,6 %</th>
+                                </tr>
+                                <tr class="table-child-6">
+                                    <th scope="col"></th>
+                                    <th scope="col">500 €</th>
+                                    <th scope="col">500 €</th>
+                                    <th scope="col">50 %</th>
+                                    <th scope="col">100 %</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-justify">Nous utiliserons un ordre contraire à celui d’ouverture de la position, un stop d’arrêt des pertes appelé stop loss.</p>
 				    </div>
-                    <h2>Titre 3</h2>
+
+                    <h2>Le stop loss</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <strong>Définition :</strong>
+                        <p>Le stop loss est un ordre à seuil de déclenchement qui se place contre la tendance du trade qui a été initié.</p>
+                        <ul>
+                            <li>Pour un achat, le stop loss sera un ordre de vente à seuil de déclenchement dont le but sera de protéger la position contre un retournement des cours à la baisse.</li>
+                            <li>Pour une vente à découvert, le stop loss sera un ordre d’achat à seuil de déclenchement dont le but sera de protéger la position contre un retournement des cours à la hausse.</li>
+                        </ul>
+
+                        <strong>2 types d’ordres :</strong>
+                        <ul>
+                            <li>Le stop loss fixe. En cas de retournement des cours, la perte sera limitée.</li>
+                            <li>Le stop loss glissant couramment appelé trailing stop. <br> Les cours évoluent dans le sens du trade, le stop loss évolue de façon identique en se rapprochant du cours d’achat, voir devient supérieur au cours d’achat, en cas de retournement des cours, la perte sera plus limitée ou bien le profit sera inférieur aux espérances.</li>
+                        </ul>
 				    </div>
-                    <h2>Titre 4</h2>
+
+                    <h2>Positionner le stop loss</h2>
                     <div class="container-fluid bg-light mb-4 p-3">
-                        Text ...
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                        <div class="section text-center important-text text-success">
+						    <p>Votre premier objectif, rendre la position gagnante.</p>
+					    </div>
+                        <p class="text-justify">
+                            Tout achat doit être protégé par un stop loss qui sera positionné au niveau bas du creux précédent.
+                        </p>
+                        <p class="text-justify">
+                            Chaque fois que les cours forment un creux ascendant, le stop loss sera déplacé sous le nouveau creux. Il arrivera le moment ou le stop qui est un ordre à seuil de déclenchement sera exécuté. Voir graphique ci-après. Pour faciliter la détection des creux, vous pouvez utiliser l’indicateur Zig Zag. 
+                        </p>
+                        <p class="text-justify">
+                            Cette technique est facile à mettre en œuvre.
+                        </p>
+                        <p class="text-justify">
+                            Parmi les autres techniques, l’indicateur technique « SUPER TREND » est très facile à utiliser.  Voir graphique ci-après.
+                        </p>
+                        <p class="text-justify">
+                            Vous pouvez utiliser tout autre système à votre convenance 
+                        </p>
+                        <p class="text-justify">
+                            Si votre stop loss est exécuté prématurément, vous pouvez toujours reprendre une position dans le respect de la méthode, mais il est préférable de chercher une autre valeur qui sera dans un creux de marché et d’attendre la première bulle.
+                        </p>
 				    </div>
+
+                    <div class="row mb-4 justify-content-between">
+                        <div class="col-md-6 d-flex justify-content-start">
+                            <div class="card d-flex flex-column justify-content-between border-0">
+                                <div class="text-center">
+                                    <div class="py-2">
+                                        <p>Stop loss sous les creux ascendants</p>
+                                    </div>
+                                    <a class="image-popup-no-margins" href="{{ asset('images/investisseur/gestion/zz-orgo.jpg') }}">
+                                        <img src="{{ asset('images/investisseur/gestion/zz-orgo.jpg') }}" class="img-fluid rounded mx-auto d-block" alt="zz-orgo.jpg">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 justify-content-end d-flex">
+                            <div class="card d-flex flex-column border-0">
+                                <div class="text-center">
+                                    <div class="py-2">
+                                        <p>Stop loss avec le Super Trend</p>
+                                    </div>
+                                    <a class="image-popup-no-margins" href="{{ asset('images/investisseur/gestion/st-orgo.jpg') }}">
+                                        <img src="{{ asset('images/investisseur/gestion/st-orgo.jpg') }}" class="img-fluid rounded mx-auto d-block" alt="st-orgo.jpg">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>    
+                    </div> 
+
+                    <div class="container-fluid bg-light-red mb-4 p-3">
+                        <div class="section text-center important-text text-danger">
+                            <p>Toute position doit être protégée par un STOP LOSS</p>
+                        </div>
+                    </div>
 				</div>
+
 				<div class="col-md-3 mt-3">
 					{% include 'investisseur/widgets/sidebar.html.twig' %}
 				</div>
