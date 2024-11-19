@@ -1,0 +1,17 @@
+<div class="position-sticky" style="top: 12.5rem;">
+	<div class="sidebar p-4 mb-3 bg-light rounded">	
+        <div class="box-title py-3">
+			<h4 class="fst-italic sidebar-title text-center m-0">Structures de continuation de tendance</h4>
+		</div>
+		<ul>
+            {% for key, data in chandeliersJaponais %}	
+            {% set active = (key == currentValue) ? 'fw-bold text-success' : '' %}
+            <li class="py-2 {{ active }}">         
+                <a href="{{ path('investisseur_methode_chandeliers_japonais_value', {'value': key}) }}" class="text-dark">
+                    {{ data.title }}
+                </a>         
+            </li>	
+			{% endfor %}
+		</ul>
+	</div>
+</div>

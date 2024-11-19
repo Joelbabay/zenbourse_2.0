@@ -36,7 +36,7 @@ class SubscriptionController extends AbstractController
             'investisseur',
             new InvestisseurRequest(),
             'Votre demande d\'adhésion à la méthode investisseur a été soumise avec succès.',
-            'investisseur_home',
+            'investisseur_methode',
             'subscription/investisseur-subscription.html.twig'
         );
     }
@@ -49,7 +49,7 @@ class SubscriptionController extends AbstractController
             'intraday',
             new IntradayRequest(),
             'Votre demande d\'adhésion à la méthode intraday a été soumise avec succès.',
-            'intraday_home',
+            'intraday_methode',
             'subscription/intraday-subscription.html.twig',
             true
         );

@@ -45,7 +45,8 @@
                     {% for child in item.children %}
                         {% if app.request.attributes.get('_route') == child.route or 
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_1', 'investisseur_bibliotheque_bulles_type_1_value'] and child.label == 'bulles type 1') or 
-                              (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') %}
+                              (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') or
+                              (app.request.attributes.get('_route') in ['investisseur_methode_chandeliers_japonais', 'investisseur_methode_chandeliers_japonais_value'] and child.label == 'chandeliers japonais') %}
                             {% set child_active = true %}
                         {% endif %}
                     {% endfor %}
@@ -67,7 +68,8 @@
                                     {% for child in sorted_children %}
                                         {% set child_is_active = app.request.attributes.get('_route') == child.route or 
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_1_value' and child.label == 'bulles type 1') or 
-                                            (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_2_value' and child.label == 'bulles type 2') %}
+                                            (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_2_value' and child.label == 'bulles type 2') or
+                                            (app.request.attributes.get('_route') == 'investisseur_methode_chandeliers_japonais_value' and child.label == 'chandeliers japonais') %}
                                         <li class="nav-item">
                                             <a class="py-2 px-3 nav-link link-secondary {{ child_is_active ? 'active' : '' }}" href="{{ path(child.route) }}">
                                                 {{ child.label }}

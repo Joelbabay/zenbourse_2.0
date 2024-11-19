@@ -19,13 +19,13 @@
 								{% if app.user.isInvestisseur %}
 									<div class="mr-3">
 										<button class="btn btn-sm">
-											<a class="btn-investisseur px-3 py-2 rounded-1 text-nowrap" href="{{ path('investisseur_presentation') }}">METHODE INVESTISSEUR</a>
+											<a class="btn-investisseur px-3 py-2 rounded-1 text-nowrap" href="{{ path('investisseur_methode') }}">METHODE INVESTISSEUR</a>
 										</button>
 									</div>
 								{% endif %}
 								{% if app.user.isIntraday %}
 										<button class="btn btn-sm">
-											<a class="btn-intraday px-3 py-2 rounded-1 text-nowrap" href="{{ path('intraday_home') }}">METHODE INTRADAY</a>
+											<a class="btn-intraday px-3 py-2 rounded-1 text-nowrap" href="{{ path('intraday_methode') }}">METHODE INTRADAY</a>
 										</button>
 								{% endif %}
 							{% endif %}
@@ -33,13 +33,13 @@
 						{% if app.request.get('_route') starts with 'investisseur'%}
 							{% if app.user.isIntraday %}
 									<button class="btn btn-sm">
-										<a class="btn-intraday px-3 py-2 rounded-1" href="{{ path('intraday_home') }}">METHODE INTRADAY</a>
+										<a class="btn-intraday px-3 py-2 rounded-1" href="{{ path('intraday_methode') }}">METHODE INTRADAY</a>
 									</button>
 							{% endif %}
 						{% endif %}
 						{% if app.request.get('_route') starts with 'intraday'%}
 							<button class="btn btn-sm">
-								<a class="btn-investisseur px-3 py-2 rounded-1" href="{{ path('investisseur_presentation') }}">METHODE INVESTISSEUR</a>
+								<a class="btn-investisseur px-3 py-2 rounded-1" href="{{ path('investisseur_methode') }}">METHODE INVESTISSEUR</a>
 							</button>
 						{% endif %}
 						{% if app.user %}
