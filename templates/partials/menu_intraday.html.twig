@@ -52,7 +52,7 @@
                 {% if is_active and item.children|length > 0 %}
                     <nav class="navbar navbar-expand-lg text-uppercase" style="font-weight: 400;">
                         <div class="container-fluid limited-width">
-                            <span class="me-3 fw-bold" href="#">{{ item.label }} -></span>
+                            <a class="me-3 fw-bold" href="{{ path(item.route) }}">{{ item.label }} -></a>
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
