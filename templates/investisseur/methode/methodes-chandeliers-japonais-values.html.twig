@@ -9,42 +9,32 @@
 		<main class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-                    <h2>Chandeliers japonais – le gap de continuation</h2>
+                    <h2>{{title}}</h2>
                 <div class="container-fluid bg-light mb-4 p-3">
-                    <p> Le GAP de continuation s’inscrit dans une tendance validée. Il indique la poursuite de la tendance haussière / baissière. </p>   
+                    <p>{{ description | raw }}</p>   
 				</div>
                 <div class="row">
                     <div class="col-md-6 d-flex">
                         <div class="card p-4 d-flex flex-column justify-content-between border-0">
-                            <h5>Le gap haussier</h5>
-                            <a class="image-popup-no-margins" href="{{asset('images/investisseur/methode/chandelier-japonais/gaph.jpg')}}">
-                                <img src="{{asset('images/investisseur/methode/chandelier-japonais/gaph.jpg')}}" class="img-fluid rounded mx-auto d-block" alt="La boîte de DARVAS">
+                            <h5>{{image_name_h}}</h5>
+                            <a class="image-popup-no-margins" href="{{asset(image_h)}}">
+                                <img src="{{asset(image_h)}}" class="img-fluid rounded mx-auto d-block" alt="La boîte de DARVAS">
                             </a>
                             <strong>Caractéristiques de la structure :</strong>
-                            <p>La structure est formée de 2 chandeliers haussiers verts.</p>
-                            <ul>
-                                <li>Le premier est un grand chandelier haussier vert</li>
-                                <li>Le second chandelier dont le cours d’ouverture doit être supérieur au cours de clôture du chandelier précédent</li>
-                                <li>Cette structure intervient généralement dans une tendance haussière après une hausse significative</li>
-                            </ul>
-                            <strong>Invalidation de la structure :</strong>
+                            {{ content_h | raw }}
+                            
                         </div>
                     </div>
 
                     <div class="col-md-6 d-flex">
                         <div class="card p-4 d-flex flex-column justify-content-between border-0">
-                            <h5>Le gap baissier</h5>
-                            <a class="image-popup-no-margins" href="{{ asset('images/investisseur/methode/chandelier-japonais/gapb.jpg') }}">
-                                <img src="{{asset('images/investisseur/methode/chandelier-japonais/gapb.jpg')}}" class="img-fluid rounded mx-auto d-block" alt="La boîte de DARVAS">
+                            <h5>{{image_name_b}}</h5>
+                            <a class="image-popup-no-margins" href="{{ asset(image_b ) }}">
+                                <img src="{{asset(image_b)}}" class="img-fluid rounded mx-auto d-block" alt="La boîte de DARVAS">
                             </a>
                             <strong>Caractéristiques de la structure :</strong>
-                            <p>La structure est formée de 2 chandeliers baissiers rouges.</p>
-                            <ul>
-                                <li>Le premier est un grand chandelier baissier rouge</li>
-                                <li>Le second chandelier dont le cours d’ouverture doit être inférieur au cours de clôture du chandelier précédent</li>
-                                <li>Cette structure intervient généralement dans une tendance haussière après une hausse significative</li>
-                            </ul>
-                            <strong>Invalidation de la structure :</strong>
+                            {{ content_b | raw }}
+                            
                         </div>
                     </div>
                 </div>

@@ -9,13 +9,13 @@
                 {% set active = (key == currentValue) ? 'fw-bold text-success' : '' %}
                 <li class="py-2 {{ active }}">         
                     <a href="{{ path('investisseur_methode_chandeliers_japonais_value', {'value': key}) }}" class="text-dark">
-                        {{ data.title }}
+                        {{ data.structure }}
                     </a>         
                 </li>	
             {% else %}
                 <li class="py-2">         
                     <a href="{{ path('investisseur_methode_chandeliers_japonais_value', {'value': key}) }}" class="text-dark">
-                        {{ data.title }}
+                        {{ data.structure }}
                     </a>         
                 </li>	
             {% endif %}
