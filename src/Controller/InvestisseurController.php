@@ -349,7 +349,7 @@ class InvestisseurController extends AbstractController
         ]);
     }
 
-    #[Route('/bibliotheque/chandeliers-japonais/{value}', name: 'investisseur_methode_chandeliers_japonais_value')]
+    #[Route('/la-methode/chandeliers-japonais/{value}', name: 'investisseur_methode_chandeliers_japonais_value')]
     public function investisseur_methode_chandeliers_japonais_value(string $value, Request $request): Response
     {
         if (!array_key_exists($value, $this->chandeliersJaponais)) {
