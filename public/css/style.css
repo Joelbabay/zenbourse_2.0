@@ -512,3 +512,7 @@ label.required:after {
   background-color: #ff0000;
   color: #fff;
 }
+
+.cnt-ch-jp li {
+  padding-bottom: 20px;
+}
