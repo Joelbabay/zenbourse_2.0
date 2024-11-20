@@ -16,7 +16,8 @@
                             {% for child in item.children %}
                                 {% if app.request.attributes.get('_route') == child.route or 
                                       (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_1' and item.label == 'Bibliothèque') or 
-                                      (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') %}
+                                      (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') or
+                                      (app.request.attributes.get('_route') in ['investisseur_methode_chandeliers_japonais', 'investisseur_methode_chandeliers_japonais_value'] and child.label == 'chandeliers japonais') %}
                                     {% set child_active = true %}
                                 {% endif %}
                             {% endfor %}
