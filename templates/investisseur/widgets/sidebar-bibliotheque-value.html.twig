@@ -13,8 +13,39 @@
 								<a href="{{ path('investisseur_bibliotheque_bulles_type_1_value', {'value': key}) }}" class="text-dark">
 									{{ data.title }}
 								</a>
-							{% else %}
+							{% endif %}
+							{% if app.request.get('_route') starts with 'investisseur_bibliotheque_bulles_type_2' %}
 								<a href="{{ path('investisseur_bibliotheque_bulles_type_2_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_ramasssage_1' %}
+								<a href="{{ path('investisseur_bibliotheque_ramasssage_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_ramasssage_pic' %}
+								<a href="{{ path('investisseur_bibliotheque_ramasssage_pic_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_pic_ramassage' %}
+								<a href="{{ path('investisseur_bibliotheque_pic_ramassage_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_pics_volumes' %}
+								<a href="{{ path('investisseur_bibliotheque_pics_volumes_values', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_volumes_faibles' %}
+								<a href="{{ path('investisseur_bibliotheque_volumes_faibles_values', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_introduction' %}
+								<a href="{{ path('investisseur_bibliotheque_introduction_values', {'value': key}) }}" class="text-dark">
 									{{ data.title }}
 								</a>
 							{% endif %}
@@ -30,8 +61,39 @@
 								<a href="{{ path('investisseur_bibliotheque_bulles_type_1_value', {'value': key}) }}" class="text-dark">
 									{{ data.title }}
 								</a>
-							{% else %}
+							{% endif %}
+							{% if app.request.get('_route') starts with 'investisseur_bibliotheque_bulles_type_2' %}
 								<a href="{{ path('investisseur_bibliotheque_bulles_type_2_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_ramasssage_1' %}
+								<a href="{{ path('investisseur_bibliotheque_ramasssage_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_ramasssage_pic' %}
+								<a href="{{ path('investisseur_bibliotheque_ramasssage_pic_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_pic_ramassage' %}
+								<a href="{{ path('investisseur_bibliotheque_pic_ramassage_value', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_pics_volumes' %}
+								<a href="{{ path('investisseur_bibliotheque_pics_volumes_values', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_volumes_faibles' %}
+								<a href="{{ path('investisseur_bibliotheque_volumes_faibles_values', {'value': key}) }}" class="text-dark">
+									{{ data.title }}
+								</a>
+							{% endif %}
+							{% if  app.request.get('_route') starts with 'investisseur_bibliotheque_introduction' %}
+								<a href="{{ path('investisseur_bibliotheque_introduction_values', {'value': key}) }}" class="text-dark">
 									{{ data.title }}
 								</a>
 							{% endif %}

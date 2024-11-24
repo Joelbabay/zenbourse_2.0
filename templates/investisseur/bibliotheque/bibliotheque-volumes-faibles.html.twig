@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Zenbourse - Méthode Investisseur - Bibliothèque - Voluime faible
+	Zenbourse - Méthode Investisseur - Bibliothèque - Volumes faibles
 {% endblock %}
 
 {% block body %}
@@ -10,72 +10,25 @@
 		<div class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-					<div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
-						<span class="fi fi-fr" style="font-size: 30px"></span>
-						<span class="mx-3">
-							DRONE VOLT - ALDVR
-						</span>
+					<div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Volumes faibles</strong></h1>
 					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE JOUR
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										RANGE
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE SEMAINE
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										VALIDATION
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">La particularité de ces valeurs réside dans les volumes échangées.</p>
+						<p class="text-justify">Les volumes échangés sont faibles, voire très faibles.</p>
+						<p class="text-justify">Il n’en demeure pas moins qu’elles forment des bulles donc suscitent un intérêt certain.</p>
+						<p class="text-justify">Elles sont fortement déconseillées par beaucoup de conseillers.</p>
+						<p class="text-justify">Il convient notamment de s’y intéresser, leur démarrage sont foudroyant, en quelques jours vous pouvez réaliser un belle plus-value.</p>
+						<p class="text-justify">La prudence consiste néanmoins à en acquérir une quantité réduite, comme on dit, une demie louche.</p>
+						<p class="text-justify">Les bulles doivent toujours être validées par un écartement des bandes de Bollinger sur l’unité de temps Semaine.</p>
+                        <div class="section text-center important-text text-success">
+						    <p>Vous pouvez consulter les valeurs présentées</p>
+					    </div>
+                    </div>
 				</div>
 		
 				<div class="col-md-3 mt-3">
-					{% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+					{% include 'investisseur/widgets/sidebar-bibliotheque-value.html.twig' with {'bullesTypeData': volumesFaibles} %}
 				</div>	
 			</div>
 		</div>

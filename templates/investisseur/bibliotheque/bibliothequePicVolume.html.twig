@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Zenbourse - Méthode Investisseur - Bibliothèque - Pics de volumes
+	Zenbourse - Méthode Investisseur - Bibliothèque - Pics de Volumes
 {% endblock %}
 
 {% block body %}
@@ -10,72 +10,23 @@
 		<div class="custom-container">
 			<div class="row g-5 mt-1">
 				<div class="col-md-9 mt-3">
-					<div class="d-flex align-items-center mb-3 p-3 bg-light rounded">
-						<span class="fi fi-fr" style="font-size: 30px"></span>
-						<span class="mx-3">
-							DRONE VOLT - ALDVR
-						</span>
+					<div class="col px-0 text-center mb-3">
+					    <h1 class="display-5 fst-italic"><strong>Pic de volumes</strong></h1>
 					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE JOUR
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-info p-2 text-center text-light">
-									<span class="p-0">
-										RANGE
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="card mb-3" style="border: none">
-						<div class="row g-2">
-							<div class="col-md-8">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										GRAPHIQUE SEMAINE
-									</span>
-								</div>
-								<a class="image-popup-no-margins" href="{{ asset('images/1.png') }}">
-									<img src="{{ asset('images/1.png') }}" class="img-fluid rounded-start" alt="...">
-								</a>
-							</div>
-							<div class="col-md-4">
-								<div class="bg-success p-2 text-center text-light">
-									<span class="p-0">
-										VALIDATION
-									</span>
-								</div>
-								<div class="card-body">
-									<h5 class="card-title">Commentaire</h5>
-									<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-									<p class="card-text">
-										<small class="text-muted">Last updated 3 mins ago</small>
-									</p>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">Il s’agit d’une augmentation significative des volumes sans ramassage de titres</p>
+						<p class="text-justify">En général ce sont des valeurs dont les prix évoluent dans un range étroit. La sortie du range est violente</p>
+						<p class="text-justify">L’écartement des bandes de Bollinger intervient le jour du pic de volumes.</p>
+						<p class="text-justify">Il n’y a pas de bulles, mais il était impotant de signaler les pics de volumes eu égard à l’importance des volumes dans la méthode.</p>
+						<p class="text-justify">Les bulles doivent toujours être validées par un écartement des bandes de Bollinger sur l’unité de temps Semaine.</p>
+                        <div class="section text-center important-text text-success">
+						    <p>Vous pouvez consulter les 5 valeurs présentées</p>
+					    </div>
+                    </div>
 				</div>
 		
 				<div class="col-md-3 mt-3">
-					{% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+					{% include 'investisseur/widgets/sidebar-bibliotheque-value.html.twig' with {'bullesTypeData': picVolume} %}
 				</div>	
 			</div>
 		</div>

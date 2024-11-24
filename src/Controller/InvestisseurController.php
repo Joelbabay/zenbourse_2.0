@@ -37,13 +37,13 @@ class InvestisseurController extends AbstractController
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-1/organogenesis-s.jpg',
             'description' => 'Description spécifique pour ORGANOGENESIS HLD.',
         ],
-        'pacific-biosciences' => [
-            'title' => 'PACIFIC BIOSCIENCES OF CALIFORNIA',
+        'prophase' => [
+            'title' => 'PROPHASE LABS INC  -  PRPH',
             'flag' => 'us',
-            'ticker' => 'PACB',
-            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-1/pacific-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-1/pacific-s.jpg',
-            'description' => 'Description spécifique pour PACIFIC BIOSCIENCES.',
+            'ticker' => 'PRPH',
+            'image_jour' => '/images/investisseur/bibliotheque/bulle-type-1/prophase-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-1/prophase-s.jpg',
+            'description' => 'Description spécifique pour PROPHASE LABS INC  -  PRPH',
         ],
         'riot-platforms-inc' => [
             'title' => 'RIOT PLATFORMS INC',
@@ -95,6 +95,272 @@ class InvestisseurController extends AbstractController
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-s.jpg',
             'description' => 'Description spécifique pour WITBE  -  ALWIT.',
+        ],
+    ];
+
+    private array  $ramassageData = [
+        'altimmune' => [
+            'title' => 'ALTIMMUNE INC - ALT',
+            'flag' => 'us',
+            'ticker' => 'ALT',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/altimmune-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/altimmune-s.jpg',
+            'description' => 'Description spécifique pour ALTIMMUNE INC - ALT',
+        ],
+        'celsius' => [
+            'title' => 'CELSIUS HLD - CELH',
+            'flag' => 'us',
+            'ticker' => 'CELH',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/celsius-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/celsius-s.jpg',
+            'description' => 'Description spécifique pour CELSIUS HLD - CELH',
+        ],
+        'digital-turbine' => [
+            'title' => 'DIGITAL TURBINE INC - APPS',
+            'flag' => 'us',
+            'ticker' => 'APPS',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/digital-turbine-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/digital-turbine-s.jpg',
+            'description' => 'Description spécifique pour DIGITAL TURBINE INC - APPS',
+        ],
+        'novavax' => [
+            'title' => 'NOVAVAX INC - NVAX',
+            'flag' => 'us',
+            'ticker' => 'NVAX',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/novavax-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/novavax-s.jpg',
+            'description' => 'Description spécifique pour NOVAVAX INC - NVAX',
+        ],
+        'westport' => [
+            'title' => 'WESTPORT FUEL SYSTEMS INC - WPRT',
+            'flag' => 'us',
+            'ticker' => 'WPRT',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/westport-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/westport-s.jpg',
+            'description' => 'Description spécifique pour WESTPORT FUEL SYSTEMS INC - WPRT',
+        ],
+    ];
+
+    private array  $ramassagePicData = [
+        'big-sporting' => [
+            'title' => 'BIG 5 SPORTING GOODS - BGFV',
+            'flag' => 'us',
+            'ticker' => 'BGFV',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/big5-sporting-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/big5-sporting-s.jpg',
+            'description' => 'Description spécifique pour BIG 5 SPORTING GOODS - BGFV',
+        ],
+        'himax' => [
+            'title' => 'HIMAX TECHNOLOGIES INC  -  HIMX',
+            'flag' => 'us',
+            'ticker' => 'CELH',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/himax-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/himax-s.jpg',
+            'description' => 'Description spécifique pour HIMAX TECHNOLOGIES INC  -  HIMX',
+        ],
+        'lendingclub' => [
+            'title' => 'LENDINGCLUB CORP - LC',
+            'flag' => 'us',
+            'ticker' => 'LC',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/lendingclub-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/lendingclub-s.jpg',
+            'description' => 'Description spécifique pour LENDINGCLUB CORP  -  LC',
+        ],
+        'plug-power' => [
+            'title' => 'PLUG-POWER INC - PLUG',
+            'flag' => 'us',
+            'ticker' => 'PLUG',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/plug-power-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/plug-power-s.jpg',
+            'description' => 'Description spécifique pour PLUG-POWER INC  -  PLUG',
+        ],
+        'up-fintech' => [
+            'title' => 'UP FINTECH HLD - TIGR',
+            'flag' => 'au',
+            'ticker' => 'TIGR',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/up-fintech-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/up-fintech-s.jpg',
+            'description' => 'Description spécifique pour UP FINTECH HLD  -  TIGR',
+        ],
+    ];
+
+    private array  $picRamassageData = [
+        'altimmune' => [
+            'title' => 'ALTIMMUNE INC - ALT',
+            'flag' => 'us',
+            'ticker' => 'ALT',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/altimmune-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/altimmune-s.jpg',
+            'description' => 'Description spécifique pour ALTIMMUNE INC - ALT',
+        ],
+        'celsius' => [
+            'title' => 'CELSIUS HLD - CELH',
+            'flag' => 'us',
+            'ticker' => 'CELH',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/celsius-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/celsius-s.jpg',
+            'description' => 'Description spécifique pour CELSIUS HLD - CELH',
+        ],
+        'digital-turbine' => [
+            'title' => 'DIGITAL TURBINE INC - APPS',
+            'flag' => 'us',
+            'ticker' => 'APPS',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/digital-turbine-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/digital-turbine-s.jpg',
+            'description' => 'Description spécifique pour DIGITAL TURBINE INC - APPS',
+        ],
+        'novavax' => [
+            'title' => 'NOVAVAX INC - NVAX',
+            'flag' => 'us',
+            'ticker' => 'NVAX',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/novavax-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/novavax-s.jpg',
+            'description' => 'Description spécifique pour NOVAVAX INC - NVAX',
+        ],
+        'westport' => [
+            'title' => 'WESTPORT FUEL SYSTEMS INC - WPRT',
+            'flag' => 'us',
+            'ticker' => 'WPRT',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/westport-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/westport-s.jpg',
+            'description' => 'Description spécifique pour WESTPORT FUEL SYSTEMS INC - WPRT',
+        ],
+    ];
+
+    private array  $picVolume = [
+        'gaotu-techedu ' => [
+            'title' => 'GAOTU TECHEDU INC  -  GOTU',
+            'flag' => 'us',
+            'ticker' => 'GOTU',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/gaotu-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/gaotu-s.jpg',
+            'description' => 'Description spécifique pour GAOTU TECHEDU INC  -  GOTU',
+        ],
+        'greeland-technologies' => [
+            'title' => 'GREENLAND TECHNOLOGIES INC  -  GTEC',
+            'flag' => 'us',
+            'ticker' => 'GTEC',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/greeland-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/greeland-s.jpg',
+            'description' => 'Description spécifique pour GREENLAND TECHNOLOGIES INC  -  GTEC',
+        ],
+        'lexicon-pharmaceuticals' => [
+            'title' => 'LEXICON PHAMACEUTICALS INC  -  LXRX',
+            'flag' => 'us',
+            'ticker' => 'LXRX',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/lexicon-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/lexicon-s.jpg',
+            'description' => 'Description spécifique pour LEXICON PHAMACEUTICALS INC  -  LXRX',
+        ],
+        'raibow-rare' => [
+            'title' => 'RAINBOW RARE EARTHS LTD  -  REW',
+            'flag' => 'us',
+            'ticker' => 'REW',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/rainbow-rare-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/rainbow-rare-s.jpg',
+            'description' => 'Description spécifique pour RAINBOW RARE EARTHS LTD  -  REW',
+        ],
+        'superior-industries' => [
+            'title' => 'SUPERIOR INDUSTRIES INTL  -  SUP',
+            'flag' => 'us',
+            'ticker' => 'SUP',
+            'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/superior-industries-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/superior-indusries-s.jpg',
+            'description' => 'Description spécifique pour SUPERIOR INDUSTRIES INTL  -  SUP',
+        ],
+    ];
+
+    private array  $volumesFaibles = [
+        '22nd-century' => [
+            'title' => '22ND CENTURY GROUP INC  -  XXIII',
+            'flag' => 'us',
+            'ticker' => 'XXIII',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/22nd-century-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/22nd-century-s.jpg',
+            'description' => 'Description spécifique pour 22ND CENTURY GROUP INC  -  XXIII',
+        ],
+        'alumexx' => [
+            'title' => 'ALUMEXX  -  ALX',
+            'flag' => 'nl',
+            'ticker' => 'ALX',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/alumexx-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/alumexx-s.jpg',
+            'description' => 'Description spécifique pour ALUMEXX  -  ALX',
+        ],
+        'cliq-digital' => [
+            'title' => 'CLIQ DIGITAL AGNA  -  CLIQ',
+            'flag' => 'us',
+            'ticker' => 'CLIQ',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-s.jpg',
+            'description' => 'Description spécifique pour CLIQ DIGITAL AGNA  -  CLIQ',
+        ],
+        'groupe-ldlc' => [
+            'title' => 'GROUPE LDLC  -  ALLDL',
+            'flag' => 'fr',
+            'ticker' => 'ALLDL',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/groupe-ldlc-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/groupe-ldlc-s.jpg',
+            'description' => 'Description spécifique pour GROUPE LDLC  -  ALLDL',
+        ],
+        'guillemot' => [
+            'title' => 'GUILLEMOT  -  GUI',
+            'flag' => 'fr',
+            'ticker' => 'GUI',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-s.jpg',
+            'description' => 'Description spécifique pour GUILLEMOT  -  GUI',
+        ],
+        'petvivo' => [
+            'title' => 'PETVIVO HOLDINGS INC  -  PETV',
+            'flag' => 'us',
+            'ticker' => 'PETV',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/petvivo-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/petvivo-s.jpg',
+            'description' => 'Description spécifique pour PETVIVO HOLDINGS INC  -  PETV',
+        ],
+    ];
+
+    private array  $intoduction = [
+        'bit-digital' => [
+            'title' => 'BIT DIGITAL  -  BTBT',
+            'flag' => 'us',
+            'ticker' => 'BTBT',
+            'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/bit-digital-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/bit-digital-s.jpg',
+            'description' => 'Description spécifique pour BIT DIGITAL  -  BTBT',
+        ],
+        'bitfarms' => [
+            'title' => 'BITFARMS LTD  -  BITF',
+            'flag' => 'us',
+            'ticker' => 'BITF',
+            'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/bitfarms-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/bitfarms-s.jpg',
+            'description' => 'Description spécifique pour BITFARMS LTD  -  BITF',
+        ],
+        'fastly' => [
+            'title' => 'FASTLY INC  -  FSLY',
+            'flag' => 'us',
+            'ticker' => 'FSLY',
+            'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/fastly-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/fastly-s.jpg',
+            'description' => 'Description spécifique pour FASTLY INC  -  FSLY',
+        ],
+        'mind-medicine' => [
+            'title' => 'MIND MIDICINE INC  -  MNMD',
+            'flag' => 'us',
+            'ticker' => 'MNMD',
+            'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/mind-medicine-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/mind-medicine-s.jpg',
+            'description' => 'Description spécifique pour MIND MIDICINE INC  -  MNMD',
+        ],
+        'peloton-interactive' => [
+            'title' => 'PELOTON INTERACTIVE INC  -  PTON',
+            'flag' => 'us',
+            'ticker' => 'PTON',
+            'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/peleton-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/peleton-s.jpg',
+            'description' => 'Description spécifique pour PELOTON INTERACTIVE INC  -  PTON',
         ],
     ];
 
@@ -448,39 +714,203 @@ class InvestisseurController extends AbstractController
         ]);
     }
 
-    #[Route('/bibliotheque/pics-de-volume', name: 'investisseur_bibliotheque_pics_volumes')]
-    public function investisseur_bibliotheque_pics_volumes(): Response
-    {
-        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', []);
-    }
-    #[Route('/bibliotheque/ramassage', name: 'investisseur_bibliotheque_ramasssage')]
+    #[Route('/bibliotheque/ramassage', name: 'investisseur_bibliotheque_ramasssage_1')]
     public function investisseur_bibliotheque_ramasssage(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliotheque-ramassage.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-ramassage.html.twig', [
+            'ramassageData' => $this->ramassageData,
+        ]);
+    }
+
+    #[Route('/bibliotheque/ramassage/{value}', name: 'investisseur_bibliotheque_ramasssage_value')]
+    public function ramassage_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->ramassageData)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->ramassageData[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->ramassageData,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
     }
 
     #[Route('/bibliotheque/ramassage-pic', name: 'investisseur_bibliotheque_ramasssage_pic')]
     public function investisseur_bibliotheque_ramasssage_pic(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliotheque-ramassage-pic.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-ramassage-pic.html.twig', [
+            'ramassagePicData' => $this->ramassagePicData,
+        ]);
+    }
+
+    #[Route('/bibliotheque/ramassage-pic/{value}', name: 'investisseur_bibliotheque_ramasssage_pic_value')]
+    public function ramassage_pic_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->ramassagePicData)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->ramassagePicData[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->ramassagePicData,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
     }
 
     #[Route('/bibliotheque/pic-ramassage', name: 'investisseur_bibliotheque_pic_ramassage')]
     public function investisseur_bibliotheque_pic_ramassage(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliotheque-pic-ramassage.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-pic-ramassage.html.twig', [
+            'picRamassageData' => $this->picRamassageData,
+        ]);
+    }
+
+    #[Route('/bibliotheque/pic-ramassage/{value}', name: 'investisseur_bibliotheque_pic_ramassage_value')]
+    public function pic_ramassage_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->picRamassageData)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->picRamassageData[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->picRamassageData,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
+    }
+
+    #[Route('/bibliotheque/pics-de-volumes', name: 'investisseur_bibliotheque_pics_volumes')]
+    public function investisseur_bibliotheque_pics_volumes(): Response
+    {
+        return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', [
+            'picVolume' => $this->picVolume,
+        ]);
+    }
+
+    #[Route('/bibliotheque/pics-de-volumes/{value}', name: 'investisseur_bibliotheque_pics_volumes_values')]
+    public function pic_volumes_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->picVolume)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->picVolume[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->picVolume,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
     }
 
     #[Route('/bibliotheque/volumes-faibles', name: 'investisseur_bibliotheque_volumes_faibles')]
     public function investisseur_bibliotheque_volumes_faibles(): Response
     {
-        return $this->render('investisseur/bibliotheque/bibliotheque-volumes-faibles.html.twig', []);
+        return $this->render('investisseur/bibliotheque/bibliotheque-volumes-faibles.html.twig', [
+            'volumesFaibles' => $this->volumesFaibles,
+        ]);
     }
 
-    #[Route('/bibliotheque/introduction', name: 'investisseur_bibliotheque_introduction')]
+    #[Route('/bibliotheque/volumes-faibles/{value}', name: 'investisseur_bibliotheque_volumes_faibles_values')]
+    public function volumes_faible_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->volumesFaibles)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->volumesFaibles[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->volumesFaibles,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
+    }
+
+    #[Route('/bibliotheque/introductions-recentes', name: 'investisseur_bibliotheque_introduction')]
     public function investisseur_bibliotheque_introduction(): Response
     {
+        return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', [
+            'intoduction' => $this->intoduction,
+        ]);
         return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', []);
+    }
+
+    #[Route('/bibliotheque/introductions-recentes/{value}', name: 'investisseur_bibliotheque_introduction_values')]
+    public function introduction_value(string $value, Request $request): Response
+    {
+        // Vérifie si la valeur sélectionnée existe dans les données
+        if (!array_key_exists($value, $this->intoduction)) {
+            throw $this->createNotFoundException('Cette valeur n\'existe pas.');
+        }
+
+        $data = $this->intoduction[$value];
+        $currentRoute = $request->get('_route');
+        $currentValue = $request->get('value');
+
+        return $this->render('investisseur/bibliotheque/bibliotheque-bulles-value.html.twig', [
+            'title' => $data['title'],
+            'ticker' => $data['ticker'],
+            'flag' => $data['flag'],
+            'image_jour' => $data['image_jour'],
+            'image_semaine' => $data['image_semaine'],
+            'description' => $data['description'],
+            'bullesTypeData' => $this->intoduction,
+            'currentRoute' => $currentRoute,
+            'currentValue' => $currentValue,
+        ]);
     }
 
     #[Route('/outils', name: 'investisseur_outils')]
