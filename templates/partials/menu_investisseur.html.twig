@@ -17,7 +17,7 @@
                                 {% if app.request.attributes.get('_route') == child.route or 
                                       (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_1' and item.label == 'Bibliothèque') or 
                                       (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') or
-                                      (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_1', 'investisseur_bibliotheque_ramasssage_value'] and child.label == 'Ramassage') or
+                                      (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_1', 'investisseur_bibliotheque_ramasssage_1_value'] and child.label == 'Ramassage') or
                                       (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_pic', 'investisseur_bibliotheque_ramasssage_pic_value'] and child.label == 'Ramassage + pic') or
                                       (app.request.attributes.get('_route') in ['investisseur_bibliotheque_pic_ramassage', 'investisseur_bibliotheque_pic_ramassage_value'] and child.label == 'Pic + ramassage') or
                                       (app.request.attributes.get('_route') in ['investisseur_bibliotheque_pics_volumes', 'investisseur_bibliotheque_pics_volumes_values'] and child.label == 'Pics de volumes') or
@@ -53,7 +53,7 @@
                         {% if app.request.attributes.get('_route') == child.route or 
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_1', 'investisseur_bibliotheque_bulles_type_1_value'] and child.label == 'bulles type 1') or 
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_bulles_type_2', 'investisseur_bibliotheque_bulles_type_2_value'] and child.label == 'bulles type 2') or
-                              (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_1', 'investisseur_bibliotheque_ramasssage_value'] and child.label == 'Ramassage') or
+                              (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_1', 'investisseur_bibliotheque_ramasssage_1_value'] and child.label == 'Ramassage') or
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_ramasssage_pic', 'investisseur_bibliotheque_ramasssage_pic_value'] and child.label == 'Ramassage + pic') or
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_pic_ramassage', 'investisseur_bibliotheque_pic_ramassage_value'] and child.label == 'Pic + ramassage') or
                               (app.request.attributes.get('_route') in ['investisseur_bibliotheque_pics_volumes', 'investisseur_bibliotheque_pics_volumes_values'] and child.label == 'Pics de volumes') or
@@ -82,7 +82,7 @@
                                         {% set child_is_active = app.request.attributes.get('_route') == child.route or 
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_1_value' and child.label == 'bulles type 1') or 
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_bulles_type_2_value' and child.label == 'bulles type 2') or
-                                            (app.request.attributes.get('_route') == 'investisseur_bibliotheque_ramasssage_value' and child.label == 'Ramassage') or
+                                            (app.request.attributes.get('_route') == 'investisseur_bibliotheque_ramasssage_1_value' and child.label == 'Ramassage') or
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_ramasssage_pic_value' and child.label == 'Ramassage + pic') or
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_pic_ramassage_value' and child.label == 'Pic + ramassage') or
                                             (app.request.attributes.get('_route') == 'investisseur_bibliotheque_pics_volumes_values' and child.label == 'Pics de volumes') or

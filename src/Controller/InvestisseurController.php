@@ -99,45 +99,45 @@ class InvestisseurController extends AbstractController
     ];
 
     private array  $ramassageData = [
-        'altimmune' => [
-            'title' => 'ALTIMMUNE INC - ALT',
+        'beyond' => [
+            'title' => 'BEYOND INC  -  BYON',
             'flag' => 'us',
-            'ticker' => 'ALT',
-            'image_jour' => '/images/investisseur/bibliotheque/ramassage/altimmune-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/altimmune-s.jpg',
-            'description' => 'Description spécifique pour ALTIMMUNE INC - ALT',
+            'ticker' => 'BYON',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/beyond-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/beyond-s.jpg',
+            'description' => 'Description spécifique pour BEYOND INC  -  BYON',
         ],
-        'celsius' => [
-            'title' => 'CELSIUS HLD - CELH',
+        'jumia' => [
+            'title' => 'JUMIA TECHNOLOGIES  -  JMIA',
             'flag' => 'us',
-            'ticker' => 'CELH',
-            'image_jour' => '/images/investisseur/bibliotheque/ramassage/celsius-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/celsius-s.jpg',
-            'description' => 'Description spécifique pour CELSIUS HLD - CELH',
+            'ticker' => 'JMIA',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/jumia-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/jumia-s.jpg',
+            'description' => 'Description spécifique pour JUMIA TECHNOLOGIES  -  JMIA',
         ],
-        'digital-turbine' => [
-            'title' => 'DIGITAL TURBINE INC - APPS',
+        'microstrategy' => [
+            'title' => 'MICROSTRATEGY INC  -  MSTR',
             'flag' => 'us',
-            'ticker' => 'APPS',
-            'image_jour' => '/images/investisseur/bibliotheque/ramassage/digital-turbine-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/digital-turbine-s.jpg',
-            'description' => 'Description spécifique pour DIGITAL TURBINE INC - APPS',
+            'ticker' => 'MSTR',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/microstrategy-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/microstrategy-s.jpg',
+            'description' => 'Description spécifique pour MICROSTRATEGY INC  -  MSTR',
         ],
-        'novavax' => [
-            'title' => 'NOVAVAX INC - NVAX',
+        'nio' => [
+            'title' => 'NIO INC  -  NIO',
             'flag' => 'us',
-            'ticker' => 'NVAX',
-            'image_jour' => '/images/investisseur/bibliotheque/ramassage/novavax-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/novavax-s.jpg',
-            'description' => 'Description spécifique pour NOVAVAX INC - NVAX',
+            'ticker' => 'NIO',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/nio-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/nio-s.jpg',
+            'description' => 'Description spécifique pour NIO INC  -  NIO',
         ],
-        'westport' => [
-            'title' => 'WESTPORT FUEL SYSTEMS INC - WPRT',
-            'flag' => 'us',
-            'ticker' => 'WPRT',
-            'image_jour' => '/images/investisseur/bibliotheque/ramassage/westport-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/westport-s.jpg',
-            'description' => 'Description spécifique pour WESTPORT FUEL SYSTEMS INC - WPRT',
+        'weebit-nano' => [
+            'title' => 'WEEBIT NANO LTD  -  WBT',
+            'flag' => 'au',
+            'ticker' => 'WBT',
+            'image_jour' => '/images/investisseur/bibliotheque/ramassage/weebit-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/ramassage/weebit-s.jpg',
+            'description' => 'Description spécifique pour WEEBIT NANO LTD  -  WBT',
         ],
     ];
 
@@ -651,8 +651,10 @@ class InvestisseurController extends AbstractController
     #[Route('/bibliotheque/bulles-type-1', name: 'investisseur_bibliotheque_bulles_type_1')]
     public function investisseur_bibliotheque_bulles_type_1(): Response
     {
+        $title = 'Bulles type 1';
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles.html.twig', [
             'bullesTypeData' => $this->bullesType1Data,
+            'title' => $title
         ]);
     }
 
@@ -664,6 +666,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Bulles type 1';
         $data = $this->bullesType1Data[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -678,14 +681,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->bullesType1Data,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title
         ]);
     }
 
     #[Route('/bibliotheque/bulles-type-2', name: 'investisseur_bibliotheque_bulles_type_2')]
     public function investisseur_bibliotheque_bulles_type_2(): Response
     {
+        $title = 'Bulles type 2';
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles-type-2.html.twig', [
             'bullesType2Data' => $this->bullesType2Data,
+            'title' => $title
         ]);
     }
 
@@ -697,6 +703,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Bulles type 2';
         $data = $this->bullesType2Data[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -711,25 +718,28 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->bullesType2Data,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title
         ]);
     }
 
     #[Route('/bibliotheque/ramassage', name: 'investisseur_bibliotheque_ramasssage_1')]
     public function investisseur_bibliotheque_ramasssage(): Response
     {
+        $title = 'Ramassage';
         return $this->render('investisseur/bibliotheque/bibliotheque-ramassage.html.twig', [
             'ramassageData' => $this->ramassageData,
+            'title' => $title
         ]);
     }
 
-    #[Route('/bibliotheque/ramassage/{value}', name: 'investisseur_bibliotheque_ramasssage_value')]
+    #[Route('/bibliotheque/ramassage/{value}', name: 'investisseur_bibliotheque_ramasssage_1_value')]
     public function ramassage_value(string $value, Request $request): Response
     {
         // Vérifie si la valeur sélectionnée existe dans les données
         if (!array_key_exists($value, $this->ramassageData)) {
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
-
+        $title = 'Ramassage';
         $data = $this->ramassageData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -744,14 +754,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->ramassageData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
     #[Route('/bibliotheque/ramassage-pic', name: 'investisseur_bibliotheque_ramasssage_pic')]
     public function investisseur_bibliotheque_ramasssage_pic(): Response
     {
+        $title = 'Ramasage + Pic';
         return $this->render('investisseur/bibliotheque/bibliotheque-ramassage-pic.html.twig', [
             'ramassagePicData' => $this->ramassagePicData,
+            'title' => $title,
         ]);
     }
 
@@ -763,6 +776,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Ramasage + Pic';
         $data = $this->ramassagePicData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -777,14 +791,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->ramassagePicData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
     #[Route('/bibliotheque/pic-ramassage', name: 'investisseur_bibliotheque_pic_ramassage')]
     public function investisseur_bibliotheque_pic_ramassage(): Response
     {
+        $title = 'Pic + Ramassage';
         return $this->render('investisseur/bibliotheque/bibliotheque-pic-ramassage.html.twig', [
             'picRamassageData' => $this->picRamassageData,
+            'title' => $title,
         ]);
     }
 
@@ -796,6 +813,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Pic + Ramassage';
         $data = $this->picRamassageData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -810,14 +828,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->picRamassageData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
     #[Route('/bibliotheque/pics-de-volumes', name: 'investisseur_bibliotheque_pics_volumes')]
     public function investisseur_bibliotheque_pics_volumes(): Response
     {
+        $title = 'Pics de volumes';
         return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', [
             'picVolume' => $this->picVolume,
+            'title' => $title,
         ]);
     }
 
@@ -829,6 +850,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Pics de volumes';
         $data = $this->picVolume[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -843,14 +865,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->picVolume,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
     #[Route('/bibliotheque/volumes-faibles', name: 'investisseur_bibliotheque_volumes_faibles')]
     public function investisseur_bibliotheque_volumes_faibles(): Response
     {
+        $title = 'Volumes faibles';
         return $this->render('investisseur/bibliotheque/bibliotheque-volumes-faibles.html.twig', [
             'volumesFaibles' => $this->volumesFaibles,
+            'title' => $title,
         ]);
     }
 
@@ -862,6 +887,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Volumes faibles';
         $data = $this->volumesFaibles[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -876,14 +902,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->volumesFaibles,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
     #[Route('/bibliotheque/introductions-recentes', name: 'investisseur_bibliotheque_introduction')]
     public function investisseur_bibliotheque_introduction(): Response
     {
+        $title = 'Introduction';
         return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', [
             'intoduction' => $this->intoduction,
+            'title' => $title,
         ]);
         return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', []);
     }
@@ -896,6 +925,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
+        $title = 'Introduction';
         $data = $this->intoduction[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -910,6 +940,7 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->intoduction,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
+            'title' => $title,
         ]);
     }
 
