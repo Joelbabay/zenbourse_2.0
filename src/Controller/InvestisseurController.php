@@ -38,12 +38,12 @@ class InvestisseurController extends AbstractController
             'description' => 'Description spécifique pour ORGANOGENESIS HLD.',
         ],
         'prophase' => [
-            'title' => 'PROPHASE LABS INC  -  PRPH',
+            'title' => 'PROPHASE LABS INC',
             'flag' => 'us',
             'ticker' => 'PRPH',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-1/prophase-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-1/prophase-s.jpg',
-            'description' => 'Description spécifique pour PROPHASE LABS INC  -  PRPH',
+            'description' => 'Description spécifique pour PROPHASE LABS INC',
         ],
         'riot-platforms-inc' => [
             'title' => 'RIOT PLATFORMS INC',
@@ -62,7 +62,7 @@ class InvestisseurController extends AbstractController
             'ticker' => 'AMCX',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/amc-networks-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/amc-networks-s.jpg',
-            'description' => 'Description spécifique pour AMC NETWORKS INC  -  AMCX.',
+            'description' => 'Description spécifique pour AMC NETWORKS INC.',
         ],
         'establishment' => [
             'title' => 'ESTABLISHMENT LABS HLD',
@@ -70,7 +70,7 @@ class InvestisseurController extends AbstractController
             'ticker' => 'ESTA',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/establishment-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/establishment-s.jpg',
-            'description' => 'Description spécifique pour ESTABLISHMENT LABS HLD  -  ESTA.',
+            'description' => 'Description spécifique pour ESTABLISHMENT LABS HLD.',
         ],
         'fastned' => [
             'title' => 'FASTNED',
@@ -78,7 +78,7 @@ class InvestisseurController extends AbstractController
             'ticker' => 'FAST',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/fastned-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/fastned-s.jpg',
-            'description' => 'Description spécifique pour FASTNED  -  FAST.',
+            'description' => 'Description spécifique pour FASTNED.',
         ],
         'futu' => [
             'title' => 'FUTU HOLDINGS LTD',
@@ -86,7 +86,7 @@ class InvestisseurController extends AbstractController
             'ticker' => 'FUTU',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/futu-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/futu-s.jpg',
-            'description' => 'Description spécifique pour FUTU HOLDINGS LTD  -  FUTU.',
+            'description' => 'Description spécifique pour FUTU HOLDINGS LTD.',
         ],
         'witbe' => [
             'title' => 'WITBE ',
@@ -94,273 +94,265 @@ class InvestisseurController extends AbstractController
             'ticker' => 'ALWIT',
             'image_jour' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/bulle-type-2/witbe-s.jpg',
-            'description' => 'Description spécifique pour WITBE  -  ALWIT.',
+            'description' => 'Description spécifique pour WITBE.',
         ],
     ];
 
     private array  $ramassageData = [
         'beyond' => [
-            'title' => 'BEYOND INC  -  BYON',
+            'title' => 'BEYOND INC',
             'flag' => 'us',
             'ticker' => 'BYON',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage/beyond-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage/beyond-s.jpg',
-            'description' => 'Description spécifique pour BEYOND INC  -  BYON',
+            'description' => 'Description spécifique pour BEYOND INC',
         ],
         'jumia' => [
-            'title' => 'JUMIA TECHNOLOGIES  -  JMIA',
+            'title' => 'JUMIA TECHNOLOGIES',
             'flag' => 'us',
             'ticker' => 'JMIA',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage/jumia-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage/jumia-s.jpg',
-            'description' => 'Description spécifique pour JUMIA TECHNOLOGIES  -  JMIA',
+            'description' => 'Description spécifique pour JUMIA TECHNOLOGIES',
         ],
         'microstrategy' => [
-            'title' => 'MICROSTRATEGY INC  -  MSTR',
+            'title' => 'MICROSTRATEGY INC',
             'flag' => 'us',
             'ticker' => 'MSTR',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage/microstrategy-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage/microstrategy-s.jpg',
-            'description' => 'Description spécifique pour MICROSTRATEGY INC  -  MSTR',
+            'description' => 'Description spécifique pour MICROSTRATEGY INC',
         ],
         'nio' => [
-            'title' => 'NIO INC  -  NIO',
+            'title' => 'NIO INC',
             'flag' => 'us',
             'ticker' => 'NIO',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage/nio-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage/nio-s.jpg',
-            'description' => 'Description spécifique pour NIO INC  -  NIO',
+            'description' => 'Description spécifique pour NIO INC',
         ],
         'weebit-nano' => [
-            'title' => 'WEEBIT NANO LTD  -  WBT',
+            'title' => 'WEEBIT NANO LTD',
             'flag' => 'au',
             'ticker' => 'WBT',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage/weebit-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage/weebit-s.jpg',
-            'description' => 'Description spécifique pour WEEBIT NANO LTD  -  WBT',
+            'description' => 'Description spécifique pour WEEBIT NANO LTD',
         ],
     ];
 
     private array  $ramassagePicData = [
         'big-sporting' => [
-            'title' => 'BIG 5 SPORTING GOODS - BGFV',
+            'title' => 'BIG 5 SPORTING GOODS',
             'flag' => 'us',
             'ticker' => 'BGFV',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/big5-sporting-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/big5-sporting-s.jpg',
-            'description' => 'Description spécifique pour BIG 5 SPORTING GOODS - BGFV',
+            'description' => 'Description spécifique pour BIG 5 SPORTING GOODS',
         ],
         'himax' => [
-            'title' => 'HIMAX TECHNOLOGIES INC  -  HIMX',
+            'title' => 'HIMAX TECHNOLOGIES INC',
             'flag' => 'us',
             'ticker' => 'CELH',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/himax-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/himax-s.jpg',
-            'description' => 'Description spécifique pour HIMAX TECHNOLOGIES INC  -  HIMX',
+            'description' => 'Description spécifique pour HIMAX TECHNOLOGIES INC',
         ],
         'lendingclub' => [
-            'title' => 'LENDINGCLUB CORP - LC',
+            'title' => 'LENDINGCLUB CORP',
             'flag' => 'us',
             'ticker' => 'LC',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/lendingclub-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/lendingclub-s.jpg',
-            'description' => 'Description spécifique pour LENDINGCLUB CORP  -  LC',
+            'description' => 'Description spécifique pour LENDINGCLUB CORP',
         ],
         'plug-power' => [
-            'title' => 'PLUG-POWER INC - PLUG',
+            'title' => 'PLUG-POWER INC',
             'flag' => 'us',
             'ticker' => 'PLUG',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/plug-power-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/plug-power-s.jpg',
-            'description' => 'Description spécifique pour PLUG-POWER INC  -  PLUG',
+            'description' => 'Description spécifique pour PLUG-POWER INC',
         ],
         'up-fintech' => [
-            'title' => 'UP FINTECH HLD - TIGR',
+            'title' => 'UP FINTECH HLD',
             'flag' => 'au',
             'ticker' => 'TIGR',
             'image_jour' => '/images/investisseur/bibliotheque/ramassage-pic/up-fintech-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/ramassage-pic/up-fintech-s.jpg',
-            'description' => 'Description spécifique pour UP FINTECH HLD  -  TIGR',
+            'description' => 'Description spécifique pour UP FINTECH HLD',
         ],
     ];
 
     private array  $picRamassageData = [
         'altimmune' => [
-            'title' => 'ALTIMMUNE INC - ALT',
+            'title' => 'ALTIMMUNE INC',
             'flag' => 'us',
             'ticker' => 'ALT',
             'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/altimmune-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/altimmune-s.jpg',
-            'description' => 'Description spécifique pour ALTIMMUNE INC - ALT',
+            'description' => 'Description spécifique pour ALTIMMUNE INC',
         ],
         'celsius' => [
-            'title' => 'CELSIUS HLD - CELH',
+            'title' => 'CELSIUS HLD',
             'flag' => 'us',
             'ticker' => 'CELH',
             'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/celsius-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/celsius-s.jpg',
-            'description' => 'Description spécifique pour CELSIUS HLD - CELH',
+            'description' => 'Description spécifique pour CELSIUS HLD',
         ],
         'digital-turbine' => [
-            'title' => 'DIGITAL TURBINE INC - APPS',
+            'title' => 'DIGITAL TURBINE INC',
             'flag' => 'us',
             'ticker' => 'APPS',
             'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/digital-turbine-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/digital-turbine-s.jpg',
-            'description' => 'Description spécifique pour DIGITAL TURBINE INC - APPS',
+            'description' => 'Description spécifique pour DIGITAL TURBINE INC',
         ],
         'novavax' => [
-            'title' => 'NOVAVAX INC - NVAX',
+            'title' => 'NOVAVAX INC',
             'flag' => 'us',
             'ticker' => 'NVAX',
             'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/novavax-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/novavax-s.jpg',
-            'description' => 'Description spécifique pour NOVAVAX INC - NVAX',
+            'description' => 'Description spécifique pour NOVAVAX INC',
         ],
         'westport' => [
-            'title' => 'WESTPORT FUEL SYSTEMS INC - WPRT',
+            'title' => 'WESTPORT FUEL SYSTEMS INC',
             'flag' => 'us',
             'ticker' => 'WPRT',
             'image_jour' => '/images/investisseur/bibliotheque/pic-ramassage/westport-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-ramassage/westport-s.jpg',
-            'description' => 'Description spécifique pour WESTPORT FUEL SYSTEMS INC - WPRT',
+            'description' => 'Description spécifique pour WESTPORT FUEL SYSTEMS INC',
         ],
     ];
 
     private array  $picVolume = [
         'gaotu-techedu ' => [
-            'title' => 'GAOTU TECHEDU INC  -  GOTU',
+            'title' => 'GAOTU TECHEDU INC',
             'flag' => 'us',
             'ticker' => 'GOTU',
             'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/gaotu-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/gaotu-s.jpg',
-            'description' => 'Description spécifique pour GAOTU TECHEDU INC  -  GOTU',
+            'description' => 'Description spécifique pour GAOTU TECHEDU INC',
         ],
         'greeland-technologies' => [
-            'title' => 'GREENLAND TECHNOLOGIES INC  -  GTEC',
+            'title' => 'GREENLAND TECHNOLOGIES INC',
             'flag' => 'us',
             'ticker' => 'GTEC',
             'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/greeland-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/greeland-s.jpg',
-            'description' => 'Description spécifique pour GREENLAND TECHNOLOGIES INC  -  GTEC',
+            'description' => 'Description spécifique pour GREENLAND TECHNOLOGIES INC',
         ],
         'lexicon-pharmaceuticals' => [
-            'title' => 'LEXICON PHAMACEUTICALS INC  -  LXRX',
+            'title' => 'LEXICON PHAMACEUTICALS INC',
             'flag' => 'us',
             'ticker' => 'LXRX',
             'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/lexicon-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/lexicon-s.jpg',
-            'description' => 'Description spécifique pour LEXICON PHAMACEUTICALS INC  -  LXRX',
+            'description' => 'Description spécifique pour LEXICON PHAMACEUTICALS INC',
         ],
         'raibow-rare' => [
-            'title' => 'RAINBOW RARE EARTHS LTD  -  REW',
+            'title' => 'RAINBOW RARE EARTHS LTD',
             'flag' => 'us',
-            'ticker' => 'REW',
+            'ticker' => 'RBW',
             'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/rainbow-rare-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/rainbow-rare-s.jpg',
-            'description' => 'Description spécifique pour RAINBOW RARE EARTHS LTD  -  REW',
+            'description' => 'Description spécifique pour RAINBOW RARE EARTHS LTD',
         ],
         'superior-industries' => [
-            'title' => 'SUPERIOR INDUSTRIES INTL  -  SUP',
+            'title' => 'SUPERIOR INDUSTRIES INTL',
             'flag' => 'us',
             'ticker' => 'SUP',
             'image_jour' => '/images/investisseur/bibliotheque/pic-volumes/superior-industries-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/pic-volumes/superior-indusries-s.jpg',
-            'description' => 'Description spécifique pour SUPERIOR INDUSTRIES INTL  -  SUP',
+            'description' => 'Description spécifique pour SUPERIOR INDUSTRIES INTL',
         ],
     ];
 
     private array  $volumesFaibles = [
         '22nd-century' => [
-            'title' => '22ND CENTURY GROUP INC  -  XXIII',
+            'title' => '22ND CENTURY GROUP INC',
             'flag' => 'us',
             'ticker' => 'XXIII',
             'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/22nd-century-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/22nd-century-s.jpg',
-            'description' => 'Description spécifique pour 22ND CENTURY GROUP INC  -  XXIII',
+            'description' => 'Description spécifique pour 22ND CENTURY GROUP INC',
         ],
         'alumexx' => [
-            'title' => 'ALUMEXX  -  ALX',
+            'title' => 'ALUMEXX',
             'flag' => 'nl',
             'ticker' => 'ALX',
             'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/alumexx-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/alumexx-s.jpg',
-            'description' => 'Description spécifique pour ALUMEXX  -  ALX',
+            'description' => 'Description spécifique pour ALUMEXX',
         ],
         'cliq-digital' => [
-            'title' => 'CLIQ DIGITAL AGNA  -  CLIQ',
+            'title' => 'CLIQ DIGITAL AGNA',
             'flag' => 'us',
             'ticker' => 'CLIQ',
             'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-s.jpg',
-            'description' => 'Description spécifique pour CLIQ DIGITAL AGNA  -  CLIQ',
+            'description' => 'Description spécifique pour CLIQ DIGITAL AGNA',
         ],
         'groupe-ldlc' => [
-            'title' => 'GROUPE LDLC  -  ALLDL',
+            'title' => 'GROUPE LDLC',
             'flag' => 'fr',
             'ticker' => 'ALLDL',
             'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/groupe-ldlc-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/groupe-ldlc-s.jpg',
-            'description' => 'Description spécifique pour GROUPE LDLC  -  ALLDL',
+            'description' => 'Description spécifique pour GROUPE LDLC',
         ],
         'guillemot' => [
-            'title' => 'GUILLEMOT  -  GUI',
+            'title' => 'GUILLEMOT',
             'flag' => 'fr',
             'ticker' => 'GUI',
-            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/cliq-digital-s.jpg',
-            'description' => 'Description spécifique pour GUILLEMOT  -  GUI',
-        ],
-        'petvivo' => [
-            'title' => 'PETVIVO HOLDINGS INC  -  PETV',
-            'flag' => 'us',
-            'ticker' => 'PETV',
-            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/petvivo-j.jpg',
-            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/petvivo-s.jpg',
-            'description' => 'Description spécifique pour PETVIVO HOLDINGS INC  -  PETV',
+            'image_jour' => '/images/investisseur/bibliotheque/volumes-faibles/guillemot-j.jpg',
+            'image_semaine' => '/images/investisseur/bibliotheque/volumes-faibles/guillemot-s.jpg',
+            'description' => 'Description spécifique pour GUILLEMOT',
         ],
     ];
 
     private array  $intoduction = [
         'bit-digital' => [
-            'title' => 'BIT DIGITAL  -  BTBT',
+            'title' => 'BIT DIGITAL',
             'flag' => 'us',
             'ticker' => 'BTBT',
             'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/bit-digital-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/bit-digital-s.jpg',
-            'description' => 'Description spécifique pour BIT DIGITAL  -  BTBT',
+            'description' => 'Description spécifique pour BIT DIGITAL',
         ],
         'bitfarms' => [
-            'title' => 'BITFARMS LTD  -  BITF',
+            'title' => 'BITFARMS LTD',
             'flag' => 'us',
             'ticker' => 'BITF',
             'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/bitfarms-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/bitfarms-s.jpg',
-            'description' => 'Description spécifique pour BITFARMS LTD  -  BITF',
+            'description' => 'Description spécifique pour BITFARMS LTD',
         ],
         'fastly' => [
-            'title' => 'FASTLY INC  -  FSLY',
+            'title' => 'FASTLY INC',
             'flag' => 'us',
             'ticker' => 'FSLY',
             'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/fastly-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/fastly-s.jpg',
-            'description' => 'Description spécifique pour FASTLY INC  -  FSLY',
+            'description' => 'Description spécifique pour FASTLY INC',
         ],
         'mind-medicine' => [
-            'title' => 'MIND MIDICINE INC  -  MNMD',
+            'title' => 'MIND MIDICINE INC',
             'flag' => 'us',
             'ticker' => 'MNMD',
             'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/mind-medicine-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/mind-medicine-s.jpg',
-            'description' => 'Description spécifique pour MIND MIDICINE INC  -  MNMD',
+            'description' => 'Description spécifique pour MIND MIDICINE INC',
         ],
         'peloton-interactive' => [
-            'title' => 'PELOTON INTERACTIVE INC  -  PTON',
+            'title' => 'PELOTON INTERACTIVE INC',
             'flag' => 'us',
             'ticker' => 'PTON',
             'image_jour' => '/images/investisseur/bibliotheque/introduction-recente/peleton-j.jpg',
             'image_semaine' => '/images/investisseur/bibliotheque/introduction-recente/peleton-s.jpg',
-            'description' => 'Description spécifique pour PELOTON INTERACTIVE INC  -  PTON',
+            'description' => 'Description spécifique pour PELOTON INTERACTIVE INC',
         ],
     ];
 
@@ -651,10 +643,10 @@ class InvestisseurController extends AbstractController
     #[Route('/bibliotheque/bulles-type-1', name: 'investisseur_bibliotheque_bulles_type_1')]
     public function investisseur_bibliotheque_bulles_type_1(): Response
     {
-        $title = 'Bulles type 1';
+        $valueTitle = 'Bulles type 1';
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles.html.twig', [
             'bullesTypeData' => $this->bullesType1Data,
-            'title' => $title
+            'valueTitle' => $valueTitle
         ]);
     }
 
@@ -666,7 +658,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Bulles type 1';
+        $valueTitle = 'Bulles type 1';
         $data = $this->bullesType1Data[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -681,17 +673,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->bullesType1Data,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title
+            'valueTitle' => $valueTitle
         ]);
     }
 
     #[Route('/bibliotheque/bulles-type-2', name: 'investisseur_bibliotheque_bulles_type_2')]
     public function investisseur_bibliotheque_bulles_type_2(): Response
     {
-        $title = 'Bulles type 2';
+        $valueTitle = 'Bulles type 2';
         return $this->render('investisseur/bibliotheque/bibliotheque-bulles-type-2.html.twig', [
             'bullesType2Data' => $this->bullesType2Data,
-            'title' => $title
+            'valueTitle' => $valueTitle
         ]);
     }
 
@@ -703,7 +695,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Bulles type 2';
+        $valueTitle = 'Bulles type 2';
         $data = $this->bullesType2Data[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -718,17 +710,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->bullesType2Data,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title
+            'valueTitle' => $valueTitle
         ]);
     }
 
     #[Route('/bibliotheque/ramassage', name: 'investisseur_bibliotheque_ramasssage_1')]
     public function investisseur_bibliotheque_ramasssage(): Response
     {
-        $title = 'Ramassage';
+        $valueTitle = 'Ramassage';
         return $this->render('investisseur/bibliotheque/bibliotheque-ramassage.html.twig', [
             'ramassageData' => $this->ramassageData,
-            'title' => $title
+            'valueTitle' => $valueTitle
         ]);
     }
 
@@ -739,7 +731,7 @@ class InvestisseurController extends AbstractController
         if (!array_key_exists($value, $this->ramassageData)) {
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
-        $title = 'Ramassage';
+        $valueTitle = 'Ramassage';
         $data = $this->ramassageData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -754,17 +746,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->ramassageData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
     #[Route('/bibliotheque/ramassage-pic', name: 'investisseur_bibliotheque_ramasssage_pic')]
     public function investisseur_bibliotheque_ramasssage_pic(): Response
     {
-        $title = 'Ramasage + Pic';
+        $valueTitle = 'Ramasage + Pic';
         return $this->render('investisseur/bibliotheque/bibliotheque-ramassage-pic.html.twig', [
             'ramassagePicData' => $this->ramassagePicData,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
@@ -776,7 +768,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Ramasage + Pic';
+        $valueTitle = 'Ramasage + Pic';
         $data = $this->ramassagePicData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -791,17 +783,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->ramassagePicData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
     #[Route('/bibliotheque/pic-ramassage', name: 'investisseur_bibliotheque_pic_ramassage')]
     public function investisseur_bibliotheque_pic_ramassage(): Response
     {
-        $title = 'Pic + Ramassage';
+        $valueTitle = 'Pic + Ramassage';
         return $this->render('investisseur/bibliotheque/bibliotheque-pic-ramassage.html.twig', [
             'picRamassageData' => $this->picRamassageData,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
@@ -813,7 +805,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Pic + Ramassage';
+        $valueTitle = 'Pic + Ramassage';
         $data = $this->picRamassageData[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -828,17 +820,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->picRamassageData,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
     #[Route('/bibliotheque/pics-de-volumes', name: 'investisseur_bibliotheque_pics_volumes')]
     public function investisseur_bibliotheque_pics_volumes(): Response
     {
-        $title = 'Pics de volumes';
+        $valueTitle = 'Pics de volumes';
         return $this->render('investisseur/bibliotheque/bibliothequePicVolume.html.twig', [
             'picVolume' => $this->picVolume,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
@@ -850,7 +842,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Pics de volumes';
+        $valueTitle = 'Pics de volumes';
         $data = $this->picVolume[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -865,17 +857,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->picVolume,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
     #[Route('/bibliotheque/volumes-faibles', name: 'investisseur_bibliotheque_volumes_faibles')]
     public function investisseur_bibliotheque_volumes_faibles(): Response
     {
-        $title = 'Volumes faibles';
+        $valueTitle = 'Volumes faibles';
         return $this->render('investisseur/bibliotheque/bibliotheque-volumes-faibles.html.twig', [
             'volumesFaibles' => $this->volumesFaibles,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
@@ -887,7 +879,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Volumes faibles';
+        $valueTitle = 'Volumes faibles';
         $data = $this->volumesFaibles[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -902,17 +894,17 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->volumesFaibles,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 
     #[Route('/bibliotheque/introductions-recentes', name: 'investisseur_bibliotheque_introduction')]
     public function investisseur_bibliotheque_introduction(): Response
     {
-        $title = 'Introduction';
+        $valueTitle = 'Introductions';
         return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', [
             'intoduction' => $this->intoduction,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
         return $this->render('investisseur/bibliotheque/bibliotheque-introduction.html.twig', []);
     }
@@ -925,7 +917,7 @@ class InvestisseurController extends AbstractController
             throw $this->createNotFoundException('Cette valeur n\'existe pas.');
         }
 
-        $title = 'Introduction';
+        $valueTitle = 'Introductions';
         $data = $this->intoduction[$value];
         $currentRoute = $request->get('_route');
         $currentValue = $request->get('value');
@@ -940,7 +932,7 @@ class InvestisseurController extends AbstractController
             'bullesTypeData' => $this->intoduction,
             'currentRoute' => $currentRoute,
             'currentValue' => $currentValue,
-            'title' => $title,
+            'valueTitle' => $valueTitle,
         ]);
     }
 

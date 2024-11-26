@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Zenbourse - Méthode Investisseur - Bibliothèque - Bulle type valeur {{ title }}
+	Zenbourse - Méthode Investisseur - Bibliothèque - {{valueTitle}} - {{ title }}
 {% endblock %}
 
 {% block body %}
@@ -18,7 +18,7 @@
                             </span>
                         </div>
                         <div class="cnt-section">
-                            BULLE
+                            {{valueTitle}}
                         </div>
 					</div>
 					<div class="card mb-3" style="border: none">
