@@ -30,68 +30,56 @@
 		<script src="/js/jquery.magnific-popup.js"></script>
 		<script src="{{ asset('js/app.js') }}"></script>
 		<script>
-		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-			anchor.addEventListener('click', function(e) {
-			e.preventDefault();
-			const targetId = this.getAttribute('href');
-			const targetElement = document.querySelector(targetId);
-			const navbarHeight = document.querySelector('.sticky-top').offsetHeight;
+			function populateH2List() {
+				const h2Elements = document.querySelectorAll('h2');
+				const h2List = document.getElementById('h2-list');
 
-			if (targetElement) {
-						window.scrollTo({
-							top: targetElement.offsetTop - navbarHeight,
-							behavior: 'smooth'
-						});
+				h2List.innerHTML = '';
 
-						// Vérifier la position après l'animation de scroll
-						setTimeout(() => {
-							const currentScrollPosition = window.pageYOffset;
-							const targetPosition = targetElement.offsetTop - navbarHeight;
-
-							if (Math.abs(currentScrollPosition - targetPosition) > 10) {
-								window.scrollTo({
-									top: targetPosition,
-									behavior: 'smooth'
-								});
-							}
-						}, 500); // Ajuster le délai si nécessaire
+				h2Elements.forEach((h2, index) => {
+					if (!h2.id) {
+						h2.id = `section-${index + 1}`;
 					}
+
+					const listItem = document.createElement('li');
+					const link = document.createElement('a');
+					link.href = `#${h2.id}`;
+					link.textContent = h2.textContent;
+
+					link.style.cursor = 'pointer';
+					link.style.textDecoration = 'none';
+
+					listItem.appendChild(link);
+					h2List.appendChild(listItem);
+				});	
+			}
+
+		document.addEventListener('DOMContentLoaded', populateH2List);
+		document.addEventListener('turbo:load', populateH2List);
+
+		document.querySelectorAll('.clickable-div').forEach(function(div) {
+			div.addEventListener('click', function() {
+				window.location = div.getAttribute('data-href');
 			});
 		});
 
-		function populateH2List() {
-			const h2Elements = document.querySelectorAll('h2');
-			const h2List = document.getElementById('h2-list');
+		// Fonction pour mettre à jour la marge dynamique
+		function updateScrollMargin() {
+			// Sélectionnez le header sticky
+			const header = document.querySelector('.sticky-top');
 
-			h2List.innerHTML = '';
+			// Vérifiez si le header existe
+			if (header) {
+				const headerHeight = Math.ceil(header.getBoundingClientRect().height);
 
-			h2Elements.forEach((h2, index) => {
-				if (!h2.id) {
-					h2.id = `section-${index + 1}`;
-				}
-
-				const listItem = document.createElement('li');
-				const link = document.createElement('a');
-				link.href = `#${h2.id}`;
-				link.textContent = h2.textContent;
-
-				link.style.cursor = 'pointer';
-				link.style.textDecoration = 'none';
-
-				listItem.appendChild(link);
-				h2List.appendChild(listItem);
-			});	
-		}
-
-			document.addEventListener('DOMContentLoaded', populateH2List);
-			document.addEventListener('turbo:load', populateH2List);
-
-			document.querySelectorAll('.clickable-div').forEach(function(div) {
-				div.addEventListener('click', function() {
-					window.location = div.getAttribute('data-href');
+				// Ajoutez le scroll-margin-top à tous les éléments ciblés (par exemple, h2)
+				document.querySelectorAll('h2').forEach(element => {
+					element.style.scrollMarginTop = `${headerHeight + 10}px`; // +10 pour un peu d'espacement
 				});
-			});
-
+			}
+		}
+		updateScrollMargin();
+		window.addEventListener('resize', updateScrollMargin);
 		</script>
 	</body>
 </html>
