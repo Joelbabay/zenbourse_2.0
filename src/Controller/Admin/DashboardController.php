@@ -7,6 +7,7 @@ use App\Entity\Download;
 use App\Entity\IntradayRequest;
 use App\Entity\InvestisseurRequest;
 use App\Entity\Menu;
+use App\Entity\PageContent;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -41,7 +42,13 @@ class DashboardController extends AbstractDashboardController
     public function configureAssets(): Assets
     {
         return Assets::new()
-            ->addCssFile('/css/admin.css');
+            ->addCssFile('/css/admin.css')
+            ->addHtmlContentToHead('<script src="https://cdn.tiny.cloud/1/1ii47bnpw6kbzwupf0piyjyp0ixu6ih9u4hwjkuk77de2l70/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>')
+            ->addHtmlContentToBody('
+            <script> tinymce.init({
+				selector: \'#my_tinymce\'
+			    }); 
+            </script>');
     }
 
     public function configureMenuItems(): iterable
@@ -56,5 +63,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Méthode Intraday', 'fa fa-star', IntradayRequest::class)
             ->setController(IntradayRequestCrudController::class);
         yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
+        yield MenuItem::linkToCrud('Contenus des Pages', 'fa fa-edit', PageContent::class);
     }
 }

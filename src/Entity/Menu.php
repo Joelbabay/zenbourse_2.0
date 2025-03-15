@@ -37,6 +37,9 @@ class Menu
     #[ORM\Column]
     private ?int $menuorder = null;
 
+    #[ORM\OneToOne(mappedBy: 'menu', cascade: ['persist', 'remove'])]
+    private ?PageContent $pageContent = null;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -140,5 +143,22 @@ class Menu
     public function __tostring(): string
     {
         return $this->label;
+    }
+
+    public function getPageContent(): ?PageContent
+    {
+        return $this->pageContent;
+    }
+
+    public function setPageContent(PageContent $pageContent): static
+    {
+        // set the owning side of the relation if necessary
+        if ($pageContent->getMenu() !== $this) {
+            $pageContent->setMenu($this);
+        }
+
+        $this->pageContent = $pageContent;
+
+        return $this;
     }
 }

@@ -85,7 +85,7 @@
 			</header>
 		</div>
 	</div>
-			{% if app.request.get('_route') starts with 'home'%}
+			{% if app.request.get('_route') matches '/^(home|app)/' %}
 				{% include 'partials/menu_home.html.twig' %}
 			{% endif %}
 			{% if app.request.get('_route') starts with 'investisseur'%}

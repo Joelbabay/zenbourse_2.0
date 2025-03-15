@@ -9,7 +9,10 @@
           <ul class="navbar-nav">
             {% for item in get_menu('HOME')  %}
               <li class="nav-item">
-                <a class="p-3 nav-link {{ app.request.get('_route') == item.route ? 'active' : '' }}" href="{{ path(item.route) }}">{{ item.label }}</a>
+                <a href="{{ path('app_page', {'route': item.route}) }}"
+                  class="p-3 nav-link menu-home {% if app.request.pathinfo == '/' ~ item.route %}active{% endif %}">
+                  {{ item.label }}
+                  </a>
               </li>
             {% endfor %}
           </ul>

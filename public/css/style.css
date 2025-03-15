@@ -13,10 +13,6 @@ h4 {
   line-height: 1.2;
 }
 
-h2 {
-  scroll-margin-top: 175px;
-}
-
 input::-webkit-input-placeholder {
   color: lightgray !important;
   /* Pour Chrome, Safari et Opera */
