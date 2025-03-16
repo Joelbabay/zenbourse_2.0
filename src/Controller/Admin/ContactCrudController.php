@@ -116,7 +116,7 @@ class ContactCrudController extends AbstractCrudController
                 })->hideOnIndex(),
             FormField::addColumn(8),
             FormField::addPanel('Message')->setIcon('fa fa-comment'),
-            TextareaField::new('content', 'Contenu')->setColumns(6)->setMaxLength(30),
+            TextareaField::new('content', 'Contenu')->setColumns(6),
             DateTimeField::new('createdAt', 'Reçu le')->setFormat('d F Y - H:i:s')
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
