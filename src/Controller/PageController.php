@@ -21,7 +21,8 @@ class PageController extends AbstractController
 
         $pageContent = $contentRepo->findOneBy(['menu' => $menu]);
 
-        return $this->render('home/' . $route . '.html.twig', [
+        return $this->render('home/page.html.twig', [
+            'menu' => $menu,
             'pageContent' => $pageContent
         ]);
     }

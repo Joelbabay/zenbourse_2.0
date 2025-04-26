@@ -7,7 +7,8 @@
         <div class="collapse navbar-collapse menu-home" id="navbarNav">
           <span class="navbar-text me-3 fw-bold text-dark" style="color: #370028;">ZENBOURSE 50 -></span>
           <ul class="navbar-nav">
-            {% for item in get_menu('HOME')  %}
+            {% set sorted_menu = get_menu('HOME')|sort((a, b) => a.menuorder <=> b.menuorder) %}
+            {% for item in sorted_menu %}
               <li class="nav-item">
                 <a href="{{ path('app_page', {'route': item.route}) }}"
                   class="p-3 nav-link menu-home {% if app.request.pathinfo == '/' ~ item.route %}active{% endif %}">

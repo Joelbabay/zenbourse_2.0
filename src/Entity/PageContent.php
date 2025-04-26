@@ -16,10 +16,10 @@ class PageContent
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(nullable: true)]
     private ?string $content = null;
 
-    #[ORM\OneToOne(inversedBy: 'pageContent', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'pageContent', cascade: ['persist'], orphanRemoval: false)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
 

@@ -6,6 +6,7 @@ use App\Entity\PageContent;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
@@ -21,7 +22,7 @@ class PageContentCrudController extends AbstractCrudController
         return [
             TextField::new('title', 'Titre'),
             AssociationField::new('menu', 'Menu lié'),
-            TextEditorField::new('content', 'Contenu')->setNumOfRows(50)->setRequired(true)->onlyOnForms()
+            TextareaField::new('content', 'Contenu')->onlyOnForms()->setFormTypeOption('attr', ['class' => 'ckeditor'])->setColumns(8)->setNumOfRows(30),
         ];
     }
 }
