@@ -101,6 +101,7 @@ class DashboardController extends AbstractDashboardController
                     PasteFromOffice,
                     RemoveFormat,
                     ShowBlocks,
+                    SimpleUploadAdapter,
                     SourceEditing,
                     SpecialCharacters,
                     SpecialCharactersArrows,
@@ -180,6 +181,7 @@ class DashboardController extends AbstractDashboardController
                             PasteFromOffice,
                             RemoveFormat,
                             ShowBlocks,
+                            SimpleUploadAdapter,
                             SourceEditing,
                             SpecialCharacters,
                             SpecialCharactersArrows,
@@ -425,6 +427,12 @@ class DashboardController extends AbstractDashboardController
                         },
                         table: {
                             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
+                        },
+                        simpleUpload: {
+                            uploadUrl: '/uploadImage',
+                            headers: {
+                                'X-CSRF-TOKEN': 'CSRF-Token' 
+                            }
                         }
                 } )
             </script>");

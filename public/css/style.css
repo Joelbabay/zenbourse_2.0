@@ -43,6 +43,11 @@ body {
   padding-left: 12px;
 }
 
+.custom-container img {
+  max-width: 100%;
+  height: auto;
+}
+
 .limited-width {
   max-width: 1700px;
 }
