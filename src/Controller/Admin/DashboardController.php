@@ -429,7 +429,7 @@ class DashboardController extends AbstractDashboardController
                             contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties']
                         },
                         simpleUpload: {
-                            uploadUrl: '/public/uploads/',
+                            uploadUrl: '/upload-image',
                             headers: {
                                 'X-CSRF-TOKEN': 'CSRF-Token' 
                             }
