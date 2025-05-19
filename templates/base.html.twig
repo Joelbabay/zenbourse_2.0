@@ -33,8 +33,20 @@
 			function populateH2List() {
 				const h2Elements = document.querySelectorAll('h2');
 				const h2List = document.getElementById('h2-list');
+				const sidebarContainer = h2List.closest('.sidebar');
 
 				h2List.innerHTML = '';
+
+				if (h2Elements.length === 0) {
+					if (sidebarContainer) {
+						sidebarContainer.style.display = 'none';
+					}
+					return;
+				} else {
+					if (sidebarContainer) {
+						sidebarContainer.style.display = '';
+					}
+				}
 
 				h2Elements.forEach((h2, index) => {
 					if (!h2.id) {
@@ -51,8 +63,9 @@
 
 					listItem.appendChild(link);
 					h2List.appendChild(listItem);
-				});	
+				});
 			}
+
 
 		document.addEventListener('DOMContentLoaded', populateH2List);
 		document.addEventListener('turbo:load', populateH2List);
