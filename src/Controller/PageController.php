@@ -14,7 +14,6 @@ class PageController extends AbstractController
     public function show(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $route): Response
     {
         $menu = $menuRepo->findOneBy(['route' => $route]);
-        //dd($_GET);
         if (!$menu) {
             throw $this->createNotFoundException('Page non trouvée');
         }
