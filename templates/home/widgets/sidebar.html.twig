@@ -4,20 +4,22 @@
 		<ul id="h2-list" class="py-2">
 		</ul>
 	</div>
-
-	<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_investisseur_subscription') }}">
-		<p>Je suis intéressé par</p>
-		<a href="{{ path('home_investisseur_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
-			la méthode Investisseur
-		</a>
-	</div>
-
-	<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_intraday_subscription') }}">
+	{% if not app.user or not app.user.isInvestisseur %}
+		<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_investisseur_subscription') }}">
+			<p>Je suis intéressé par</p>
+			<a href="{{ path('home_investisseur_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
+				la méthode Investisseur
+			</a>
+		</div>
+	{% endif %}
+	{% if not app.user or not app.user.isIntraday %}
+		<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_intraday_subscription') }}">
 		<p>Je suis intéressé par</p>
 		<a href="{{ path('home_intraday_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			la méthode Intraday
 		</a>
 	</div>
+	{% endif %}
 
 	<div class="sidebar p-4 rounded clickable-div bg-light" data-href="{{ path('home_download_page') }}">
 		<p>Les valeurs de</p>

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PageController extends AbstractController
 {
-    #[Route('/{route}', name: 'app_page')]
+    #[Route('/{route}', name: 'app_home_page')]
     public function show(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $route): Response
     {
         $menu = $menuRepo->findOneBy(['route' => $route]);

@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ContactController extends AbstractController
 {
     public function __construct(private UserPasswordHasherInterface $passwordHasher) {}
-    #[Route('/home_contact', name: 'home_contact')]
+    #[Route('/contact', name: 'app_home_contact')]
     public function index(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
         $contact = new Contact();

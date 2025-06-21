@@ -152,9 +152,9 @@ nav .nav-item a:hover {
   color: #183d3d;
 }
 
-.bg-zen-primary a {
+/*.bg-zen-primary a {
   color: #fff;
-}
+}*/
 
 .methode-section a {
   font-size: 15px;
@@ -229,9 +229,9 @@ a {
   box-shadow: none !important;
 }
 
-.dropdown-menu a {
+/*.dropdown-menu a {
   color: #000 !important;
-}
+}*/
 
 /* padding-bottom and top for image */
 

@@ -1,5 +1,5 @@
 
-  <nav class="navbar navbar-expand-lg bg-body-tertiary text-uppercase main-nav-g p-0">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary text-uppercase main-nav-g p-0 {% if app.request.get('_route') starts with 'app_user_'%}d-none{% endif %}">
       <div class="container-fluid limited-width">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -10,7 +10,7 @@
             {% set sorted_menu = get_menu('HOME')|sort((a, b) => a.menuorder <=> b.menuorder) %}
             {% for item in sorted_menu %}
               <li class="nav-item">
-                <a href="{{ path('app_page', {'route': item.route}) }}"
+                <a href="{{ path('app_home_page', {'route': item.route}) }}"
                   class="p-3 nav-link menu-home {% if app.request.pathinfo == '/' ~ item.route %}active{% endif %}">
                   {{ item.label }}
                   </a>
