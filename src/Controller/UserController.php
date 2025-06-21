@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Form\ChangePasswordType;
+use App\Form\ChangeLocalPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ final class UserController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         $user = $this->getUser();
-        $form = $this->createForm(ChangePasswordType::class);
+        $form = $this->createForm(ChangeLocalPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
