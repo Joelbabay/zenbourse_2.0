@@ -37,7 +37,7 @@ class CandlestickPatternRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.isActive = :active')
             ->setParameter('active', true)
-            ->orderBy('c.name', 'ASC')
+            ->orderBy('c.title', 'ASC')
             ->getQuery()
             ->getResult();
     }

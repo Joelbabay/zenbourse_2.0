@@ -521,4 +521,15 @@ label.required:after {
 
 .cnt-ch-jp li {
   padding-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+/* Card hover effects */
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
 }

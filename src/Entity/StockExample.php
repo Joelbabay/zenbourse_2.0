@@ -38,6 +38,9 @@ class StockExample
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $introduction = null;
+
     #[ORM\Column]
     private ?bool $isActive = true;
 
@@ -142,6 +145,17 @@ class StockExample
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getIntroduction(): ?string
+    {
+        return $this->introduction;
+    }
+
+    public function setIntroduction(?string $introduction): static
+    {
+        $this->introduction = $introduction;
         return $this;
     }
 

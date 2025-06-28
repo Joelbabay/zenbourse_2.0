@@ -151,6 +151,53 @@ class MenuService
             }
         }
 
+        // Gestion spéciale pour les routes de détail des chandeliers japonais
+        if ($section === 'INVESTISSEUR' && $currentRoute === 'investisseur_methode_chandeliers_japonais_detail') {
+            // Chercher le parent "La Méthode" au lieu de "Chandeliers japonais"
+            $methodeParent = $this->menuRepository->findOneBy([
+                'section' => 'INVESTISSEUR',
+                'parent' => null,
+                'route' => 'investisseur_la-methode'
+            ]);
+
+            if ($methodeParent) {
+                // Charger le parent avec ses enfants via DQL
+                $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
+                $query = $this->entityManager->createQuery($dql);
+                $query->setParameter('id', $methodeParent->getId());
+                $result = $query->getResult();
+
+                if (!empty($result)) {
+                    return $result[0];
+                }
+            }
+        }
+
+        // Gestion générique pour les routes de détail qui commencent par une route parent
+        if ($section === 'INVESTISSEUR' && str_ends_with($currentRoute, '_detail')) {
+            // Extraire la route parent en supprimant '_detail'
+            $parentRoute = str_replace('_detail', '', $currentRoute);
+            
+            // Chercher le menu enfant qui a cette route
+            $childMenu = $this->menuRepository->findOneBy([
+                'section' => 'INVESTISSEUR',
+                'route' => $parentRoute
+            ]);
+
+            if ($childMenu && $childMenu->getParent()) {
+                // Charger le parent avec ses enfants via DQL
+                $parentId = $childMenu->getParent()->getId();
+                $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
+                $query = $this->entityManager->createQuery($dql);
+                $query->setParameter('id', $parentId);
+                $result = $query->getResult();
+
+                if (!empty($result)) {
+                    return $result[0];
+                }
+            }
+        }
+
         return null;
     }
 

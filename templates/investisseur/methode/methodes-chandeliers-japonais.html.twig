@@ -13,20 +13,58 @@
 					    <h1 class="display-5 fst-italic"><strong>Les chandeliers japonais</strong></h1>
 				    </div>
 
-                    <div class="container-fluid bg-light mb-4 p-3">
-                        <p class="text-justify">Les structures en chandeliers japonais sont nombreuses, environ 40, c’est comme les figures chartistes, elles ne sont pas toutes utiles.</p>
-                        <p class="text-justify">On distingue 2 catégories :</p>
+                    <div class="container-fluid bg-light mb-4 p-3 rounded">
+                        <p class="text-justify">Les structures en chandeliers japonais sont nombreuses, environ 40, c'est comme les figures chartistes, elles ne sont pas toutes utiles.</p>
+                        <p class="text-justify">On distingue 2 catégories :</p>
                         <ul>
                             <li>Les structures de retournement de tendance, environ 14</li>
                             <li>Les structures de continuation de tendance. Environ 26</li>
                         </ul>
-                        <p class="text-justify">Comme nous prenons des positions lorsqu’une tendance est validée, les structures de retournement de tendance ne sont utilisées dans la méthode</p>
+                        <p class="text-justify">Comme nous prenons des positions lorsqu'une tendance est validée, les structures de retournement de tendance ne sont utilisées dans la méthode</p>
                         <p class="text-justify">Par contre les structures de continuation de tendance sont très utiles pour la gestion des positions. Lorsque vous êtes en position, détecter une structure de continuation de tendance est rassurant. Il reste du carburant pour aller plus haut. Ces structures confirment la poursuite de la tendance actuelle.</p>
 				    </div>
-                    <div class="container-fluid bg-light mb-4 p-3">
+                    <div class="container-fluid bg-light mb-4 p-3 rounded">
                         <p class="text-center important-text text-success">
-                            Les structures à connaître doivent être constatées sur l’unité de temps <strong>Semaine</strong>
+                            Les structures à connaître doivent être constatées sur l'unité de temps <strong>Semaine</strong>
                         </p>
+                    </div>
+
+                    <!-- Patterns Grid -->
+                    <div class="row g-4">
+                        {% for slug, pattern in chandeliersJaponais %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 shadow-sm hover-shadow">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-primary">{{ pattern.title }}</h5>
+                                        <p class="card-text text-muted small">{{ pattern.structure }}</p>
+                                        
+                                        {% if pattern.image_h or pattern.image_b %}
+                                            <div class="text-center mb-3">
+                                                {% if pattern.image_h %}
+                                                    <img src="{{ asset('/'~ pattern.image_h) }}" 
+                                                         alt="{{ pattern.image_name_h }}" 
+                                                         class="img-fluid rounded" 
+                                                         style="max-height: 120px; max-width: 100%;">
+                                                {% elseif pattern.image_b %}
+                                                    <img src="{{ asset('/'~ pattern.image_b) }}" 
+                                                         alt="{{ pattern.image_name_b }}" 
+                                                         class="img-fluid rounded" 
+                                                         style="max-height: 120px; max-width: 100%;">
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <a href="{{ path('investisseur_methode_chandeliers_japonais_detail', {'slug': slug}) }}" 
+                                               class="btn btn-outline-primary btn-sm">
+                                                Voir détails
+                                            </a>
+                                            <span class="badge bg-success">Continuation</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
 				</div>
 				<div class="col-md-3 mt-3">

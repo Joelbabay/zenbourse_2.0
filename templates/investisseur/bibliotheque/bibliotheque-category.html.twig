@@ -4,33 +4,23 @@
 
 {% block body %}
 {% include 'partials/header.html.twig' %}
-    <div class="container-fluid">
+    <div class="custom-container mt-4">
         <div class="row">
             <div class="col-md-9">
                 <h1>{{ valueTitle }}</h1>
-                
-                <div class="row">
-                    {% for slug, example in examples %}
-                        <div class="col-md-4 mb-4">
-                            <div class="card clickable-div" data-href="{{ path('investisseur_bibliotheque_detail', {'category': category, 'slug': slug}) }}">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ example.title }}</h5>
-                                    <p class="card-text">
-                                        <span class="fi fi-{{ example.flag }}"></span>
-                                        <strong>{{ example.ticker }}</strong>
-                                    </p>
-                                    {% if example.image_jour %}
-                                        <img src="{{ example.image_jour }}" class="img-fluid" alt="{{ example.title }}">
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
+                {% if introduction %}
+                    <div class="container bg-light mb-4 p-3">
+                        <p class="text-justify">{{ introduction|raw }}</p>
+                    </div>
+                {% endif %}
             </div>
             
             <div class="col-md-3">
-                {% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+                {% include 'investisseur/widgets/sidebar-stocks.html.twig' with {
+                    'stocks': examples,
+                    'valueTitle': valueTitle,
+                    'category': category
+                } %}
             </div>
         </div>
     </div>

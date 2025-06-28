@@ -4,41 +4,85 @@
 
 {% block body %}
 {% include 'partials/header.html.twig' %}
-    <div class="container-fluid">
+    <div class="custom-container">
         <div class="row">
             <div class="col-md-9">
-                <h1>{{ example.title }}</h1>
-                <p class="lead">
-                    <span class="fi fi-{{ example.flag }}"></span>
-                    <strong>{{ example.ticker }}</strong>
-                </p>
+                <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                    <div class="cnt-title d-flex align-items-center">
+                        <span class="fi fi-{{ example.flag }}" style="font-size: 30px"></span>
+                        <span class="mx-3">
+                            {{ example.title }} - {{ example.ticker }}
+                        </span>
+                    </div>
+                    <div class="cnt-section">
+                        {{ valueTitle }}
+                    </div>
+                </div>
                 
                 {% if example.description %}
-                    <div class="mb-4">
-                        <h3>Description</h3>
-                        <p>{{ example.description }}</p>
+                    <div class="card mb-3" style="border: none">
+                        <div class="row g-2">
+                            {% if example.image_jour %}
+                                <div class="col-md-8">
+                                    <div class="bg-blue p-2 text-center">
+                                        <span class="p-0">
+                                            GRAPHIQUE JOUR
+                                        </span>
+                                    </div>
+                                    <a class="image-popup-no-margins" href="{{ asset(example.image_jour) }}">
+                                        <img src="{{ asset(example.image_jour) }}" class="img-fluid rounded-start" alt="{{ example.title }}">
+                                    </a>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="bg-blue p-2 text-center">
+                                        <span class="p-0">
+                                            ANALYSE
+                                        </span>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">{{ example.description }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endif %}
                 
-                <div class="row">
-                    {% if example.image_jour %}
-                        <div class="col-md-6">
-                            <h4>Graphique journalier</h4>
-                            <img src="{{ example.image_jour }}" class="img-fluid" alt="{{ example.title }} - Journalier">
+                {% if example.image_semaine %}
+                    <div class="card mb-3" style="border: none">
+                        <div class="row g-2">
+                            <div class="col-md-8">
+                                <div class="bg-green p-2 text-center">
+                                    <span class="p-0">
+                                        GRAPHIQUE SEMAINE
+                                    </span>
+                                </div>
+                                <a class="image-popup-no-margins" href="{{ asset(example.image_semaine) }}">
+                                    <img src="{{ asset(example.image_semaine) }}" class="img-fluid rounded-start" alt="{{ example.title }}">
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-green p-2 text-center">
+                                    <span class="p-0">
+                                        ANALYSE ET VALIDATION
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text">{{ example.description }}</p>
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
-                    
-                    {% if example.image_semaine %}
-                        <div class="col-md-6">
-                            <h4>Graphique hebdomadaire</h4>
-                            <img src="{{ example.image_semaine }}" class="img-fluid" alt="{{ example.title }} - Hebdomadaire">
-                        </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
             
             <div class="col-md-3">
-                {% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+                {% include 'investisseur/widgets/sidebar-stocks.html.twig' with {
+                    'stocks': examples,
+                    'valueTitle': valueTitle,
+                    'category': category,
+                    'currentValue': currentValue
+                } %}
             </div>
         </div>
     </div>

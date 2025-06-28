@@ -11,17 +11,10 @@
                 {% for item in get_menu('HOME') %}
                     {% set is_active = is_active_menu(current_route, item) %}
                     <li class="nav-item">
-                        {% if item.route and item.route != 'home_' ~ item.slug %}
-                            <a href="{{ path(item.route) }}"
-                               class="p-3 nav-link menu-home {{ is_active ? 'active' : '' }}">
-                                {{ item.label }}
-                            </a>
-                        {% else %}
-                            <a href="{{ path('app_home_page', {'slug': item.slug}) }}"
-                               class="p-3 nav-link menu-home {{ is_active ? 'active' : '' }}">
-                                {{ item.label }}
-                            </a>
-                        {% endif %}
+                        <a href="{{ menu_url(item) }}"
+                           class="p-3 nav-link menu-home {{ is_active ? 'active' : '' }}">
+                            {{ item.label }}
+                        </a>
                     </li>
                 {% endfor %}
             </ul>

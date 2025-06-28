@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
+use App\Entity\Menu;
 use App\Repository\MenuRepository;
-use App\Service\MenuService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -13,23 +13,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:generate-slugs',
-    description: 'Génère automatiquement les slugs pour tous les menus existants',
+    description: 'Génère des slugs pour les menus existants',
 )]
 class GenerateSlugsCommand extends Command
 {
-    private $menuRepository;
-    private $menuService;
-    private $entityManager;
-
     public function __construct(
-        MenuRepository $menuRepository,
-        MenuService $menuService,
-        EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private MenuRepository $menuRepository
     ) {
         parent::__construct();
-        $this->menuRepository = $menuRepository;
-        $this->menuService = $menuService;
-        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -38,54 +30,67 @@ class GenerateSlugsCommand extends Command
 
         $io->title('Génération des slugs pour les menus');
 
-        // Récupère tous les menus
-        $menus = $this->menuRepository->findAll();
-
-        if (empty($menus)) {
-            $io->warning('Aucun menu trouvé dans la base de données.');
-            return Command::SUCCESS;
-        }
-
-        $io->text(sprintf('Traitement de %d menus...', count($menus)));
-
+        $menus = $this->entityManager->getRepository(Menu::class)->findAll();
         $updatedCount = 0;
-        $skippedCount = 0;
         $usedSlugs = [];
 
+        // Pré-remplir avec les slugs déjà existants en base (hors menu courant)
         foreach ($menus as $menu) {
-            $label = $menu->getLabel();
-            $currentSlug = $menu->getSlug();
-
-            // Régénère le slug s'il est vide ou s'il commence par "temp-"
-            if (empty($currentSlug) || str_starts_with($currentSlug, 'temp-')) {
-                // Génère un slug unique en tenant compte des slugs déjà générés dans cette exécution
-                $baseSlug = $this->menuRepository->generateUniqueSlug($label, $menu->getId());
-                $slug = $baseSlug;
-                $counter = 1;
-                while (in_array($slug, $usedSlugs)) {
-                    $slug = $baseSlug . '-' . $counter;
-                    $counter++;
-                }
-                $menu->setSlug($slug);
-                $usedSlugs[] = $slug;
-                $io->text(sprintf('✓ Généré slug "%s" pour "%s" (remplace "%s")', $slug, $label, $currentSlug));
-                $updatedCount++;
-            } else {
-                $usedSlugs[] = $currentSlug;
-                $io->text(sprintf('- Slug déjà présent "%s" pour "%s"', $currentSlug, $label));
-                $skippedCount++;
+            $slug = $menu->getSlug();
+            if (!empty($slug)) {
+                $usedSlugs[$slug] = true;
             }
         }
 
-        // Persiste les changements
-        $this->entityManager->flush();
+        foreach ($menus as $menu) {
+            $currentSlug = $menu->getSlug();
+            
+            // Si le slug est vide ou commence par "menu-", générer un nouveau slug
+            if (empty($currentSlug) || str_starts_with($currentSlug, 'menu-')) {
+                $baseSlug = $this->generateSlug($menu->getLabel());
+                $newSlug = $baseSlug;
+                $counter = 1;
+                // Chercher un slug unique (en mémoire et en base)
+                while (isset($usedSlugs[$newSlug]) || $this->menuRepository->slugExists($newSlug, $menu->getId())) {
+                    $newSlug = $baseSlug . '-' . $counter;
+                    $counter++;
+                }
+                $menu->setSlug($newSlug);
+                $usedSlugs[$newSlug] = true;
+                $updatedCount++;
+                $io->text(sprintf('Menu "%s" : %s → %s', $menu->getLabel(), $currentSlug, $newSlug));
+            }
+        }
 
-        $io->success([
-            sprintf('%d slugs générés', $updatedCount),
-            sprintf('%d menus déjà avec slug', $skippedCount),
-            'Tous les slugs ont été sauvegardés en base de données.'
-        ]);
+        if ($updatedCount > 0) {
+            $this->entityManager->flush();
+            $io->success(sprintf('%d menus ont été mis à jour avec de nouveaux slugs.', $updatedCount));
+        } else {
+            $io->info('Aucun menu nécessitait de mise à jour de slug.');
+        }
 
         return Command::SUCCESS;
+    }
+
+    private function generateSlug(string $text): string
+    {
+        // Convertit en minuscules
+        $text = strtolower($text);
+
+        // Remplace les caractères accentués
+        $text = str_replace(
+            ['à', 'á', 'â', 'ã', 'ä', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'],
+            ['a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'],
+            $text
+        );
+
+        // Remplace les caractères spéciaux par des tirets
+        $text = preg_replace('/[^a-z0-9-]/', '-', $text);
+
+        // Supprime les tirets multiples
+        $text = preg_replace('/-+/', '-', $text);
+
+        // Supprime les tirets en début et fin
+        return trim($text, '-');
     }
 }

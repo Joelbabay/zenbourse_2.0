@@ -29,11 +29,13 @@ class BibliothequeController extends AbstractController
         $examples = $this->stockExampleService->getExamplesByCategory($category);
         $valueTitle = $this->stockExampleService->getCategoryTitle($category);
         $formattedExamples = $this->stockExampleService->formatExamplesForTemplate($examples);
+        $introduction = $this->stockExampleService->getCategoryIntroduction($category);
 
         return $this->render('investisseur/bibliotheque/bibliotheque-category.html.twig', [
             'examples' => $formattedExamples,
             'valueTitle' => $valueTitle,
-            'category' => $category
+            'category' => $category,
+            'introduction' => $introduction
         ]);
     }
 

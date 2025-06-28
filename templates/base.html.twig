@@ -72,7 +72,9 @@
 		document.addEventListener('turbo:load', populateH2List);
 
 		document.querySelectorAll('.clickable-div').forEach(function(div) {
-			div.addEventListener('click', function() {
+			div.addEventListener('click', function(e) {
+				// Si le clic vient d'un lien, on laisse le lien fonctionner normalement
+				if (e.target.closest('a')) return;
 				window.location = div.getAttribute('data-href');
 			});
 		});

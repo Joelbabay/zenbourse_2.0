@@ -7,7 +7,7 @@
                     <div class="col-3 ps-0">
                         <a class="header-logo d-flex align-items-center navbar-brand" href="/accueil">
                             {#<img src="{{ asset('images/logo/zenbourse-logo.svg') }}" alt="Logo" width="25" class="d-inline-block align-text-center">#}
-                            <span class="text-uppercase ps-2 text-white">zenbourse</span>
+                            <span class="text-uppercase text-white">zenbourse</span>
                         </a>
                     </div>
                     <div class="col-4 pt-1">
@@ -41,13 +41,13 @@
 
                         {# Dropdown utilisateur #}
                         {% if app.user %}
-                            <div class="dropdown">
+                            <div class="dropdown ms-2">
                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownAccount" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Mon compte">
                                     <span>MON COMPTE</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
                                     <li>
-                                        <a class="dropdown-item" href="{{ path('app_user_profile') }}">Voir mon profil</a>
+                                        <a class="dropdown-item" href="{{ path('app_user_profile') }}">Mes informations</a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>

@@ -15,19 +15,13 @@ class CandlestickPattern
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $slug = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     private ?string $structure = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageH = null;
@@ -42,6 +36,9 @@ class CandlestickPattern
     private ?string $imageNameB = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $contentH = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -49,6 +46,9 @@ class CandlestickPattern
 
     #[ORM\Column]
     private ?bool $isActive = true;
+
+    #[ORM\Column]
+    private ?int $menuOrder = 0;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
@@ -66,17 +66,6 @@ class CandlestickPattern
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -85,17 +74,6 @@ class CandlestickPattern
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
-        return $this;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): static
-    {
-        $this->title = $title;
         return $this;
     }
 
@@ -110,14 +88,14 @@ class CandlestickPattern
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getTitle(): ?string
     {
-        return $this->description;
+        return $this->title;
     }
 
-    public function setDescription(string $description): static
+    public function setTitle(string $title): static
     {
-        $this->description = $description;
+        $this->title = $title;
         return $this;
     }
 
@@ -165,6 +143,17 @@ class CandlestickPattern
         return $this;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
     public function getContentH(): ?string
     {
         return $this->contentH;
@@ -195,6 +184,17 @@ class CandlestickPattern
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+        return $this;
+    }
+
+    public function getMenuOrder(): ?int
+    {
+        return $this->menuOrder;
+    }
+
+    public function setMenuOrder(int $menuOrder): static
+    {
+        $this->menuOrder = $menuOrder;
         return $this;
     }
 

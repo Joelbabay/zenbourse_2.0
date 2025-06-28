@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Zenbourse - Méthode Investisseur - Chandeliers Japonais - {{ pattern.title }}
+{% endblock %}
+
+{% block body %}
+	{% include 'partials/header.html.twig' %}
+		<main class="custom-container">
+			<div class="row g-5 mt-1">
+				<div class="col-md-9 mt-3">
+                    <div class="col px-0 text-center">
+					    <h1 class="display-5 fst-italic"><strong>{{ pattern.title }}</strong></h1>
+                        <p class="text-muted">{{ pattern.structure }}</p>
+				    </div>
+
+                    <div class="container-fluid bg-light mb-4 p-3 rounded">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="text-success mb-3">Configuration haussière</h4>
+                                {% if pattern.image_h %}
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset('/'~ pattern.image_h) }}" 
+                                             alt="{{ pattern.image_name_h }}" 
+                                             class="img-fluid rounded shadow-sm" 
+                                             style="max-height: 200px;">
+                                    </div>
+                                {% endif %}
+                                <div class="bg-white p-3 rounded">
+                                    {{ pattern.content_h|raw }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="text-danger mb-3">Configuration baissière</h4>
+                                {% if pattern.image_b %}
+                                    <div class="text-center mb-3">
+                                        <img src="{{ asset('/'~ pattern.image_b) }}" 
+                                             alt="{{ pattern.image_name_b }}" 
+                                             class="img-fluid rounded shadow-sm" 
+                                             style="max-height: 200px;">
+                                    </div>
+                                {% endif %}
+                                <div class="bg-white p-3 rounded">
+                                    {{ pattern.content_b|raw }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if pattern.description %}
+                        <div class="container-fluid bg-light mb-4 p-3 rounded">
+                            <h4 class="text-primary mb-3">Description générale</h4>
+                            <div class="bg-white p-3 rounded">
+                                {{ pattern.description|raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+                        <a href="{{ path('investisseur_methode_chandeliers_japonais') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Retour à la liste des patterns
+                        </a>
+                    </div>
+				</div>
+				<div class="col-md-3 mt-3">
+					{% include 'investisseur/widgets/sidebar-methode-chandelier-japonais.html.twig' %}
+				</div>
+			</div>
+		</main>
+{% endblock %} 

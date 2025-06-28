@@ -52,6 +52,10 @@ class StockExampleCrudController extends AbstractCrudController
             ->setHelp('Description détaillée de l\'exemple')
             ->setRequired(false);
 
+        yield TextareaField::new('introduction', 'Introduction de catégorie')
+            ->setHelp('Introduction de la catégorie (utilisée pour le premier stock de chaque catégorie)')
+            ->setRequired(false);
+
         yield UrlField::new('imageJour', 'Image Jour')
             ->setHelp('URL de l\'image pour le graphique journalier')
             ->setRequired(false);

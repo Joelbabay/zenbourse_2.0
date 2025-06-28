@@ -64,4 +64,15 @@ class StockExampleService
         }
         return $formatted;
     }
+
+    public function getCategoryIntroduction(string $category): ?string
+    {
+        $examples = $this->getExamplesByCategory($category);
+        foreach ($examples as $example) {
+            if ($example->getIntroduction()) {
+                return $example->getIntroduction();
+            }
+        }
+        return null;
+    }
 }
