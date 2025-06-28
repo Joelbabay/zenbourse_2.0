@@ -42,18 +42,9 @@ class ValidateMenuRoutesCommand extends Command
             try {
                 // Routes qui nécessitent le paramètre slug
                 $routesWithSlug = ['app_home_page', 'home'];
-                
+
                 // Routes qui nécessitent le paramètre category
-                $routesWithCategory = [
-                    'investisseur_bibliotheque_bulles-type-1',
-                    'investisseur_bibliotheque_bulles-type-2',
-                    'investisseur_bibliotheque_ramassage',
-                    'investisseur_bibliotheque_ramassage-pic',
-                    'investisseur_bibliotheque_pic-ramassage',
-                    'investisseur_bibliotheque_pics-de-volumes',
-                    'investisseur_bibliotheque_volumes-faibles',
-                    'investisseur_bibliotheque_introductions',
-                ];
+                $routesWithCategory = ['investisseur_bibliotheque_category'];
 
                 if (in_array($route, $routesWithSlug)) {
                     $this->router->generate($route, ['slug' => $slug]);
@@ -65,7 +56,6 @@ class ValidateMenuRoutesCommand extends Command
 
                 $validRoutes++;
                 $io->text(sprintf('✓ Menu "%s" : route "%s" valide', $menu->getLabel(), $route));
-
             } catch (\Exception $e) {
                 $invalidRoutes++;
                 $error = sprintf('✗ Menu "%s" : route "%s" invalide - %s', $menu->getLabel(), $route, $e->getMessage());
@@ -86,4 +76,4 @@ class ValidateMenuRoutesCommand extends Command
 
         return $invalidRoutes === 0 ? Command::SUCCESS : Command::FAILURE;
     }
-} 
+}
