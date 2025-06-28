@@ -16,7 +16,7 @@ class AppExtension extends AbstractExtension
     private $urlGenerator;
 
     public function __construct(
-        MenuService $menuService, 
+        MenuService $menuService,
         RequestStack $requestStack,
         UrlGeneratorInterface $urlGenerator
     ) {
@@ -77,7 +77,7 @@ class AppExtension extends AbstractExtension
                     }
                 }
             }
-            
+
             // Gestion spéciale pour le parent Chandeliers japonais sur les routes de détail
             if (
                 $menu->getRoute() === 'investisseur_methode_chandeliers_japonais'
@@ -85,7 +85,7 @@ class AppExtension extends AbstractExtension
             ) {
                 return true;
             }
-            
+
             // Gestion générique pour les routes de détail qui commencent par une route parent
             if (str_ends_with($currentRoute, '_detail')) {
                 $parentRoute = str_replace('_detail', '', $currentRoute);
@@ -93,7 +93,7 @@ class AppExtension extends AbstractExtension
                     return true;
                 }
             }
-            
+
             // Pour les autres sections, comparer avec la route du menu parent
             if ($currentRoute === $menu->getRoute()) {
                 return true;
@@ -112,34 +112,43 @@ class AppExtension extends AbstractExtension
 
     public function isActiveChild(string $currentRoute, Menu $child): bool
     {
-        // Comparaison directe avec la route du menu enfant
-        if ($currentRoute === $child->getRoute()) {
-            return true;
-        }
+        $request = $this->requestStack->getCurrentRequest();
+        $childSlug = $child->getSlug();
+        $parent = $child->getParent();
 
-        // Gestion spéciale pour les chandeliers japonais : activer le menu enfant si on est sur la page de détail
-        if (
-            $child->getRoute() === 'investisseur_methode_chandeliers_japonais'
-            && $currentRoute === 'investisseur_methode_chandeliers_japonais_detail'
-        ) {
-            return true;
-        }
+        // Gestion spéciale pour les sous-menus de la bibliothèque (PRIORITÉ)
+        if ($parent && $parent->getLabel() === 'Bibliothèque') {
+            if (in_array($currentRoute, ['investisseur_bibliotheque_category', 'investisseur_bibliotheque_detail']) && $request) {
+                // Essayer d'obtenir le paramètre category de plusieurs façons
+                $category = $request->attributes->get('category') ?? $request->get('category');
+                // Fallback : extraire de l'URL si besoin
+                if (!$category && preg_match('#/investisseur/bibliotheque/([^/]+)#', $request->getPathInfo(), $m)) {
+                    $category = $m[1];
+                }
 
-        // Gestion spéciale pour les routes dynamiques de la bibliothèque
-        if ($currentRoute === 'investisseur_bibliotheque_category' || $currentRoute === 'investisseur_bibliotheque_detail') {
-            $request = $this->requestStack->getCurrentRequest();
-            if ($request) {
-                $category = $request->get('category');
-                // Extraire la catégorie du slug du menu enfant
-                $childSlug = $child->getSlug();
                 return $category === $childSlug;
             }
+        }
+
+        // Gestion spéciale pour les sous-menus Chandeliers japonais (PRIORITÉ)
+        if ($parent && $parent->getLabel() === 'Chandeliers japonais') {
+            if ($currentRoute === 'investisseur_methode_chandeliers_japonais_detail' && $request) {
+                $slug = $request->attributes->get('slug') ?? $request->get('slug');
+                if (!$slug && preg_match('#/chandeliers-japonais/([^/]+)#', $request->getPathInfo(), $m)) {
+                    $slug = $m[1];
+                }
+                return $slug === $childSlug;
+            }
+        }
+
+        // Comparaison directe avec la route du menu enfant (seulement pour les routes statiques)
+        if ($currentRoute === $child->getRoute()) {
+            return true;
         }
 
         // Gestion générique pour les routes de détail qui commencent par une route parent
         if (str_ends_with($currentRoute, '_detail')) {
             $parentRoute = str_replace('_detail', '', $currentRoute);
-            // Si le menu enfant a la route parent, considérer comme actif
             if ($child->getRoute() === $parentRoute) {
                 return true;
             }
@@ -160,6 +169,16 @@ class AppExtension extends AbstractExtension
     {
         $route = $menu->getRoute();
         $slug = $menu->getSlug();
+        $parent = $menu->getParent();
+
+        // Cas spécial : sous-menu de la Bibliothèque
+        if ($parent && $parent->getLabel() === 'Bibliothèque') {
+            return $this->urlGenerator->generate('investisseur_bibliotheque_category', ['category' => $slug]);
+        }
+        // Cas spécial : sous-menu des Chandeliers japonais
+        if ($parent && $parent->getLabel() === 'Chandeliers japonais') {
+            return $this->urlGenerator->generate('investisseur_methode_chandeliers_japonais_detail', ['slug' => $slug]);
+        }
 
         // Routes qui nécessitent le paramètre slug
         $routesWithSlug = [
@@ -167,7 +186,7 @@ class AppExtension extends AbstractExtension
             'home'
         ];
 
-        // Routes de bibliothèque qui utilisent la route dynamique
+        // Routes de bibliothèque qui utilisent la route dynamique (fallback)
         $bibliothequeRoutes = [
             'investisseur_bibliotheque_bulles-type-1',
             'investisseur_bibliotheque_bulles-type-2',

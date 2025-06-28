@@ -151,13 +151,13 @@ class MenuService
             }
         }
 
-        // Gestion spéciale pour les routes de détail des chandeliers japonais
+        // Gestion spéciale pour les routes de détail des chandeliers japonais (PRIORITÉ)
         if ($section === 'INVESTISSEUR' && $currentRoute === 'investisseur_methode_chandeliers_japonais_detail') {
             // Chercher le parent "La Méthode" au lieu de "Chandeliers japonais"
             $methodeParent = $this->menuRepository->findOneBy([
                 'section' => 'INVESTISSEUR',
                 'parent' => null,
-                'route' => 'investisseur_la-methode'
+                'label' => 'La Méthode'
             ]);
 
             if ($methodeParent) {
@@ -177,7 +177,7 @@ class MenuService
         if ($section === 'INVESTISSEUR' && str_ends_with($currentRoute, '_detail')) {
             // Extraire la route parent en supprimant '_detail'
             $parentRoute = str_replace('_detail', '', $currentRoute);
-            
+
             // Chercher le menu enfant qui a cette route
             $childMenu = $this->menuRepository->findOneBy([
                 'section' => 'INVESTISSEUR',
