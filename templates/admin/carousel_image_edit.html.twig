@@ -1,0 +1,287 @@
+{% extends '@EasyAdmin/crud/edit.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-info">
+        <h5><i class="fas fa-info-circle"></i> Modification d'une image du carrousel</h5>
+        <p>Modifiez les propriétés de cette image du carrousel. Vous pouvez également changer l'image en utilisant l'upload ou la bibliothèque d'images.</p>
+        <ul>
+            <li><strong>Position :</strong> Détermine l'ordre d'affichage (1 = première image)</li>
+            <li><strong>Actif :</strong> Seules les images actives sont affichées dans le carrousel</li>
+            <li><strong>Image :</strong> Utilisez l'upload ou sélectionnez depuis la bibliothèque</li>
+        </ul>
+    </div>
+
+    {{ parent() }}
+
+    <style>
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            margin-top: 10px;
+        }
+        
+        .preview-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .no-image {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .upload-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .upload-tabs {
+            margin-bottom: 20px;
+        }
+
+        .upload-tab {
+            display: none;
+        }
+
+        .upload-tab.active {
+            display: block;
+        }
+
+        .drag-drop-area {
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .drag-drop-area:hover,
+        .drag-drop-area.dragover {
+            border-color: #0056b3;
+            background: #e3f2fd;
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .library-item {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .library-item:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+
+        .library-item.selected {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .library-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .library-item .filename {
+            font-size: 12px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+
+        .alert {
+            margin-top: 15px;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imagePathField = document.querySelector('#CarouselImage_imagePath');
+            
+            // Créer le conteneur de prévisualisation
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'preview-container';
+            previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+            
+            if (imagePathField) {
+                imagePathField.parentNode.appendChild(previewContainer);
+                
+                // Fonction pour mettre à jour la prévisualisation
+                function updatePreview() {
+                    const imagePath = imagePathField.value.trim();
+                    if (imagePath) {
+                        // Créer une image temporaire pour tester si elle existe
+                        const img = new Image();
+                        img.onload = function() {
+                            previewContainer.innerHTML = `
+                                <h6>Prévisualisation de l'image</h6>
+                                <img src="${imagePath}" class="image-preview" alt="Prévisualisation">
+                                <p class="mt-2"><small>Chemin: ${imagePath}</small></p>
+                            `;
+                        };
+                        img.onerror = function() {
+                            previewContainer.innerHTML = `
+                                <h6>Prévisualisation de l'image</h6>
+                                <div class="no-image">⚠️ Image non trouvée: ${imagePath}</div>
+                                <p class="mt-2"><small>Vérifiez que le chemin est correct</small></p>
+                            `;
+                        };
+                        img.src = imagePath;
+                    } else {
+                        previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+                    }
+                }
+                
+                // Écouter les changements dans le champ
+                imagePathField.addEventListener('input', updatePreview);
+                imagePathField.addEventListener('change', updatePreview);
+                
+                // Prévisualisation initiale
+                updatePreview();
+            }
+            
+            // Ajouter un événement pour vérifier les conflits de position
+            const positionField = document.querySelector('#CarouselImage_position');
+            if (positionField) {
+                positionField.addEventListener('input', function() {
+                    const enteredPosition = parseInt(this.value);
+                    const warningDiv = document.getElementById('position-warning');
+                    
+                    if (warningDiv) {
+                        warningDiv.remove();
+                    }
+                    
+                    if (enteredPosition && enteredPosition > 1) {
+                        const warning = document.createElement('div');
+                        warning.id = 'position-warning';
+                        warning.className = 'alert alert-warning mt-2';
+                        warning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <strong>Attention :</strong> Si cette position est déjà occupée, les autres images seront automatiquement décalées.';
+                        positionField.parentNode.appendChild(warning);
+                    }
+                });
+            }
+
+            // Créer la section d'upload
+            const uploadSection = document.createElement('div');
+            uploadSection.className = 'upload-section';
+            uploadSection.innerHTML = `
+                <h5><i class="fas fa-upload"></i> Changer l'image</h5>
+                <div class="drag-drop-area" id="drag-drop-area">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                    <h6>Glissez-déposez votre image ici</h6>
+                    <p class="text-muted">ou cliquez pour sélectionner un fichier</p>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                </div>
+                <div class="alert alert-info mt-3">
+                    <strong>Formats acceptés :</strong> JPG, PNG, GIF, WebP<br>
+                    <strong>Taille maximum :</strong> 5MB
+                </div>
+            `;
+            
+            // Trouver le champ titre et insérer la section d'upload juste avant
+            const titleField = document.querySelector('#CarouselImage_title');
+            if (titleField) {
+                const titleContainer = titleField.closest('.form-group') || titleField.parentNode;
+                titleContainer.parentNode.insertBefore(uploadSection, titleContainer);
+                
+                // Initialiser l'upload
+                initUpload();
+            }
+        });
+
+        function initUpload() {
+            const dragDropArea = document.getElementById('drag-drop-area');
+            const fileInput = document.getElementById('file-input');
+            const imagePathField = document.querySelector('#CarouselImage_imagePath');
+
+            dragDropArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    uploadFile(this.files[0]);
+                }
+            });
+
+            function uploadFile(file) {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                dragDropArea.innerHTML = '<i class="fas fa-spinner fa-spin fa-3x text-primary mb-3"></i><h6>Upload en cours...</h6>';
+
+                fetch('{{ path('admin_carousel_upload') }}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        imagePathField.value = data.path;
+                        imagePathField.dispatchEvent(new Event('input'));
+                        showAlert('success', 'Image uploadée avec succès !');
+                    } else {
+                        showAlert('danger', 'Erreur : ' + data.message);
+                    }
+                    
+                    dragDropArea.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                        <h6>Glissez-déposez votre image ici</h6>
+                        <p class="text-muted">ou cliquez pour sélectionner un fichier</p>
+                    `;
+                })
+                .catch(error => {
+                    showAlert('danger', 'Erreur lors de l\'upload : ' + error.message);
+                    dragDropArea.innerHTML = `
+                        <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                        <h6>Glissez-déposez votre image ici</h6>
+                        <p class="text-muted">ou cliquez pour sélectionner un fichier</p>
+                    `;
+                });
+            }
+        }
+
+        function showAlert(type, message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const uploadSection = document.querySelector('.upload-section');
+            uploadSection.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+{% endblock %} 

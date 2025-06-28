@@ -1,0 +1,116 @@
+{% extends '@EasyAdmin/crud/new.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-info">
+        <h5><i class="fas fa-info-circle"></i> Gestion des images du carrousel</h5>
+        <p>Vous pouvez ajouter, modifier ou supprimer les images qui apparaissent dans le carrousel de la page d'accueil.</p>
+        <ul>
+            <li><strong>Position :</strong> Détermine l'ordre d'affichage (1 = première image)</li>
+            <li><strong>Actif :</strong> Seules les images actives sont affichées dans le carrousel</li>
+            <li><strong>Chemin de l'image :</strong> Utilisez le format <code>/images/...</code> pour les images dans le dossier public</li>
+        </ul>
+    </div>
+
+    {{ parent() }}
+
+    <style>
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            margin-top: 10px;
+        }
+        
+        .preview-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .no-image {
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imagePathField = document.querySelector('#CarouselImage_imagePath');
+            const nextPositionSpan = document.getElementById('next-position');
+            
+            // Créer le conteneur de prévisualisation
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'preview-container';
+            previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+            
+            if (imagePathField) {
+                imagePathField.parentNode.appendChild(previewContainer);
+                
+                // Fonction pour mettre à jour la prévisualisation
+                function updatePreview() {
+                    const imagePath = imagePathField.value.trim();
+                    if (imagePath) {
+                        // Créer une image temporaire pour tester si elle existe
+                        const img = new Image();
+                        img.onload = function() {
+                            previewContainer.innerHTML = `
+                                <h6>Prévisualisation de l'image</h6>
+                                <img src="${imagePath}" class="image-preview" alt="Prévisualisation">
+                                <p class="mt-2"><small>Chemin: ${imagePath}</small></p>
+                            `;
+                        };
+                        img.onerror = function() {
+                            previewContainer.innerHTML = `
+                                <h6>Prévisualisation de l'image</h6>
+                                <div class="no-image">⚠️ Image non trouvée: ${imagePath}</div>
+                                <p class="mt-2"><small>Vérifiez que le chemin est correct</small></p>
+                            `;
+                        };
+                        img.src = imagePath;
+                    } else {
+                        previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+                    }
+                }
+                
+                // Écouter les changements dans le champ
+                imagePathField.addEventListener('input', updatePreview);
+                imagePathField.addEventListener('change', updatePreview);
+                
+                // Prévisualisation initiale
+                updatePreview();
+            }
+            
+            if (nextPositionSpan) {
+                // Afficher la prochaine position disponible
+                const currentMaxPosition = parseInt(nextPositionSpan.textContent);
+                
+                // Ajouter un événement pour vérifier les conflits de position
+                const positionField = document.querySelector('#CarouselImage_position');
+                if (positionField) {
+                    positionField.addEventListener('input', function() {
+                        const enteredPosition = parseInt(this.value);
+                        const warningDiv = document.getElementById('position-warning');
+                        
+                        if (warningDiv) {
+                            warningDiv.remove();
+                        }
+                        
+                        if (enteredPosition && enteredPosition < currentMaxPosition) {
+                            const warning = document.createElement('div');
+                            warning.id = 'position-warning';
+                            warning.className = 'alert alert-warning mt-2';
+                            warning.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <strong>Attention :</strong> Cette position est déjà occupée. Les autres images seront automatiquement décalées vers le bas.';
+                            positionField.parentNode.appendChild(warning);
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+{% endblock %} 

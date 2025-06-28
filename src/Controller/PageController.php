@@ -4,16 +4,17 @@ namespace App\Controller;
 
 use App\Repository\MenuRepository;
 use App\Repository\PageContentRepository;
+use App\Service\CarouselService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class PageController extends AbstractController
 {
-    #[Route('/{route}', name: 'app_home_page')]
-    public function show(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $route): Response
+    #[Route('/{slug}', name: 'app_home_page', requirements: ['slug' => '[a-z0-9-]+'])]
+    public function show(MenuRepository $menuRepo, PageContentRepository $contentRepo, CarouselService $carouselService, string $slug): Response
     {
-        $menu = $menuRepo->findOneBy(['route' => $route]);
+        $menu = $menuRepo->findOneBy(['slug' => $slug]);
         if (!$menu) {
             throw $this->createNotFoundException('Page non trouvée');
         }
@@ -22,7 +23,8 @@ class PageController extends AbstractController
 
         return $this->render('home/page.html.twig', [
             'menu' => $menu,
-            'pageContent' => $pageContent
+            'pageContent' => $pageContent,
+            'carousel_service' => $carouselService
         ]);
     }
 }

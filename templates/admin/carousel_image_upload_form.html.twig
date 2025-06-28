@@ -1,0 +1,358 @@
+{% extends '@EasyAdmin/crud/new.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-info">
+        <h5><i class="fas fa-cloud-upload-alt"></i> Ajouter une image au carrousel</h5>
+        <p>Vous pouvez soit uploader une nouvelle image, soit sélectionner une image existante dans la bibliothèque.</p>
+        <ul>
+            <li><strong>Upload :</strong> Glissez-déposez ou cliquez pour sélectionner une image</li>
+            <li><strong>Bibliothèque :</strong> Choisissez parmi les images déjà uploadées</li>
+            <li><strong>Position :</strong> Détermine l'ordre d'affichage dans le carrousel</li>
+        </ul>
+    </div>
+
+    {{ parent() }}
+
+    <style>
+        .upload-zone {
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .upload-zone:hover {
+            border-color: #0056b3;
+            background: #e3f2fd;
+        }
+        
+        .upload-zone.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        
+        .image-library {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff;
+        }
+        
+        .image-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .image-item:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .image-item.selected {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .image-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+            margin-top: 10px;
+        }
+        
+        .preview-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .no-image {
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .tab-content {
+            margin-top: 20px;
+        }
+        
+        .nav-tabs {
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+        }
+        
+        .nav-tabs .nav-link.active {
+            border-color: #dee2e6 #dee2e6 #fff;
+            background: #fff;
+        }
+        
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imagePathField = document.querySelector('#CarouselImage_imagePath');
+            const titleField = document.querySelector('#CarouselImage_title');
+            
+            // Créer la section d'upload juste avant le champ titre
+            const titleFieldContainer = titleField ? titleField.closest('.form-group') : null;
+            if (titleFieldContainer) {
+                const uploadSection = document.createElement('div');
+                uploadSection.className = 'upload-section';
+                uploadSection.innerHTML = `
+                    <h6><i class="fas fa-image"></i> Sélection de l'image</h6>
+                    <ul class="nav nav-tabs" id="imageTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload" type="button" role="tab">
+                                <i class="fas fa-cloud-upload-alt"></i> Upload d'image
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="library-tab" data-bs-toggle="tab" data-bs-target="#library" type="button" role="tab">
+                                <i class="fas fa-images"></i> Bibliothèque d'images
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="imageTabsContent">
+                        <div class="tab-pane fade show active" id="upload" role="tabpanel">
+                            <div class="upload-zone" id="uploadZone">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <h5>Glissez-déposez votre image ici</h5>
+                                <p>ou cliquez pour sélectionner un fichier</p>
+                                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                    <i class="fas fa-folder-open"></i> Choisir un fichier
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="library" role="tabpanel">
+                            <div class="image-library" id="imageLibrary">
+                                <p class="text-center">Chargement de la bibliothèque...</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                titleFieldContainer.parentNode.insertBefore(uploadSection, titleFieldContainer);
+            }
+            
+            // Créer le conteneur de prévisualisation
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'preview-container';
+            previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+            
+            if (imagePathField) {
+                imagePathField.parentNode.appendChild(previewContainer);
+            }
+            
+            // Gestion de l'upload
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+            
+            if (uploadZone && fileInput) {
+                // Drag and drop
+                uploadZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    uploadZone.classList.add('dragover');
+                });
+                
+                uploadZone.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    uploadZone.classList.remove('dragover');
+                });
+                
+                uploadZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    uploadZone.classList.remove('dragover');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        uploadFile(files[0]);
+                    }
+                });
+                
+                // Clic sur la zone
+                uploadZone.addEventListener('click', function() {
+                    fileInput.click();
+                });
+                
+                // Sélection de fichier
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        uploadFile(this.files[0]);
+                    }
+                });
+            }
+            
+            // Fonction d'upload
+            function uploadFile(file) {
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                fetch('/admin/carousel/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        imagePathField.value = data.path;
+                        if (titleField && !titleField.value) {
+                            titleField.value = file.name.replace(/\.[^/.]+$/, "");
+                        }
+                        updatePreview(data.path);
+                        showAlert('success', 'Image uploadée avec succès !');
+                    } else {
+                        showAlert('danger', data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('danger', 'Erreur lors de l\'upload : ' + error.message);
+                });
+            }
+            
+            // Charger la bibliothèque d'images
+            function loadImageLibrary() {
+                fetch('/admin/carousel/list-images')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayImageLibrary(data.images);
+                    } else {
+                        document.getElementById('imageLibrary').innerHTML = '<p class="text-center text-danger">Erreur lors du chargement de la bibliothèque</p>';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('imageLibrary').innerHTML = '<p class="text-center text-danger">Erreur lors du chargement de la bibliothèque</p>';
+                });
+            }
+            
+            // Afficher la bibliothèque d'images
+            function displayImageLibrary(images) {
+                const library = document.getElementById('imageLibrary');
+                if (images.length === 0) {
+                    library.innerHTML = '<p class="text-center text-muted">Aucune image dans la bibliothèque</p>';
+                    return;
+                }
+                
+                let html = '<div class="row">';
+                images.forEach(image => {
+                    const sizeKB = Math.round(image.size / 1024);
+                    html += `
+                        <div class="col-md-2 mb-2">
+                            <div class="image-item" data-path="${image.path}" data-filename="${image.filename}">
+                                <img src="${image.path}" alt="${image.filename}">
+                                <div class="mt-1">
+                                    <small class="text-muted">${sizeKB} KB</small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                library.innerHTML = html;
+                
+                // Ajouter les événements de clic
+                document.querySelectorAll('.image-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        document.querySelectorAll('.image-item').forEach(i => i.classList.remove('selected'));
+                        this.classList.add('selected');
+                        
+                        const path = this.dataset.path;
+                        const filename = this.dataset.filename;
+                        
+                        imagePathField.value = path;
+                        if (titleField && !titleField.value) {
+                            titleField.value = filename.replace(/\.[^/.]+$/, "");
+                        }
+                        updatePreview(path);
+                    });
+                });
+            }
+            
+            // Mettre à jour la prévisualisation
+            function updatePreview(imagePath) {
+                if (imagePath) {
+                    previewContainer.innerHTML = `
+                        <h6>Prévisualisation de l'image</h6>
+                        <img src="${imagePath}" class="image-preview" alt="Prévisualisation">
+                        <p class="mt-2"><small>Chemin: ${imagePath}</small></p>
+                    `;
+                } else {
+                    previewContainer.innerHTML = '<h6>Prévisualisation de l\'image</h6><div class="no-image">Aucune image sélectionnée</div>';
+                }
+            }
+            
+            // Afficher des alertes
+            function showAlert(type, message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                const container = document.querySelector('.content');
+                container.insertBefore(alertDiv, container.firstChild);
+                
+                // Auto-dismiss après 5 secondes
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+            
+            // Charger la bibliothèque quand on clique sur l'onglet
+            document.getElementById('library-tab').addEventListener('click', function() {
+                loadImageLibrary();
+            });
+            
+            // Prévisualisation initiale
+            if (imagePathField.value) {
+                updatePreview(imagePathField.value);
+            }
+        });
+    </script>
+{% endblock %} 

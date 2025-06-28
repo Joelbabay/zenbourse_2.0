@@ -21,6 +21,9 @@ class Menu
     #[ORM\Column(length: 255)]
     private ?string $route = null;
 
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
+
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(nullable: true)]
     private ?self $parent = null;
@@ -70,6 +73,18 @@ class Menu
     public function setRoute(string $route): static
     {
         $this->route = $route;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }

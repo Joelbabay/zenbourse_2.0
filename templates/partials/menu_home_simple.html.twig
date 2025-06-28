@@ -1,0 +1,30 @@
+{# Template simple pour le menu home sans sous-menus #}
+<nav class="navbar navbar-expand-lg bg-body-tertiary text-uppercase main-nav-g p-0 {% if app.request.get('_route') starts with 'app_user_'%}d-none{% endif %}">
+    <div class="container-fluid limited-width">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse menu-home" id="navbarNav">
+            <span class="navbar-text me-3 fw-bold text-dark" style="color: #370028;">ZENBOURSE -></span>
+            <ul class="navbar-nav">
+                {% set current_route = app.request.attributes.get('_route') %}
+                {% for item in get_menu('HOME') %}
+                    {% set is_active = is_active_menu(current_route, item) %}
+                    <li class="nav-item">
+                        {% if item.route and item.route != 'home_' ~ item.slug %}
+                            <a href="{{ path(item.route) }}"
+                               class="p-3 nav-link menu-home {{ is_active ? 'active' : '' }}">
+                                {{ item.label }}
+                            </a>
+                        {% else %}
+                            <a href="{{ path('app_home_page', {'slug': item.slug}) }}"
+                               class="p-3 nav-link menu-home {{ is_active ? 'active' : '' }}">
+                                {{ item.label }}
+                            </a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>  
+</nav> 

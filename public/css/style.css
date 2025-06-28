@@ -1,6 +1,6 @@
 @import url("https://fonts.cdnfonts.com/css/agency-fb");
-body {
-  font-family: "Segoe UI", arial, helvetica, sans-serif;
+* {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 h1,

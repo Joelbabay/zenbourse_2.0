@@ -1,0 +1,389 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Tableau de bord - Zenbourse{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <!-- En-tête du tableau de bord -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            Tableau de bord
+                        </h1>
+                        <p class="text-muted">Vue d'ensemble de votre plateforme Zenbourse</p>
+                    </div>
+                    <div class="text-end">
+                        <small class="text-muted">Dernière mise à jour : {{ "now"|date("d/m/Y H:i") }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes de statistiques principales -->
+        <div class="row mb-4">
+            <!-- Nombre total d'utilisateurs -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Utilisateurs
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ stats.total_users }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-users fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\UserCrudController')
+                                .setAction('index')
+                                .generateUrl() }}" 
+                               class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>
+                                Voir tous les utilisateurs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abonnés INVESTISSEUR -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Abonnés INVESTISSEUR
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ stats.investisseur_subscribers }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-chart-line fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\InterestedUsersCrudController')
+                                .setAction('index')
+                                .generateUrl() }}" 
+                               class="btn btn-success btn-sm">
+                                <i class="fas fa-eye me-1"></i>
+                                Voir les abonnés
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abonnés INTRADAY -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Abonnés INTRADAY
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ stats.intraday_subscribers }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\IntradayRequestCrudController')
+                                .setAction('index')
+                                .generateUrl() }}" 
+                               class="btn btn-info btn-sm">
+                                <i class="fas fa-eye me-1"></i>
+                                Voir les abonnés
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages de contact -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Messages
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ stats.total_contacts }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\ContactCrudController')
+                                .setAction('index')
+                                .generateUrl() }}" 
+                               class="btn btn-warning btn-sm">
+                                <i class="fas fa-inbox me-1"></i>
+                                Voir la boîte mail
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cartes secondaires -->
+        <div class="row mb-4">
+            <!-- Statistiques de visites (placeholder pour l'instant) -->
+            <div class="col-xl-6 col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-chart-area me-2"></i>
+                            Statistiques de visites
+                        </h6>
+                        <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                 aria-labelledby="dropdownMenuLink">
+                                <div class="dropdown-header">Options :</div>
+                                <a class="dropdown-item" href="#">Voir les détails</a>
+                                <a class="dropdown-item" href="#">Exporter les données</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Configurer</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line fa-3x text-gray-300 mb-3"></i>
+                            <p class="text-muted">Les statistiques de visites seront bientôt disponibles</p>
+                            <small class="text-info">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Intégration Google Analytics en cours
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions rapides -->
+            <div class="col-xl-6 col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-bolt me-2"></i>
+                            Actions rapides
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <a href="{{ ea_url()
+                                    .setController('App\\Controller\\Admin\\CarouselImageCrudController')
+                                    .setAction('new')
+                                    .generateUrl() }}" 
+                                   class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-plus me-1"></i>
+                                    Ajouter une image
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{{ ea_url()
+                                    .setController('App\\Controller\\Admin\\MenuCrudController')
+                                    .setAction('new')
+                                    .generateUrl() }}" 
+                                   class="btn btn-outline-success w-100">
+                                    <i class="fas fa-list me-1"></i>
+                                    Nouveau menu
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{{ ea_url()
+                                    .setController('App\\Controller\\Admin\\PageContentCrudController')
+                                    .setAction('new')
+                                    .generateUrl() }}" 
+                                   class="btn btn-outline-info w-100">
+                                    <i class="fas fa-edit me-1"></i>
+                                    Nouveau contenu
+                                </a>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <a href="{{ path('app_home_page', {'slug': 'accueil'}) }}" target="_blank" 
+                                   class="btn btn-outline-secondary w-100">
+                                    <i class="fas fa-external-link-alt me-1"></i>
+                                    Voir le site
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dernières activités -->
+        <div class="row">
+            <!-- Derniers messages -->
+            <div class="col-xl-6 col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-envelope me-2"></i>
+                            Derniers messages
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% if stats.recent_contacts|length > 0 %}
+                            <div class="list-group list-group-flush">
+                                {% for contact in stats.recent_contacts %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ contact.firstname }} {{ contact.lastname }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ contact.email }}</small>
+                                            <br>
+                                            <small class="text-truncate">{{ contact.content|slice(0, 50) }}...</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">{{ contact.createdAt|date("d/m/Y H:i") }}</small>
+                                            <br>
+                                            <a href="{{ ea_url()
+                                                .setController('App\\Controller\\Admin\\ContactCrudController')
+                                                .setAction('detail')
+                                                .setEntityId(contact.id)
+                                                .generateUrl() }}" 
+                                               class="btn btn-sm btn-outline-primary mt-1">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center">Aucun message récent</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nouveaux utilisateurs -->
+            <div class="col-xl-6 col-lg-6">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-user-plus me-2"></i>
+                            Nouveaux utilisateurs
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% if stats.recent_users|length > 0 %}
+                            <div class="list-group list-group-flush">
+                                {% for user in stats.recent_users %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ user.email }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ user.firstname }} {{ user.lastname }}</small>
+                                            <br>
+                                            <span class="text-white badge bg-{{ user.statut ? 'primary' : 'secondary' }}">
+                                                {{ user.statut ?: 'Aucun statut' }}
+                                            </span>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">{{ user.createdAt|date("d/m/Y H:i") }}</small>
+                                            <br>
+                                            <a href="{{ ea_url()
+                                                .setController('App\\Controller\\Admin\\UserCrudController')
+                                                .setAction('detail')
+                                                .setEntityId(user.id)
+                                                .generateUrl() }}" 
+                                               class="btn btn-sm btn-outline-primary mt-1">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted text-center">Aucun nouvel utilisateur</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+        .border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+        .text-gray-800 {
+            color: #5a5c69 !important;
+        }
+        .text-gray-300 {
+            color: #dddfeb !important;
+        }
+        .font-weight-bold {
+            font-weight: 700 !important;
+        }
+        .text-xs {
+            font-size: 0.7rem !important;
+        }
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid #e3e6f0;
+            border-radius: 0.35rem;
+        }
+        .card-header {
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 0;
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        .shadow {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+        }
+        .list-group-item {
+            border: none;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+{% endblock %} 

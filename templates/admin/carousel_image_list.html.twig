@@ -1,0 +1,128 @@
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-info">
+        <h5><i class="fas fa-images"></i> Gestion des images du carrousel</h5>
+        <p>Gérez les images qui apparaissent dans le carrousel de la page d'accueil. Seules les images actives seront affichées.</p>
+        <ul>
+            <li><strong>Position :</strong> Détermine l'ordre d'affichage (1 = première image)</li>
+            <li><strong>Actif :</strong> Seules les images actives sont affichées dans le carrousel</li>
+            <li><strong>Image :</strong> Prévisualisation de l'image qui sera affichée</li>
+        </ul>
+    </div>
+
+    {{ parent() }}
+
+    <style>
+        .carousel-image-preview {
+            max-width: 200px;
+            max-height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+        
+        .carousel-image-preview:hover {
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .image-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .position-badge {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .status-active {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Améliorer l'affichage des images
+            const imageCells = document.querySelectorAll('.field-image');
+            imageCells.forEach(function(cell) {
+                const img = cell.querySelector('img');
+                if (img) {
+                    img.classList.add('carousel-image-preview');
+                    img.style.cursor = 'pointer';
+                    
+                    // Ajouter un effet de zoom au clic
+                    img.addEventListener('click', function() {
+                        const modal = document.createElement('div');
+                        modal.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0,0,0,0.8);
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            z-index: 9999;
+                            cursor: pointer;
+                        `;
+                        
+                        const modalImg = document.createElement('img');
+                        modalImg.src = this.src;
+                        modalImg.style.cssText = `
+                            max-width: 90%;
+                            max-height: 90%;
+                            object-fit: contain;
+                            border-radius: 8px;
+                        `;
+                        
+                        modal.appendChild(modalImg);
+                        document.body.appendChild(modal);
+                        
+                        modal.addEventListener('click', function() {
+                            document.body.removeChild(modal);
+                        });
+                    });
+                }
+            });
+            
+            // Améliorer l'affichage des positions
+            const positionCells = document.querySelectorAll('.field-position');
+            positionCells.forEach(function(cell) {
+                const position = cell.textContent.trim();
+                if (position && !isNaN(position)) {
+                    cell.innerHTML = `<span class="position-badge">${position}</span>`;
+                }
+            });
+            
+            // Améliorer l'affichage du statut actif
+            const statusCells = document.querySelectorAll('.field-isActive');
+            statusCells.forEach(function(cell) {
+                const isActive = cell.textContent.trim().toLowerCase();
+                if (isActive === 'oui' || isActive === 'yes' || isActive === 'true') {
+                    cell.innerHTML = '<span class="status-active">✅ Actif</span>';
+                } else {
+                    cell.innerHTML = '<span class="status-inactive">❌ Inactif</span>';
+                }
+            });
+        });
+    </script>
+{% endblock %} 

@@ -1,0 +1,290 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Édition Inline - Exemples de stocks{% endblock %}
+
+{% block main %}
+    <div class="alert alert-info">
+        <h5><i class="fas fa-info-circle"></i> Édition des descriptions de tickers</h5>
+        <p>Cliquez sur une description pour la modifier directement. Les modifications sont sauvegardées automatiquement.</p>
+    </div>
+
+    <div class="stock-examples-grid">
+        {% for stock in stocks %}
+            <div class="stock-card" data-stock-id="{{ stock.id }}">
+                <div class="stock-header">
+                    <div class="editable-content" 
+                         contenteditable="true" 
+                         data-field="title"
+                         data-stock-id="{{ stock.id }}">
+                        {{ stock.title }}
+                    </div>
+                    <span class="badge bg-primary">{{ stock.category }}</span>
+                </div>
+                
+                <div class="stock-info">
+                    <div class="form-group">
+                        <label class="form-label">Ticker :</label>
+                        <div class="editable-content" 
+                             contenteditable="true" 
+                             data-field="ticker"
+                             data-stock-id="{{ stock.id }}">
+                            {{ stock.ticker }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Catégorie :</label>
+                        <div class="editable-content" 
+                             contenteditable="true" 
+                             data-field="category"
+                             data-stock-id="{{ stock.id }}">
+                            {{ stock.category }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stock-description">
+                    <label class="form-label">Description :</label>
+                    <div class="editable-content" 
+                         contenteditable="true" 
+                         data-field="description"
+                         data-stock-id="{{ stock.id }}">
+                        {{ stock.description|raw }}
+                    </div>
+                </div>
+                
+                <div class="stock-actions">
+                    <button class="btn btn-sm btn-success save-btn" style="display: none;">
+                        <i class="fas fa-save"></i> Sauvegarder
+                    </button>
+                    <button class="btn btn-sm btn-secondary cancel-btn" style="display: none;">
+                        <i class="fas fa-times"></i> Annuler
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <style>
+        .stock-examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stock-card {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .stock-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stock-info {
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+        
+        .form-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .editable-content {
+            min-height: 40px;
+            padding: 8px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .editable-content:hover {
+            border-color: #007bff;
+            background: white;
+        }
+        
+        .editable-content:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            background: white;
+        }
+        
+        .editing {
+            background: white !important;
+            border-color: #28a745 !important;
+        }
+        
+        .stock-description .editable-content {
+            min-height: 100px;
+        }
+        
+        .stock-actions {
+            margin-top: 15px;
+            text-align: right;
+        }
+        
+        .saving {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let originalContent = {};
+            let autoSaveTimeout = null;
+            
+            // Gestion de l'édition inline
+            document.querySelectorAll('.editable-content').forEach(function(element) {
+                element.addEventListener('click', function() {
+                    if (!this.classList.contains('editing')) {
+                        startEditing(this);
+                    }
+                });
+                
+                element.addEventListener('input', function() {
+                    if (this.classList.contains('editing')) {
+                        scheduleAutoSave(this);
+                    }
+                });
+                
+                element.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        if (!this.matches(':focus')) {
+                            finishEditing(this);
+                        }
+                    }, 100);
+                });
+            });
+            
+            function startEditing(element) {
+                originalContent[element.dataset.stockId] = element.innerHTML;
+                element.classList.add('editing');
+                element.focus();
+                
+                // Afficher les boutons d'action
+                const card = element.closest('.stock-card');
+                card.querySelector('.save-btn').style.display = 'inline-block';
+                card.querySelector('.cancel-btn').style.display = 'inline-block';
+            }
+            
+            function finishEditing(element) {
+                element.classList.remove('editing');
+                
+                // Masquer les boutons d'action
+                const card = element.closest('.stock-card');
+                card.querySelector('.save-btn').style.display = 'none';
+                card.querySelector('.cancel-btn').style.display = 'none';
+                
+                // Annuler l'auto-save en cours
+                if (autoSaveTimeout) {
+                    clearTimeout(autoSaveTimeout);
+                    autoSaveTimeout = null;
+                }
+            }
+            
+            function scheduleAutoSave(element) {
+                if (autoSaveTimeout) {
+                    clearTimeout(autoSaveTimeout);
+                }
+                
+                autoSaveTimeout = setTimeout(() => {
+                    saveContent(element);
+                }, 2000); // Auto-save après 2 secondes d'inactivité
+            }
+            
+            function saveContent(element) {
+                const stockId = element.dataset.stockId;
+                const field = element.dataset.field;
+                const content = element.innerHTML;
+                
+                // Indiquer que la sauvegarde est en cours
+                element.closest('.stock-card').classList.add('saving');
+                
+                fetch('{{ path('admin_stock_example_update') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        id: stockId,
+                        field: field,
+                        content: content
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showNotification('success', 'Modification sauvegardée !');
+                        finishEditing(element);
+                    } else {
+                        showNotification('error', 'Erreur : ' + data.message);
+                        // Restaurer le contenu original
+                        element.innerHTML = originalContent[stockId];
+                    }
+                })
+                .catch(error => {
+                    showNotification('error', 'Erreur de connexion');
+                    element.innerHTML = originalContent[stockId];
+                })
+                .finally(() => {
+                    element.closest('.stock-card').classList.remove('saving');
+                });
+            }
+            
+            // Gestion des boutons
+            document.querySelectorAll('.save-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const element = this.closest('.stock-card').querySelector('.editable-content');
+                    saveContent(element);
+                });
+            });
+            
+            document.querySelectorAll('.cancel-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const element = this.closest('.stock-card').querySelector('.editable-content');
+                    element.innerHTML = originalContent[element.dataset.stockId];
+                    finishEditing(element);
+                });
+            });
+            
+            function showNotification(type, message) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = `alert alert-${type === 'success' ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+                alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(alertDiv);
+                
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+{% endblock %} 

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ valueTitle }} - Bibliothèque{% endblock %}
+
+{% block body %}
+{% include 'partials/header.html.twig' %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-9">
+                <h1>{{ valueTitle }}</h1>
+                
+                <div class="row">
+                    {% for slug, example in examples %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card clickable-div" data-href="{{ path('investisseur_bibliotheque_detail', {'category': category, 'slug': slug}) }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ example.title }}</h5>
+                                    <p class="card-text">
+                                        <span class="fi fi-{{ example.flag }}"></span>
+                                        <strong>{{ example.ticker }}</strong>
+                                    </p>
+                                    {% if example.image_jour %}
+                                        <img src="{{ example.image_jour }}" class="img-fluid" alt="{{ example.title }}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                {% include 'investisseur/widgets/sidebar-bibliotheque.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock %} 

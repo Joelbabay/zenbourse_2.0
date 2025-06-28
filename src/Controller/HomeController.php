@@ -8,13 +8,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/')]
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
     public function index(): Response
     {
-        return $this->redirect('/home');
+        return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
     }
 
     #[Route('/upload-image', name: 'upload_image', methods: ['POST'])]

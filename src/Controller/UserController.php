@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Form\ChangeLocalPasswordType;
+use App\Form\UserProfileType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +22,51 @@ final class UserController extends AbstractController
     public function account(
         Request $request,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        UserRepository $userRepository
     ): Response {
         $user = $this->getUser();
-        $form = $this->createForm(ChangeLocalPasswordType::class);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $currentPassword = $form->get('currentPassword')->getData();
-            $newPassword = $form->get('newPassword')->getData();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Utilisateur non connecté');
+        }
+
+        // Formulaire pour les informations personnelles
+        $profileForm = $this->createForm(UserProfileType::class, $user);
+        $profileForm->handleRequest($request);
+
+        // Formulaire pour le changement de mot de passe
+        $passwordForm = $this->createForm(ChangeLocalPasswordType::class);
+        $passwordForm->handleRequest($request);
+
+        // Traitement du formulaire des informations personnelles
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+            $newEmail = $profileForm->get('email')->getData();
+
+            // Vérifier si l'email a changé et s'il n'est pas déjà utilisé
+            if ($newEmail !== $user->getEmail()) {
+                $existingUser = $userRepository->findOneBy(['email' => $newEmail]);
+                if ($existingUser && $existingUser->getId() !== $user->getId()) {
+                    $profileForm->get('email')->addError(new \Symfony\Component\Form\FormError('Cette adresse email est déjà utilisée.'));
+                } else {
+                    $em->flush();
+                    $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+                    return $this->redirectToRoute('app_user_profile');
+                }
+            } else {
+                $em->flush();
+                $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+                return $this->redirectToRoute('app_user_profile');
+            }
+        }
+
+        // Traitement du formulaire de changement de mot de passe
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+            $currentPassword = $passwordForm->get('currentPassword')->getData();
+            $newPassword = $passwordForm->get('newPassword')->getData();
 
             if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
-                $form->get('currentPassword')->addError(new \Symfony\Component\Form\FormError('Mot de passe actuel incorrect.'));
+                $passwordForm->get('currentPassword')->addError(new \Symfony\Component\Form\FormError('Mot de passe actuel incorrect.'));
             } else {
                 $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
                 $em->flush();
@@ -39,9 +75,24 @@ final class UserController extends AbstractController
             }
         }
 
+        // Déterminer quelle modal afficher en cas d'erreur
+        $showProfileModal = false;
+        $showPasswordModal = false;
+
+        if ($profileForm->isSubmitted() && !$profileForm->isValid()) {
+            $showProfileModal = true;
+        }
+
+        if ($passwordForm->isSubmitted() && !$passwordForm->isValid()) {
+            $showPasswordModal = true;
+        }
+
         return $this->render('user/account.html.twig', [
             'user' => $user,
-            'form' => $form->createView(),
+            'profileForm' => $profileForm->createView(),
+            'passwordForm' => $passwordForm->createView(),
+            'showProfileModal' => $showProfileModal,
+            'showPasswordModal' => $showPasswordModal,
         ]);
     }
 }

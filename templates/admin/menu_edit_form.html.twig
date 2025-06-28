@@ -1,0 +1,215 @@
+{% extends '@EasyAdmin/crud/edit.html.twig' %}
+
+{% block main %}
+    {{ parent() }}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sectionField = document.querySelector('select[name*="[section]"]');
+            const parentField = document.querySelector('select[name*="[parent]"]');
+            const positionField = document.querySelector('input[name*="[menuorder]"]');
+            
+            if (sectionField && parentField) {
+                // Fonction pour mettre à jour les parents selon la section
+                function updateParentOptions() {
+                    const selectedSection = sectionField.value;
+                    
+                    if (selectedSection) {
+                        console.log('Section sélectionnée:', selectedSection);
+                        
+                        // Réinitialiser le champ parent si la section change
+                        if (parentField.value) {
+                            // Vérifier si le parent actuel est de la bonne section
+                            const selectedOption = parentField.querySelector('option:checked');
+                            if (selectedOption && !selectedOption.textContent.includes(selectedSection)) {
+                                parentField.value = '';
+                            }
+                        }
+                        
+                        // Filtrer les options du select parent selon la section
+                        const options = parentField.querySelectorAll('option');
+                        options.forEach(option => {
+                            if (option.value === '') {
+                                // Garder l'option vide
+                                option.style.display = '';
+                            } else if (option.textContent.includes(selectedSection)) {
+                                // Afficher les options de la même section
+                                option.style.display = '';
+                            } else {
+                                // Masquer les options des autres sections
+                                option.style.display = 'none';
+                            }
+                        });
+                        
+                        // Mettre à jour la position suggérée si le champ est vide
+                        if (positionField && !positionField.value) {
+                            updateSuggestedPosition(selectedSection);
+                        }
+                    }
+                }
+                
+                // Écoute les changements de section
+                sectionField.addEventListener('change', updateParentOptions);
+                
+                // Initialise au chargement
+                updateParentOptions();
+            }
+            
+            // Fonction pour mettre à jour la position suggérée
+            function updateSuggestedPosition(section) {
+                // Récupérer les positions existantes pour cette section
+                const existingPositions = [];
+                const options = parentField.querySelectorAll('option');
+                
+                options.forEach(option => {
+                    if (option.value !== '' && option.textContent.includes(section)) {
+                        // Extraire la position depuis le texte (si disponible)
+                        const match = option.textContent.match(/\((\d+)\)/);
+                        if (match) {
+                            existingPositions.push(parseInt(match[1]));
+                        }
+                    }
+                });
+                
+                // Calculer la prochaine position
+                const nextPosition = existingPositions.length > 0 ? Math.max(...existingPositions) + 1 : 1;
+                
+                // Mettre à jour le placeholder du champ position
+                if (positionField) {
+                    positionField.placeholder = `Position suggérée: ${nextPosition}`;
+                    
+                    // Ajouter une info-bulle
+                    const helpText = positionField.parentNode.querySelector('.form-help');
+                    if (helpText) {
+                        helpText.textContent = `Ordre d'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position (${nextPosition}). Les menus existants seront automatiquement déplacés si nécessaire.`;
+                    }
+                }
+            }
+            
+            // Vérification de la position lors de la saisie
+            if (positionField) {
+                positionField.addEventListener('input', function() {
+                    const position = parseInt(this.value);
+                    const section = sectionField ? sectionField.value : '';
+                    
+                    if (position && section) {
+                        checkPositionAvailability(position, section);
+                    }
+                });
+            }
+            
+            // Fonction pour vérifier la disponibilité d'une position
+            function checkPositionAvailability(position, section) {
+                // Récupérer les positions existantes pour cette section
+                const existingPositions = [];
+                const options = parentField.querySelectorAll('option');
+                
+                options.forEach(option => {
+                    if (option.value !== '' && option.textContent.includes(section)) {
+                        // Extraire la position depuis le texte (si disponible)
+                        const match = option.textContent.match(/\((\d+)\)/);
+                        if (match) {
+                            existingPositions.push(parseInt(match[1]));
+                        }
+                    }
+                });
+                
+                // Vérifier si la position est déjà occupée
+                if (existingPositions.includes(position)) {
+                    // Afficher un avertissement
+                    showPositionWarning(position);
+                } else {
+                    // Masquer l'avertissement
+                    hidePositionWarning();
+                }
+            }
+            
+            // Fonction pour afficher un avertissement
+            function showPositionWarning(position) {
+                hidePositionWarning(); // Supprimer l'ancien avertissement s'il existe
+                
+                const warningDiv = document.createElement('div');
+                warningDiv.id = 'position-warning';
+                warningDiv.className = 'alert alert-warning mt-2';
+                warningDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Attention :</strong> La position ${position} est déjà occupée. 
+                    Les menus existants seront automatiquement déplacés vers les positions suivantes.
+                `;
+                
+                if (positionField && positionField.parentNode) {
+                    positionField.parentNode.appendChild(warningDiv);
+                }
+            }
+            
+            // Fonction pour masquer l'avertissement
+            function hidePositionWarning() {
+                const existingWarning = document.getElementById('position-warning');
+                if (existingWarning) {
+                    existingWarning.remove();
+                }
+            }
+            
+            // Génération automatique de la route
+            const labelField = document.querySelector('input[name*="[label]"]');
+            const routeField = document.querySelector('input[name*="[route]"]');
+            
+            if (labelField && routeField) {
+                function updateRoute() {
+                    const label = labelField.value;
+                    const section = sectionField ? sectionField.value : '';
+                    
+                    if (label && section && !routeField.value) {
+                        const baseRoute = section.toLowerCase();
+                        const slug = label.toLowerCase()
+                            .replace(/[^a-z0-9\s-]/g, '')
+                            .replace(/\s+/g, '-')
+                            .replace(/-+/g, '-')
+                            .trim('-');
+                        
+                        routeField.value = baseRoute + '_' + slug;
+                    }
+                }
+                
+                labelField.addEventListener('input', updateRoute);
+                if (sectionField) {
+                    sectionField.addEventListener('change', updateRoute);
+                }
+            }
+            
+            // Génération automatique du slug
+            const slugField = document.querySelector('input[name*="[slug]"]');
+            
+            if (labelField && slugField) {
+                function updateSlug() {
+                    const label = labelField.value;
+                    
+                    if (label && !slugField.value) {
+                        const slug = label.toLowerCase()
+                            .replace(/[àáâãäçèéêëìíîïñòóôõöùúûüýÿ]/g, function(match) {
+                                const accents = {
+                                    'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a',
+                                    'ç': 'c',
+                                    'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+                                    'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+                                    'ñ': 'n',
+                                    'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
+                                    'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
+                                    'ý': 'y', 'ÿ': 'y'
+                                };
+                                return accents[match] || match;
+                            })
+                            .replace(/[^a-z0-9\s-]/g, '')
+                            .replace(/\s+/g, '-')
+                            .replace(/-+/g, '-')
+                            .trim('-');
+                        
+                        slugField.value = slug;
+                    }
+                }
+                
+                labelField.addEventListener('input', updateSlug);
+            }
+        });
+    </script>
+{% endblock %} 

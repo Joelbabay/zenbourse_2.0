@@ -16,7 +16,7 @@ class PageContent
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $content = null;
 
     #[ORM\OneToOne(inversedBy: 'pageContent', cascade: ['persist'], orphanRemoval: false)]
@@ -36,7 +36,6 @@ class PageContent
     public function setTitle(?string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -48,7 +47,6 @@ class PageContent
     public function setContent(?string $content): static
     {
         $this->content = $content;
-
         return $this;
     }
 
@@ -60,7 +58,6 @@ class PageContent
     public function setMenu(Menu $menu): static
     {
         $this->menu = $menu;
-
         return $this;
     }
 }

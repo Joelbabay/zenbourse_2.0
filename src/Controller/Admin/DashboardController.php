@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\CarouselImage;
 use App\Entity\Contact;
 use App\Entity\Download;
 use App\Entity\IntradayRequest;
@@ -9,6 +10,12 @@ use App\Entity\InvestisseurRequest;
 use App\Entity\Menu;
 use App\Entity\PageContent;
 use App\Entity\User;
+use App\Entity\StockExample;
+use App\Repository\ContactRepository;
+use App\Repository\IntradayRequestRepository;
+use App\Repository\InvestisseurRequestRepository;
+use App\Repository\UserRepository;
+use App\Repository\StockExampleRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -20,11 +27,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardController extends AbstractDashboardController
 {
+    public function __construct(
+        private UserRepository $userRepository,
+        private ContactRepository $contactRepository,
+        private InvestisseurRequestRepository $investisseurRequestRepository,
+        private IntradayRequestRepository $intradayRequestRepository,
+        private StockExampleRepository $stockExampleRepository
+    ) {}
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        return $this->redirect($adminUrlGenerator->setController(ContactCrudController::class)->generateUrl());
+        // Récupérer les statistiques
+        $stats = [
+            'total_users' => $this->userRepository->count([]),
+            'investisseur_subscribers' => $this->investisseurRequestRepository->count([]),
+            'intraday_subscribers' => $this->intradayRequestRepository->count([]),
+            'total_contacts' => $this->contactRepository->count([]),
+            'recent_contacts' => $this->contactRepository->findBy([], ['createdAt' => 'DESC'], 5),
+            'recent_users' => $this->userRepository->findBy([], ['createdAt' => 'DESC'], 5),
+        ];
+
+        return $this->render('admin/dashboard.html.twig', [
+            'stats' => $stats,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -451,5 +477,8 @@ class DashboardController extends AbstractDashboardController
             ->setController(IntradayRequestCrudController::class);
         yield MenuItem::linkToCrud('Menus', 'fa fa-list', Menu::class);
         yield MenuItem::linkToCrud('Contenus des Pages', 'fa fa-edit', PageContent::class);
+        yield MenuItem::linkToCrud('Images du carrousel', 'fa fa-images', CarouselImage::class);
+        yield MenuItem::linkToCrud('Exemples de stocks', 'fa fa-chart-line', StockExample::class)
+            ->setController(StockExampleCrudController::class);
     }
 }
