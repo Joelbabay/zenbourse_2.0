@@ -85,12 +85,25 @@ class StockExampleInlineController extends AbstractController
     }
 
     #[Route('/inline-edit', name: 'admin_stock_example_inline_edit')]
-    public function inlineEdit(): Response
+    public function inlineEdit(Request $request): Response
     {
-        $stocks = $this->stockExampleRepository->findAll();
+        $selectedCategory = $request->query->get('category');
+
+        // Récupérer toutes les catégories disponibles
+        $categories = $this->stockExampleRepository->findDistinctCategories();
+
+        // Si une catégorie est sélectionnée, filtrer les stocks
+        if ($selectedCategory) {
+            $stocks = $this->stockExampleRepository->findByCategory($selectedCategory);
+        } else {
+            // Par défaut, afficher tous les stocks groupés par catégorie
+            $stocks = $this->stockExampleRepository->findAll();
+        }
 
         return $this->render('admin/stock_examples_inline_edit.html.twig', [
-            'stocks' => $stocks
+            'stocks' => $stocks,
+            'categories' => $categories,
+            'selectedCategory' => $selectedCategory
         ]);
     }
 }

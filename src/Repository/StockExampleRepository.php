@@ -54,4 +54,16 @@ class StockExampleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleColumnResult();
     }
+
+    /**
+     * Récupère toutes les catégories distinctes disponibles
+     */
+    public function findDistinctCategories(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('DISTINCT s.category')
+            ->orderBy('s.category', 'ASC')
+            ->getQuery()
+            ->getSingleColumnResult();
+    }
 }

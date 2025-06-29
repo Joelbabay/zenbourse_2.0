@@ -533,3 +533,212 @@ label.required:after {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
 }
+
+.modern-footer {
+  background: linear-gradient(135deg, #370028 0%, #183d3d 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.02)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.02)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+}
+
+.footer-content {
+  padding: 3rem 0 2rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-brand {
+  margin-bottom: 1rem;
+}
+
+.footer-logo {
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease;
+  max-width: 25px;
+  height: auto;
+}
+
+.footer-logo:hover {
+  transform: scale(1.05);
+}
+
+.footer-title {
+  color: #cbdfd1;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer-description {
+  color: #b8c5c0;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.footer-section-title {
+  color: #cbdfd1;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.footer-section-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, #cbdfd1, #b3edff);
+  border-radius: 1px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  color: #b8c5c0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-left: 0;
+}
+
+.footer-links a::before {
+  content: "→";
+  position: absolute;
+  left: -15px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: #b3edff;
+}
+
+.footer-links a:hover {
+  color: #cbdfd1;
+  padding-left: 15px;
+}
+
+.footer-links a:hover::before {
+  opacity: 1;
+}
+
+.footer-contact p {
+  color: #b8c5c0;
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.footer-contact i {
+  color: #b3edff;
+  width: 16px;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(203, 223, 209, 0.1);
+  color: #cbdfd1;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(203, 223, 209, 0.2);
+}
+
+.social-link:hover {
+  background: #cbdfd1;
+  color: #370028;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(203, 223, 209, 0.3);
+}
+
+.footer-bottom {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 0;
+  border-top: 1px solid rgba(203, 223, 209, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.copyright-text {
+  color: #b8c5c0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: flex-end;
+}
+
+.legal-link {
+  color: #b8c5c0;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.3s ease;
+}
+
+.legal-link:hover {
+  color: #cbdfd1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    padding: 2rem 0 1.5rem 0;
+  }
+
+  .footer-bottom {
+    padding: 1rem 0;
+  }
+
+  .footer-legal {
+    justify-content: flex-start;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+
+  .footer-section-title {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-legal {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

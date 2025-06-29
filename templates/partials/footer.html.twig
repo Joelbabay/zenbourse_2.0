@@ -1,9 +1,96 @@
-<!-- Footer-->
-<footer class="blog-footer mt-5 bottom-0 w-100">
-	<p>
-		Blog template built for
-		<a href="/">Zenbourse</a>
-		{{ "now"|date("Y") }}.
-	</p>
+<!-- Footer moderne -->
+<!-- Font Awesome pour les icônes -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<footer class="modern-footer mt-5">
+	<div class="footer-content">
+		<div class="custom-container">
+			<div class="row">
+				<!-- Logo et description -->
+				<div class="col-lg-4 col-md-6 mb-4">
+					<div class="footer-brand">
+						<div class="row">
+							<div class="d-flex align-items-center gap-2">
+								
+								<h5 class="footer-title">Zenbourse</h5>
+							</div>
+						</div>
+						<p class="footer-description">
+							Plateforme éducative spécialisée dans l'investissement boursier. 
+							Apprenez les stratégies de trading et développez vos compétences financières.
+						</p>
+					</div>
+				</div>
+
+				<!-- Liens rapides -->
+				<div class="col-lg-2 col-md-6 mb-4">
+					<h6 class="footer-section-title">Navigation</h6>
+					<ul class="footer-links">
+						<li><a href="{{ path('home') }}">Accueil</a></li>
+						<li><a href="{{ path('investisseur_home') }}">Investisseur</a></li>
+						<li><a href="{{ path('intraday_home') }}">Intraday</a></li>
+						<li><a href="{{ path('app_home_contact') }}">Contact</a></li>
+					</ul>
+				</div>
+
+				<!-- Ressources -->
+				<div class="col-lg-3 col-md-6 mb-4">
+					<h6 class="footer-section-title">Ressources</h6>
+					<ul class="footer-links">
+						<li><a href="{{ path('investisseur_bibliotheque') }}">Bibliothèque</a></li>
+						<li><a href="{{ path('investisseur_la-methode') }}">Méthodes</a></li>
+						<li><a href="{{ path('investisseur_outils') }}">Outils</a></li>
+						<li><a href="{{ path('investisseur_gestion') }}">Gestion</a></li>
+					</ul>
+				</div>
+
+				<!-- Contact et réseaux -->
+				<div class="col-lg-3 col-md-6 mb-4">
+					<h6 class="footer-section-title">Contact</h6>
+					<div class="footer-contact">
+						<p><i class="fas fa-envelope me-2"></i> contact@zenbourse.com</p>
+						<p><i class="fas fa-phone me-2"></i> +33 1 23 45 67 89</p>
+					</div>
+					
+					<div class="footer-social mt-3">
+						<h6 class="footer-section-title">Suivez-nous</h6>
+						<div class="social-links">
+							<a href="#" class="social-link" title="LinkedIn">
+								<i class="fab fa-linkedin"></i>
+							</a>
+							<a href="#" class="social-link" title="Twitter">
+								<i class="fab fa-twitter"></i>
+							</a>
+							<a href="#" class="social-link" title="YouTube">
+								<i class="fab fa-youtube"></i>
+							</a>
+							<a href="#" class="social-link" title="Facebook">
+								<i class="fab fa-facebook"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Barre de copyright -->
+	<div class="footer-bottom">
+		<div class="custom-container">
+			<div class="row align-items-center">
+				<div class="col-md-6">
+					<p class="copyright-text">
+						© {{ "now"|date("Y") }} Zenbourse. Tous droits réservés.
+					</p>
+				</div>
+				<div class="col-md-6 text-md-end">
+					<div class="footer-legal">
+						<a href="#" class="legal-link">Mentions légales</a>
+						<a href="#" class="legal-link">Politique de confidentialité</a>
+						<a href="#" class="legal-link">CGU</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </footer>
-<!-- Footer-->
