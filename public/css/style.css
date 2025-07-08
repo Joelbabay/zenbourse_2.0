@@ -165,6 +165,13 @@ nav .nav-item a:hover {
   top: 10px;
 }
 
+#h2-list .sidebar-h3 {
+  margin-left: 20px;
+  font-size: 0.95em;
+  color: #888;
+  list-style-type: circle;
+}
+
 .btn-investisseur {
   color: #000 !important;
   background-color: #cbdfd1;

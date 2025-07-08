@@ -1,101 +1,118 @@
 <!DOCTYPE html>
 <html data-turbo="false">
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}{% endblock %}
-		</title>
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		<link rel="icon" type="image/jpg" href="{{ asset('images/zenbourse-logo.svg') }}" />
-		<!--<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">-->
-		<link href="/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet"/>
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>
-		<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-		<script src="/js/bootstrap.bundle.js"></script>
-		<script src="https://kit.fontawesome.com/54fca6d779.js" crossorigin="anonymous"></script>
-		<link href="/css/style.css" rel="stylesheet"/>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{% endblock %}</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link
+      rel="icon"
+      type="image/jpg"
+      href="{{ asset('images/zenbourse-logo.svg') }}"
+    />
+    <!--<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">-->
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/js/bootstrap.bundle.js"></script>
+    <script
+      src="https://kit.fontawesome.com/54fca6d779.js"
+      crossorigin="anonymous"
+    ></script>
+    <link href="/css/style.css" rel="stylesheet" />
 
-		{% block stylesheets %}{% endblock %}
+    {% block stylesheets %}{% endblock %} {% block javascripts %} {% block
+    importmap %}
+    {{
+      importmap("app")
+    }}
+    {% endblock %} {% endblock %}
+  </head>
+  <body>
+    {% block body %}{% endblock %} {% include 'partials/footer.html.twig' %}
+    <script src="/js/jquery.magnific-popup.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+      function populateH2List() {
+        const h2Elements = document.querySelectorAll("h2");
+        const h3Elements = document.querySelectorAll("h3");
+        const h2List = document.getElementById("h2-list");
+        const sidebarContainer = h2List.closest(".sidebar");
 
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
-		{% endblock %}
-	</head>
-	<body>
-		{% block body %}{% endblock %}
-		{% include 'partials/footer.html.twig' %}
-		<script src="/js/jquery.magnific-popup.js"></script>
-		<script src="{{ asset('js/app.js') }}"></script>
-		<script>
-			function populateH2List() {
-				const h2Elements = document.querySelectorAll('h2');
-				const h2List = document.getElementById('h2-list');
-				const sidebarContainer = h2List.closest('.sidebar');
+        h2List.innerHTML = "";
 
-				h2List.innerHTML = '';
+        if (h2Elements.length === 0) {
+          if (sidebarContainer) {
+            sidebarContainer.style.display = "none";
+          }
+          return;
+        } else {
+          if (sidebarContainer) {
+            sidebarContainer.style.display = "";
+          }
+        }
 
-				if (h2Elements.length === 0) {
-					if (sidebarContainer) {
-						sidebarContainer.style.display = 'none';
-					}
-					return;
-				} else {
-					if (sidebarContainer) {
-						sidebarContainer.style.display = '';
-					}
-				}
+        // On va parcourir tous les h2 et h3 dans l'ordre du DOM
+        const headings = Array.from(document.querySelectorAll("h2, h3"));
+        headings.forEach((heading, index) => {
+          if (!heading.id) {
+            heading.id = `section-${index + 1}`;
+          }
 
-				h2Elements.forEach((h2, index) => {
-					if (!h2.id) {
-						h2.id = `section-${index + 1}`;
-					}
+          const listItem = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = `#${heading.id}`;
+          link.textContent = heading.textContent;
+          link.style.cursor = "pointer";
+          link.style.textDecoration = "none";
 
-					const listItem = document.createElement('li');
-					const link = document.createElement('a');
-					link.href = `#${h2.id}`;
-					link.textContent = h2.textContent;
+          if (heading.tagName.toLowerCase() === "h3") {
+            listItem.classList.add("sidebar-h3");
+          }
 
-					link.style.cursor = 'pointer';
-					link.style.textDecoration = 'none';
+          listItem.appendChild(link);
+          h2List.appendChild(listItem);
+        });
+      }
 
-					listItem.appendChild(link);
-					h2List.appendChild(listItem);
-				});
-			}
+      document.addEventListener("DOMContentLoaded", populateH2List);
+      document.addEventListener("turbo:load", populateH2List);
 
+      document.querySelectorAll(".clickable-div").forEach(function (div) {
+        div.addEventListener("click", function (e) {
+          // Si le clic vient d'un lien, on laisse le lien fonctionner normalement
+          if (e.target.closest("a")) return;
+          window.location = div.getAttribute("data-href");
+        });
+      });
 
-		document.addEventListener('DOMContentLoaded', populateH2List);
-		document.addEventListener('turbo:load', populateH2List);
+      // Fonction pour mettre à jour la marge dynamique
+      function updateScrollMargin() {
+        // Sélectionnez le header sticky
+        const header = document.querySelector(".sticky-top");
 
-		document.querySelectorAll('.clickable-div').forEach(function(div) {
-			div.addEventListener('click', function(e) {
-				// Si le clic vient d'un lien, on laisse le lien fonctionner normalement
-				if (e.target.closest('a')) return;
-				window.location = div.getAttribute('data-href');
-			});
-		});
+        // Vérifiez si le header existe
+        if (header) {
+          const headerHeight = Math.ceil(header.getBoundingClientRect().height);
 
-		// Fonction pour mettre à jour la marge dynamique
-		function updateScrollMargin() {
-			// Sélectionnez le header sticky
-			const header = document.querySelector('.sticky-top');
-
-			// Vérifiez si le header existe
-			if (header) {
-				const headerHeight = Math.ceil(header.getBoundingClientRect().height);
-
-				// Ajoutez le scroll-margin-top à tous les éléments ciblés (par exemple, h2)
-				document.querySelectorAll('h2').forEach(element => {
-					element.style.scrollMarginTop = `${headerHeight + 10}px`; // +10 pour un peu d'espacement
-				});
-			}
-		}
-		updateScrollMargin();
-		window.addEventListener('resize', updateScrollMargin);
-		</script>
-	</body>
+          // Ajoutez le scroll-margin-top à tous les éléments ciblés (par exemple, h2)
+          document.querySelectorAll("h2, h3").forEach((element) => {
+            element.style.scrollMarginTop = `${headerHeight + 10}px`; // +10 pour un peu d'espacement
+          });
+        }
+      }
+      updateScrollMargin();
+      window.addEventListener("resize", updateScrollMargin);
+    </script>
+  </body>
 </html>
