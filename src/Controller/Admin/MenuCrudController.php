@@ -91,10 +91,6 @@ class MenuCrudController extends AbstractCrudController
                     'INTRADAY' => 'warning'
                 ]),
 
-            TextField::new('route')
-                ->setHelp('Route Symfony (générée automatiquement si vide)')
-                ->setDisabled($pageName === Crud::PAGE_INDEX),
-
             IntegerField::new('menuorder', 'Position')
                 ->setHelp('Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.')
                 ->setRequired(false),
@@ -222,6 +218,12 @@ class MenuCrudController extends AbstractCrudController
         /** @var Menu $menu */
         $menu = $entityInstance;
 
+        if ($menu->getSection() === 'HOME') {
+            $menu->setRoute('app_home_page');
+            $slug = $this->menuService->generateSlug($menu->getLabel());
+            $menu->setSlug($slug);
+        }
+
         // Génère le slug automatiquement s'il est vide
         if (empty($menu->getSlug())) {
             $slug = $this->menuService->generateSlug($menu->getLabel());
@@ -247,6 +249,12 @@ class MenuCrudController extends AbstractCrudController
 
         // Récupérer l'ancienne position pour la comparaison
         $oldPosition = $entityManager->getUnitOfWork()->getOriginalEntityData($menu)['menuorder'] ?? null;
+
+        if ($menu->getSection() === 'HOME') {
+            $menu->setRoute('app_home_page');
+            $slug = $this->menuService->generateSlug($menu->getLabel());
+            $menu->setSlug($slug);
+        }
 
         // Génère le slug automatiquement s'il est vide
         if (empty($menu->getSlug())) {

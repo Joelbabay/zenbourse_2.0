@@ -1,5 +1,7 @@
 doctrine:
     dbal:
+        # Configuration de la base de données
+        # Pour zenbourse.fr, mettre à jour DATABASE_URL dans .env.local
         url: '%env(resolve:DATABASE_URL)%'
 
         # IMPORTANT: You MUST configure your server version,
