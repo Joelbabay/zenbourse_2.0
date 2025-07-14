@@ -40,43 +40,105 @@
   </head>
   <body>
     {# Modal Bootstrap pour afficher les graphiques de tickers #}
-    <div class="modal fade" id="tickerModal" tabindex="-1" aria-labelledby="tickerModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="tickerModal"
+      tabindex="-1"
+      aria-labelledby="tickerModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="tickerModalLabel">Graphique</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fermer"
+            ></button>
           </div>
           <div class="modal-body text-center">
-            <img id="tickerModalImg" src="" alt="Graphique du ticker" class="img-fluid" />
+            <img
+              id="tickerModalImg"
+              src=""
+              alt="Graphique du ticker"
+              class="img-fluid"
+            />
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="welcomeModal"
+      tabindex="-1"
+      aria-labelledby="welcomeModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.2rem;">
-          <div class="modal-header" style="background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%); border-top-left-radius: 1.2rem; border-top-right-radius: 1.2rem;">
+        <div
+          class="modal-content border-0 shadow-lg"
+          style="border-radius: 1.2rem"
+        >
+          <div
+            class="modal-header"
+            style="
+              background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%);
+              border-top-left-radius: 1.2rem;
+              border-top-right-radius: 1.2rem;
+            "
+          >
             <h5 class="modal-title text-white fw-bold" id="welcomeModalLabel">
               👋 Bienvenue sur Zenbourse
             </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Fermer"
+            ></button>
           </div>
-          <div class="modal-body text-center py-5" style="background: #f8f9fa;">
+          <div class="modal-body text-center py-5" style="background: #f8f9fa">
             <div class="mb-4">
               <svg width="64" height="64" fill="none" viewBox="0 0 64 64">
-                <circle cx="32" cy="32" r="32" fill="#0d6efd" fill-opacity="0.1"/>
-                <path d="M20 44L28 36L36 44L44 28" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="44" cy="28" r="3" fill="#00c9a7"/>
+                <circle
+                  cx="32"
+                  cy="32"
+                  r="32"
+                  fill="#0d6efd"
+                  fill-opacity="0.1"
+                />
+                <path
+                  d="M20 44L28 36L36 44L44 28"
+                  stroke="#0d6efd"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <circle cx="44" cy="28" r="3" fill="#00c9a7" />
               </svg>
             </div>
-            <h2 class="fw-bold mb-3" style="color: #0d6efd;">Des méthodes simples, performantes</h2>
-            <p class="lead mb-4" style="color: #333;">
-              Bienvenue sur Zenbourse, le site dédié à l’étude des méthodes d’investissement.<br>
-              Explorez nos ressources, découvrez nos graphiques et profitez de l’expérience !
+            <h2 class="fw-bold mb-3" style="color: #0d6efd">
+              Des méthodes simples, performantes
+            </h2>
+            <p class="lead mb-4" style="color: #333">
+              Bienvenue sur Zenbourse, le site dédié à l’étude des méthodes
+              d’investissement.<br />
+              Explorez nos ressources, découvrez nos graphiques et profitez de
+              l’expérience !
             </p>
-            <button type="button" class="btn btn-primary btn-lg px-5" data-bs-dismiss="modal" style="border-radius: 2rem; background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%); border: none;">
+            <button
+              type="button"
+              class="btn btn-primary btn-lg px-5"
+              data-bs-dismiss="modal"
+              style="
+                border-radius: 2rem;
+                background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%);
+                border: none;
+              "
+            >
               Commencer
             </button>
           </div>
@@ -88,39 +150,50 @@
     <script src="/js/jquery.magnific-popup.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-
-        if (!localStorage.getItem('zenbourse_welcome_shown')) {
-          var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+      document.addEventListener("DOMContentLoaded", function () {
+        if (!localStorage.getItem("zenbourse_welcome_shown")) {
+          var welcomeModal = new bootstrap.Modal(
+            document.getElementById("welcomeModal")
+          );
           welcomeModal.show();
-          localStorage.setItem('zenbourse_welcome_shown', '1');
+          localStorage.setItem("zenbourse_welcome_shown", "1");
         }
 
-        document.querySelectorAll('a[href*="/images/performances/"]').forEach(function(link) {
-          link.classList.add('ticker-link');
-        });
-      
-      document.querySelectorAll('.ticker-link').forEach(function(link) {
-              link.addEventListener('click', function(e) {
-                  e.preventDefault();
-                  var imgSrc = this.getAttribute('href');
-                  var tickerName = this.getAttribute('data-ticker') || 'Graphique';
-                  document.getElementById('tickerModalImg').src = imgSrc;
-                  document.getElementById('tickerModalLabel').textContent = tickerName;
-                  var modal = new bootstrap.Modal(document.getElementById('tickerModal'));
-                  modal.show();
-              });
+        document
+          .querySelectorAll('a[href*="/images/performances/"]')
+          .forEach(function (link) {
+            link.classList.add("ticker-link");
           });
+
+        document.querySelectorAll(".ticker-link").forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            var imgSrc = this.getAttribute("href");
+            var tickerName = this.getAttribute("data-ticker") || "Graphique";
+            document.getElementById("tickerModalImg").src = imgSrc;
+            document.getElementById("tickerModalLabel").textContent =
+              tickerName;
+            var modal = new bootstrap.Modal(
+              document.getElementById("tickerModal")
+            );
+            modal.show();
+          });
+        });
       });
+
       function populateH2List() {
-        const h2Elements = document.querySelectorAll("h2");
-        const h3Elements = document.querySelectorAll("h3");
+        const mainContent = document.getElementById("main-content");
+        if (!mainContent) return;
+
         const h2List = document.getElementById("h2-list");
         const sidebarContainer = h2List.closest(".sidebar");
 
         h2List.innerHTML = "";
 
-        if (h2Elements.length === 0) {
+        // Sélectionne uniquement les h2/h3 dans le contenu principal
+        const headings = Array.from(mainContent.querySelectorAll("h2, h3"));
+
+        if (headings.length === 0) {
           if (sidebarContainer) {
             sidebarContainer.style.display = "none";
           }
@@ -131,8 +204,6 @@
           }
         }
 
-        // On va parcourir tous les h2 et h3 dans l'ordre du DOM
-        const headings = Array.from(document.querySelectorAll("h2, h3"));
         headings.forEach((heading, index) => {
           if (!heading.id) {
             heading.id = `section-${index + 1}`;

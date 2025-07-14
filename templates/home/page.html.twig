@@ -7,7 +7,7 @@
 {% block body %}
     {% include 'partials/header.html.twig' %}
     <main class="custom-container mt-4" >
-        <div class="row g-5" data-turbo="false">
+        <div class="row g-5" data-turbo="false" id="main-content">
             <div class="col-md-9">
                 {% if menu.slug == 'accueil' %}
                     <div id="carouselExampleSlidesOnly" class="carousel slide mb-4" data-bs-ride="carousel" style="min-height:300px">
