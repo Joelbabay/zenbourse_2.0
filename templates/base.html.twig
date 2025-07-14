@@ -39,10 +39,42 @@
     {% endblock %} {% endblock %}
   </head>
   <body>
+    {# Modal Bootstrap pour afficher les graphiques de tickers #}
+    <div class="modal fade" id="tickerModal" tabindex="-1" aria-labelledby="tickerModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="tickerModalLabel">Graphique</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img id="tickerModalImg" src="" alt="Graphique du ticker" class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+
     {% block body %}{% endblock %} {% include 'partials/footer.html.twig' %}
     <script src="/js/jquery.magnific-popup.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
+    
+      document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('a[href*="/images/performances/"]').forEach(function(link) {
+        link.classList.add('ticker-link');
+      });
+      document.querySelectorAll('.ticker-link').forEach(function(link) {
+              link.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  var imgSrc = this.getAttribute('href');
+                  var tickerName = this.getAttribute('data-ticker') || 'Graphique';
+                  document.getElementById('tickerModalImg').src = imgSrc;
+                  document.getElementById('tickerModalLabel').textContent = tickerName;
+                  var modal = new bootstrap.Modal(document.getElementById('tickerModal'));
+                  modal.show();
+              });
+          });
+      });
       function populateH2List() {
         const h2Elements = document.querySelectorAll("h2");
         const h3Elements = document.querySelectorAll("h3");
