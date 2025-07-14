@@ -42,6 +42,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    public function countByStatut(string $statut): int
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.statut = :statut')
+            ->setParameter('statut', $statut)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countByStatutAndMethod(string $statut, string $method): int
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->where('u.statut = :statut')
+            ->andWhere("u.is" . ucfirst($method) . " = true")
+            ->setParameter('statut', $statut)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

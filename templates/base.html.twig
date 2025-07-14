@@ -54,15 +54,52 @@
       </div>
     </div>
 
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 1.2rem;">
+          <div class="modal-header" style="background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%); border-top-left-radius: 1.2rem; border-top-right-radius: 1.2rem;">
+            <h5 class="modal-title text-white fw-bold" id="welcomeModalLabel">
+              👋 Bienvenue sur Zenbourse
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body text-center py-5" style="background: #f8f9fa;">
+            <div class="mb-4">
+              <svg width="64" height="64" fill="none" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="32" fill="#0d6efd" fill-opacity="0.1"/>
+                <path d="M20 44L28 36L36 44L44 28" stroke="#0d6efd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="44" cy="28" r="3" fill="#00c9a7"/>
+              </svg>
+            </div>
+            <h2 class="fw-bold mb-3" style="color: #0d6efd;">Des méthodes simples, performantes</h2>
+            <p class="lead mb-4" style="color: #333;">
+              Bienvenue sur Zenbourse, le site dédié à l’étude des méthodes d’investissement.<br>
+              Explorez nos ressources, découvrez nos graphiques et profitez de l’expérience !
+            </p>
+            <button type="button" class="btn btn-primary btn-lg px-5" data-bs-dismiss="modal" style="border-radius: 2rem; background: linear-gradient(90deg, #0d6efd 0%, #00c9a7 100%); border: none;">
+              Commencer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     {% block body %}{% endblock %} {% include 'partials/footer.html.twig' %}
     <script src="/js/jquery.magnific-popup.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
-    
       document.addEventListener('DOMContentLoaded', function() {
+
+        if (!localStorage.getItem('zenbourse_welcome_shown')) {
+          var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+          welcomeModal.show();
+          localStorage.setItem('zenbourse_welcome_shown', '1');
+        }
+
         document.querySelectorAll('a[href*="/images/performances/"]').forEach(function(link) {
-        link.classList.add('ticker-link');
-      });
+          link.classList.add('ticker-link');
+        });
+      
       document.querySelectorAll('.ticker-link').forEach(function(link) {
               link.addEventListener('click', function(e) {
                   e.preventDefault();

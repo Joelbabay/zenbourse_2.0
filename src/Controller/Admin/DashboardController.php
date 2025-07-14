@@ -48,15 +48,31 @@ class DashboardController extends AbstractDashboardController
             'recent_users' => $this->userRepository->findBy([], ['createdAt' => 'DESC'], 5),
         ];
 
+        $statuts = ['PROSPECT', 'INVITE', 'CLIENT'];
+        $methods = ['investisseur', 'intraday'];
+        $statutStats = [];
+
+        $unreadContacts = $this->contactRepository->count(['isRead' => false]);
+
+        foreach ($statuts as $statut) {
+            $statutStats[$statut] = [
+                'total' => $this->userRepository->countByStatut($statut),
+                'investisseur' => $this->userRepository->countByStatutAndMethod($statut, 'investisseur'),
+                'intraday' => $this->userRepository->countByStatutAndMethod($statut, 'intraday'),
+            ];
+        }
+
         return $this->render('admin/dashboard.html.twig', [
             'stats' => $stats,
+            'statutStats' => $statutStats,
+            'unreadContacts' => $unreadContacts,
         ]);
     }
 
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Zenbourse 50');
+            ->setTitle('Zenbourse');
     }
 
     public function configureCrud(): Crud

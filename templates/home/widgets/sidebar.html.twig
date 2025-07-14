@@ -5,7 +5,7 @@
 		</ul>
 	</div>
 	{% if not app.user or not app.user.isInvestisseur %}
-		<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_investisseur_subscription') }}">
+		<div class="sidebar p-4 rounded clickable-div bg-light mb-3 border border-secondary rounded" data-href="{{ path('home_investisseur_subscription') }}">
 			<p>Je suis intéressé par</p>
 			<a href="{{ path('home_investisseur_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 				la méthode Investisseur
@@ -13,7 +13,7 @@
 		</div>
 	{% endif %}
 	{% if not app.user or not app.user.isIntraday %}
-		<div class="sidebar p-4 rounded clickable-div bg-light mb-3" data-href="{{ path('home_intraday_subscription') }}">
+		<div class="sidebar p-4 rounded clickable-div bg-light mb-3 border border-secondary rounded" data-href="{{ path('home_intraday_subscription') }}">
 		<p>Je suis intéressé par</p>
 		<a href="{{ path('home_intraday_subscription') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			la méthode Intraday
@@ -21,7 +21,7 @@
 	</div>
 	{% endif %}
 
-	<div class="sidebar p-4 rounded clickable-div bg-light" data-href="{{ path('home_download_page') }}">
+	<div class="sidebar p-4 rounded clickable-div bg-light border border-secondary rounded" data-href="{{ path('home_download_page') }}">
 		<p>Les valeurs de</p>
 		<a href="{{ path('home_download_page') }}" class="fst-italic text-dark fw-bolder text-uppercase" style="font-size: 20px;">
 			L'etude statistique

@@ -22,112 +22,86 @@
             </div>
         </div>
 
-        <!-- Cartes de statistiques principales -->
         <div class="row mb-4">
-            <!-- Nombre total d'utilisateurs -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                    Utilisateurs
+            {% for statut, data in statutStats %}
+                {% set borderClass = {
+                    'PROSPECT': 'border-left-primary',
+                    'CLIENT': 'border-left-success',
+                    'INVITE': 'border-left-warning'
+                }[statut] %}
+                {% set textClass = {
+                    'PROSPECT': 'text-primary',
+                    'CLIENT': 'text-success',
+                    'INVITE': 'text-warning'
+                }[statut] %}
+                
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card {{ borderClass }} shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold {{ textClass }} text-uppercase mb-1">
+                                        {{ statut }}
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        {{ data.total }} utilisateur{{ data.total > 1 ? 's' : '' }}
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-success me-2 text-white">
+                                            Investisseur : {{ data.investisseur }}
+                                        </span>
+                                        <span class="badge bg-primary text-white">
+                                            Intraday : {{ data.intraday }}
+                                        </span>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ ea_url()
+                                            .setController('App\\Controller\\Admin\\UserCrudController')
+                                            .setAction('index')
+                                            .set('filters[statut][comparison]', '=')
+                                            .set('filters[statut][value]', statut)
+                                            .generateUrl() }}"
+                                        class="btn btn-light btn-sm">
+                                            <i class="fas fa-eye me-1"></i>
+                                            Voir
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ stats.total_users }}
+                                <div class="col-auto">
+                                    {% if statut == 'PROSPECT' %}
+                                        <i class="fas fa-user-clock fa-2x text-gray-300"></i>
+                                    {% elseif statut == 'INVITE' %}
+                                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
+                                    {% elseif statut == 'CLIENT' %}
+                                        <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <div class="col-auto">
-                                <i class="fas fa-users fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <a href="{{ ea_url()
-                                .setController('App\\Controller\\Admin\\UserCrudController')
-                                .setAction('index')
-                                .generateUrl() }}" 
-                               class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye me-1"></i>
-                                Voir tous les utilisateurs
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Abonnés INVESTISSEUR -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    Abonnés INVESTISSEUR
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ stats.investisseur_subscribers }}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-chart-line fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <a href="{{ ea_url()
-                                .setController('App\\Controller\\Admin\\InterestedUsersCrudController')
-                                .setAction('index')
-                                .generateUrl() }}" 
-                               class="btn btn-success btn-sm">
-                                <i class="fas fa-eye me-1"></i>
-                                Voir les abonnés
-                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Abonnés INTRADAY -->
+            {% endfor %}
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Abonnés INTRADAY
+                                    Messagerie  
                                 </div>
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ stats.intraday_subscribers }}
+                                    {{ stats.total_contacts }} message{{ stats.total_contacts > 1 ? 's' : '' }}
                                 </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-clock fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <a href="{{ ea_url()
-                                .setController('App\\Controller\\Admin\\IntradayRequestCrudController')
-                                .setAction('index')
-                                .generateUrl() }}" 
-                               class="btn btn-info btn-sm">
-                                <i class="fas fa-eye me-1"></i>
-                                Voir les abonnés
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Messages de contact -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                    Messages
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ stats.total_contacts }}
+                                <div class="mt-2">
+                                    {% if unreadContacts > 0 %}
+                                        <span class="badge bg-danger text-white rounded-pill px-3 py-2" title="Non lus" style="font-size:1rem;">
+                                            {{ unreadContacts }} non lu{{ unreadContacts > 1 ? 's' : '' }} <i class="fas fa-envelope-open-text"></i>
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success text-white rounded-pill px-3 py-2" style="font-size:1rem;">
+                                            Tous les messages sont lus <i class="fas fa-check"></i>
+                                        </span>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -139,7 +113,7 @@
                                 .setController('App\\Controller\\Admin\\ContactCrudController')
                                 .setAction('index')
                                 .generateUrl() }}" 
-                               class="btn btn-warning btn-sm">
+                               class="btn btn-info btn-sm">
                                 <i class="fas fa-inbox me-1"></i>
                                 Voir la boîte mail
                             </a>
@@ -147,6 +121,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Cartes de statistiques principales -->
+        <div class="row mb-4">    <!-- Messages de contact -->
+            
         </div>
 
         <!-- Cartes secondaires -->
