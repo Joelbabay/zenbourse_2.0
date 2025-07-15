@@ -17,6 +17,25 @@ class MethodeController extends AbstractController
         private CandlestickPatternService $candlestickPatternService
     ) {}
 
+    private function checkInvestorAccess(): ?Response
+    {
+        $user = $this->getUser();
+        if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
+            $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
+            return $this->redirectToRoute('home');
+        }
+        return null;
+    }
+
+    #[Route('/', name: 'investisseur_la-methode')]
+    public function investisseur_methode(): Response
+    {
+        if ($resp = $this->checkInvestorAccess()) {
+            return $resp;
+        }
+        return $this->render('investisseur/methode.html.twig');
+    }
+
     #[Route('/vagues-elliott', name: 'investisseur_methode_vagues_elliot')]
     public function vaguesElliot(): Response
     {

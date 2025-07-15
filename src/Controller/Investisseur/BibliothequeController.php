@@ -17,9 +17,22 @@ class BibliothequeController extends AbstractController
         private StockExampleService $stockExampleService
     ) {}
 
+    private function checkInvestorAccess(): ?Response
+    {
+        $user = $this->getUser();
+        if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
+            $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
+            return $this->redirectToRoute('home');
+        }
+        return null;
+    }
+
     #[Route('/', name: 'investisseur_bibliotheque')]
     public function index(): Response
     {
+        if ($resp = $this->checkInvestorAccess()) {
+            return $resp;
+        }
         return $this->render('investisseur/bibliotheque.html.twig');
     }
 

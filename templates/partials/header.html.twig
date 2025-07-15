@@ -24,7 +24,7 @@
                         {# Affichage des boutons méthode selon la route et l'utilisateur #}
                         {% if isHome %}
                             {% if app.user %}
-                                {% if app.user.isInvestisseur %}
+                                {% if app.user.isInvestisseur or app.user.hasTemporaryInvestorAccess %}
                                     <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1 text-nowrap me-2" href="{{ path('investisseur_la-methode') }}">METHODE INVESTISSEUR</a>
                                 {% endif %}
                                 {% if app.user.isIntraday %}

@@ -17,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -96,7 +97,19 @@ class UserCrudController extends AbstractCrudController
                         '4' => 4,
                         '5' => 5
                     ]) //->setFormTypeOption('multiple', true)
-            );
+            )
+            ->add(
+                BooleanFilter::new('hasTemporaryInvestorAccess')
+            )
+
+            ->add(
+                BooleanFilter::new('isInvestisseur', 'Accès investisseur')
+            )
+            ->add(
+                BooleanFilter::new('isIntraday', 'Accès intraday')
+            )
+
+            ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -177,6 +190,28 @@ class UserCrudController extends AbstractCrudController
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
+
+            // Badge custom pour accès temporaire actif
+            TextField::new('badgeTemporaryInvestorAccess', 'Accès temporaire')
+                ->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    if ($entity->hasValidTemporaryInvestorAccess()) {
+                        $dateEnd = (clone $entity->getTemporaryInvestorAccessStart())->modify('+10 days');
+                        return '<span class="badge bg-warning text-dark fw-bold">Accès temporaire actif<br><small>Expire le ' . $dateEnd->format('d/m/Y') . '</small></span>';
+                    }
+                    return ' ';
+                })
+                ->renderAsHtml(),
+
+            BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
+                ->renderAsSwitch(true)
+                ->setHelp('Activez pour donner un accès temporaire de 10 jours à la méthode Investisseur')
+                ->onlyOnForms(),
+
+            DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
+                ->setFormat('dd/MM/YYYY HH:mm')
+                ->onlyOnForms(),
+
             DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
@@ -214,6 +249,13 @@ class UserCrudController extends AbstractCrudController
         $user->setRoles($roles);
 
         $user->setPassword($hashedPassword);
+
+        if ($user->getHasTemporaryInvestorAccess() && !$user->getTemporaryInvestorAccessStart()) {
+            $user->setTemporaryInvestorAccessStart(new \DateTime());
+        }
+        if (!$user->getHasTemporaryInvestorAccess()) {
+            $user->setTemporaryInvestorAccessStart(null);
+        }
 
         parent::persistEntity($entityManager, $entityInstance);
     }
@@ -268,6 +310,13 @@ class UserCrudController extends AbstractCrudController
                 $user->getPassword()
             );
             $entityInstance->setPassword($encodedPassword);
+        }
+
+        if ($user->getHasTemporaryInvestorAccess() && !$user->getTemporaryInvestorAccessStart()) {
+            $user->setTemporaryInvestorAccessStart(new \DateTime());
+        }
+        if (!$user->getHasTemporaryInvestorAccess()) {
+            $user->setTemporaryInvestorAccessStart(null);
         }
 
         parent::updateEntity($entityManager, $entityInstance);

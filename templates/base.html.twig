@@ -145,8 +145,11 @@
         </div>
       </div>
     </div>
+    <div id="main-content">
+      {% block body %}{% endblock %} 
+    </div>
 
-    {% block body %}{% endblock %} {% include 'partials/footer.html.twig' %}
+    {% include 'partials/footer.html.twig' %}
     <script src="/js/jquery.magnific-popup.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>

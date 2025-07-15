@@ -35,54 +35,86 @@
                     'INVITE': 'text-warning'
                 }[statut] %}
                 
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card {{ borderClass }} shadow h-100 py-2">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold {{ textClass }} text-uppercase mb-1">
-                                        {{ statut }}
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        {{ data.total }} utilisateur{{ data.total > 1 ? 's' : '' }}
-                                    </div>
-                                    <div class="mt-2">
-                                        <span class="badge bg-success me-2 text-white">
-                                            Investisseur : {{ data.investisseur }}
-                                        </span>
-                                        <span class="badge bg-primary text-white">
-                                            Intraday : {{ data.intraday }}
-                                        </span>
-                                    </div>
-                                    <div class="mt-3">
-                                        <a href="{{ ea_url()
-                                            .setController('App\\Controller\\Admin\\UserCrudController')
-                                            .setAction('index')
-                                            .set('filters[statut][comparison]', '=')
-                                            .set('filters[statut][value]', statut)
-                                            .generateUrl() }}"
-                                        class="btn btn-light btn-sm">
-                                            <i class="fas fa-eye me-1"></i>
-                                            Voir
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-auto">
-                                    {% if statut == 'PROSPECT' %}
-                                        <i class="fas fa-user-clock fa-2x text-gray-300"></i>
-                                    {% elseif statut == 'INVITE' %}
-                                        <i class="fas fa-user-plus fa-2x text-gray-300"></i>
-                                    {% elseif statut == 'CLIENT' %}
-                                        <i class="fas fa-user-check fa-2x text-gray-300"></i>
-                                    {% endif %}
-                                </div>
-                            </div>
+                <div class="col-xl-3 col-md-4 mb-4">
+                    <div class="card {{ borderClass }} custom-stats-card p-0 shadow">
+                        <div class="py-3 stats-header d-flex align-items-center px-3 py-2">
+                            <span class="stats-title flex-grow-1"><em><strong>
+                                {% if statut == 'CLIENT' %}Clients{% elseif statut == 'PROSPECT' %}Prospects{% else %}Invités{% endif %}
+                            </strong></em></span>
+                            <span class="stats-value">{{ data.total }}</span>
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\UserCrudController')
+                                .setAction('index')
+                                .set('filters[statut][comparison]', '=')
+                                .set('filters[statut][value]', statut)
+                                .generateUrl() }}" class="stats-eye ms-2">
+                                <i class="fas fa-eye text-gray-800"></i>
+                            </a>
+                        </div>
+                        <div class="mb-2 stats-subblock bg-success text-white stats-invest d-flex align-items-center px-3 py-2">
+                            <span class="flex-grow-1">Accès Méthode Investisseur</span>
+                            <span class="stats-value">{{ data.investisseur }}</span>
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\UserCrudController')
+                                .setAction('index')
+                                .set('filters[statut][comparison]', '=')
+                                .set('filters[statut][value]', statut)
+                                .set('filters[isInvestisseur]', 1)
+                                .generateUrl() }}" class="stats-eye ms-2">
+                                <i class="fas fa-eye text-white"></i>
+                            </a>
+                        </div>
+                        <div class="mb-2 text-white stats-subblock bg-primary stats-intraday d-flex align-items-center px-3 py-2">
+                            <span class="flex-grow-1">Accès méthode Intraday</span>
+                            <span class="stats-value">{{ data.intraday }}</span>
+                            <a href="{{ ea_url()
+                                .setController('App\\Controller\\Admin\\UserCrudController')
+                                .setAction('index')
+                                .set('filters[statut][comparison]', '=')
+                                .set('filters[statut][value]', statut)
+                                .set('filters[isIntraday]', 1)
+                                .generateUrl() }}" class="stats-eye ms-2">
+                                <i class="fas fa-eye text-white"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+            <!-- Carte accès temporaire investisseur -->
+            <div class="col-xl-3 col-md-4 mb-4">
+                <div class="card border-left-info custom-stats-card p-0 shadow">
+                    <div class="py-3 stats-header d-flex align-items-center px-3 py-2">
+                        <span class="stats-title flex-grow-1"><em><strong>Accès temporaire</strong></em></span>
+                        <span class="stats-value">{{ totalTemporaryInvestorAccess }}</span>
+                        <a href="{{ ea_url()
+                            .setController('App\\Controller\\Admin\\UserCrudController')
+                            .setAction('index')
+                            .set('filters[hasTemporaryInvestorAccess][value]', 1)
+                            .generateUrl() }}" class="stats-eye ms-2">
+                            <i class="fas fa-eye text-gray-800"></i>
+                        </a>
+                    </div>
+                    <div class="mb-2 stats-subblock stats-tempinvest d-flex align-items-center px-3 py-2">
+                        <span class="flex-grow-1">Accès temporaire actif</span>
+                        <span class="stats-value text-gray">{{ totalTemporaryInvestorAccess }}</span>
+                        <a href="{{ ea_url()
+                            .setController('App\\Controller\\Admin\\UserCrudController')
+                            .setAction('index')
+                            .set('filters[hasTemporaryInvestorAccess][value]', 1)
+                            .generateUrl() }}" class="stats-eye ms-2">
+                            <i class="fas fa-eye text-gray-800"></i>
+                        </a>
+                    </div>
+                    <div class="mb-2 stats-subblock d-flex align-items-center px-3 py-2" style="background: #f8f9fa; color: #888;">
+                        <span class="flex-grow-1 fst-italic">Accès limité à 10 jours</span>
+                        <span class="stats-value"></span>
+                        <span class="stats-eye ms-2"></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
+                <div class="card border-left-danger shadow h-100 py-2">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">

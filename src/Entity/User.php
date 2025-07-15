@@ -104,6 +104,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $isInterestedInIntradayMethode = false;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $hasTemporaryInvestorAccess = false;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $temporaryInvestorAccessStart;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -468,5 +474,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isInterestedInIntradayMethode = $isInterestedInIntradayMethode;
 
         return $this;
+    }
+
+    public function getTemporaryInvestorAccessStart(): ?\DateTimeInterface
+    {
+        return $this->temporaryInvestorAccessStart;
+    }
+    
+    public function setTemporaryInvestorAccessStart(?\DateTimeInterface $temporaryInvestorAccessStart): static
+    {
+        $this->temporaryInvestorAccessStart = $temporaryInvestorAccessStart;
+
+        return $this;
+    }   
+
+    public function getHasTemporaryInvestorAccess(): ?bool
+    {
+        return $this->hasTemporaryInvestorAccess;
+    }
+
+    public function setHasTemporaryInvestorAccess(?bool $hasTemporaryInvestorAccess): static
+    {
+        $this->hasTemporaryInvestorAccess = $hasTemporaryInvestorAccess;
+
+        return $this;
+    }
+
+    public function hasValidTemporaryInvestorAccess(): bool
+    {
+        if (!$this->hasTemporaryInvestorAccess || !$this->temporaryInvestorAccessStart) {
+            return false;
+        }
+        $now = new \DateTime();
+        $end = (clone $this->temporaryInvestorAccessStart)->modify('+10 days');
+        if ($now <= $end) {
+            return true;
+        }
+        $this->hasTemporaryInvestorAccess = false;
+        return false;
+    }
+    
+    public function getBadgeTemporaryInvestorAccess(): ?string
+    {
+        return null;
     }
 }
