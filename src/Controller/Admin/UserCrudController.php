@@ -17,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -89,17 +90,17 @@ class UserCrudController extends AbstractCrudController
                     ])
             )
             ->add(
-                ChoiceFilter::new('note', 'Catégorie (Cat.)')
-                    ->setChoices([
-                        '1' => 1,
-                        '2' => 2,
-                        '3' => 3,
-                        '4' => 4,
-                        '5' => 5
-                    ]) //->setFormTypeOption('multiple', true)
-            )
-            ->add(
                 BooleanFilter::new('hasTemporaryInvestorAccess')
+                    ->setLabel('Accès temporaire')
+                    ->setFormTypeOption('choices', [
+                        'Actif' => true,
+                        'Expiré' => false,
+                    ])
+            )
+
+            ->add(
+                NullFilter::new('temporaryInvestorAccessStart')
+                ->setChoiceLabels('NULL', 'NOT_NULL')
             )
 
             ->add(
@@ -191,13 +192,20 @@ class UserCrudController extends AbstractCrudController
                     return $value ? $formatter->format($value) : ' ';
                 }),
 
-            // Badge custom pour accès temporaire actif
+            // Badge custom pour accès temporaire actif ou expiré
             TextField::new('badgeTemporaryInvestorAccess', 'Accès temporaire')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
-                    if ($entity->hasValidTemporaryInvestorAccess()) {
-                        $dateEnd = (clone $entity->getTemporaryInvestorAccessStart())->modify('+10 days');
-                        return '<span class="badge bg-warning text-dark fw-bold">Accès temporaire actif<br><small>Expire le ' . $dateEnd->format('d/m/Y') . '</small></span>';
+                    $start = $entity->getTemporaryInvestorAccessStart();
+                    $hasTemp = $entity->getHasTemporaryInvestorAccess();
+                    if ($start) {
+                        $dateEnd = (clone $start)->modify('+10 days');
+                        $now = new \DateTime();
+                        if ($hasTemp && $now <= $dateEnd) {
+                            return '<span class="badge bg-warning text-dark fw-bold">Accès temporaire actif<br><small>Expire le ' . $dateEnd->format('d/m/Y') . '</small></span>';
+                        } else {
+                            return '<span class="badge bg-danger text-white fw-bold">Accès temporaire expiré<br><small>Expiré le ' . $dateEnd->format('d/m/Y') . '</small></span>';
+                        }
                     }
                     return ' ';
                 })

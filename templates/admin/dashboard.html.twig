@@ -85,7 +85,7 @@
                 <div class="card border-left-info custom-stats-card p-0 shadow">
                     <div class="py-3 stats-header d-flex align-items-center px-3 py-2">
                         <span class="stats-title flex-grow-1"><em><strong>Accès temporaire</strong></em></span>
-                        <span class="stats-value">{{ totalTemporaryInvestorAccess }}</span>
+                        <span class="stats-value">{{ totalTemporaryInvestorAccessActive }}</span>
                         <a href="{{ ea_url()
                             .setController('App\\Controller\\Admin\\UserCrudController')
                             .setAction('index')
@@ -94,9 +94,9 @@
                             <i class="fas fa-eye text-gray-800"></i>
                         </a>
                     </div>
-                    <div class="mb-2 stats-subblock stats-tempinvest d-flex align-items-center px-3 py-2">
+                    <div class="mb-2 bg-warning stats-subblock stats-tempinvest d-flex align-items-center px-3 py-2">
                         <span class="flex-grow-1">Accès temporaire actif</span>
-                        <span class="stats-value text-gray">{{ totalTemporaryInvestorAccess }}</span>
+                        <span class="stats-value text-gray">{{ totalTemporaryInvestorAccessActive }}</span>
                         <a href="{{ ea_url()
                             .setController('App\\Controller\\Admin\\UserCrudController')
                             .setAction('index')
@@ -105,10 +105,17 @@
                             <i class="fas fa-eye text-gray-800"></i>
                         </a>
                     </div>
-                    <div class="mb-2 stats-subblock d-flex align-items-center px-3 py-2" style="background: #f8f9fa; color: #888;">
-                        <span class="flex-grow-1 fst-italic">Accès limité à 10 jours</span>
-                        <span class="stats-value"></span>
-                        <span class="stats-eye ms-2"></span>
+                    <div class="mb-2 stats-subblock d-flex align-items-center px-3 py-2" style="background: #f8d7da; color: #721c24;">
+                        <span class="flex-grow-1">Accès temporaire expiré</span>
+                        <span class="stats-value">{{ totalTemporaryInvestorAccessExpired }}</span>
+                        <a href="{{ ea_url()
+                            .setController('App\\Controller\\Admin\\UserCrudController')
+                            .setAction('index')
+                            .set('filters[hasTemporaryInvestorAccess][value]', 0)
+                            .set('filters[temporaryInvestorAccessStart][value]', 'not_null')
+                            .generateUrl() }}" class="stats-eye ms-2">
+                            <i class="fas fa-eye text-danger"></i>
+                        </a>
                     </div>
                 </div>
             </div>

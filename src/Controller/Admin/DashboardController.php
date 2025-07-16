@@ -65,16 +65,20 @@ class DashboardController extends AbstractDashboardController
         // Calcul du nombre d'utilisateurs avec accès temporaire investisseur actif
         $usersWithTempAccess = $this->userRepository->createQueryBuilder('u')
             ->select('u')
-            ->where('u.hasTemporaryInvestorAccess = true')
-            ->andWhere('u.temporaryInvestorAccessStart IS NOT NULL')
+            ->where('u.temporaryInvestorAccessStart IS NOT NULL')
             ->getQuery()
             ->getResult();
-        $totalTemporaryInvestorAccess = 0;
+
+        $totalTemporaryInvestorAccessActive = 0;
+        $totalTemporaryInvestorAccessExpired = 0;
         $now = new \DateTime();
+
         foreach ($usersWithTempAccess as $user) {
             $end = (clone $user->getTemporaryInvestorAccessStart())->modify('+10 days');
-            if ($now <= $end) {
-                $totalTemporaryInvestorAccess++;
+            if ($user->getHasTemporaryInvestorAccess() && $now <= $end) {
+                $totalTemporaryInvestorAccessActive++;
+            } else {
+                $totalTemporaryInvestorAccessExpired++;
             }
         }
 
@@ -82,7 +86,8 @@ class DashboardController extends AbstractDashboardController
             'stats' => $stats,
             'statutStats' => $statutStats,
             'unreadContacts' => $unreadContacts,
-            'totalTemporaryInvestorAccess' => $totalTemporaryInvestorAccess,
+            'totalTemporaryInvestorAccessActive' => $totalTemporaryInvestorAccessActive,
+            'totalTemporaryInvestorAccessExpired' => $totalTemporaryInvestorAccessExpired,
         ]);
     }
 
