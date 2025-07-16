@@ -80,6 +80,7 @@ class DashboardController extends AbstractDashboardController
             } else {
                 $totalTemporaryInvestorAccessExpired++;
             }
+            $totalTemporaryInvestorAccess = $totalTemporaryInvestorAccessActive + $totalTemporaryInvestorAccessExpired;
         }
 
         return $this->render('admin/dashboard.html.twig', [
@@ -88,6 +89,7 @@ class DashboardController extends AbstractDashboardController
             'unreadContacts' => $unreadContacts,
             'totalTemporaryInvestorAccessActive' => $totalTemporaryInvestorAccessActive,
             'totalTemporaryInvestorAccessExpired' => $totalTemporaryInvestorAccessExpired,
+            'totalTemporaryInvestorAccess' => $totalTemporaryInvestorAccess,
         ]);
     }
 

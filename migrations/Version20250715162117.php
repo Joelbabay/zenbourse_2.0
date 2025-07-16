@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250628111816 extends AbstractMigration
+final class Version20250715162117 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,12 @@ final class Version20250628111816 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_7D053A93989D9B62 ON menu (slug)');
+        $this->addSql('ALTER TABLE user ADD has_temporary_investor_access TINYINT(1) DEFAULT NULL, ADD temporary_investor_access_start DATETIME DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP INDEX UNIQ_7D053A93989D9B62 ON menu');
+        $this->addSql('ALTER TABLE user DROP has_temporary_investor_access, DROP temporary_investor_access_start');
     }
 }

@@ -74,7 +74,7 @@ class SubscriptionController extends AbstractController
 
         if ($user && ($isIntraday ? $user->isInterestedInIntradayMethode() : $user->isInterestedInInvestorMethod())) {
             $this->addFlash('info', sprintf('Votre demande sur la méthode %s est en cours de validation', ucfirst($subscriptionType)));
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
         $form = $this->createForm($formType, $user, [
