@@ -211,6 +211,13 @@ class UserCrudController extends AbstractCrudController
                 })
                 ->renderAsHtml(),
 
+            DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
+                    ->setFormat('dd/MM/YYYY HH:mm')
+                    ->onlyOnIndex()
+                    ->formatValue(function ($value, $entity) {
+                        return $value ? $value->format('d/m/Y H:i') : ' ';
+                    }),
+
             BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
                 ->renderAsSwitch(true)
                 ->setHelp('Activez pour donner un accès temporaire de 10 jours à la méthode Investisseur')
