@@ -100,7 +100,7 @@ class UserCrudController extends AbstractCrudController
 
             ->add(
                 NullFilter::new('temporaryInvestorAccessStart')
-                ->setChoiceLabels('NULL', 'NOT_NULL')
+                    ->setChoiceLabels('NULL', 'NOT_NULL')
             )
 
             ->add(
@@ -110,7 +110,7 @@ class UserCrudController extends AbstractCrudController
                 BooleanFilter::new('isIntraday', 'Accès intraday')
             )
 
-            ;
+        ;
     }
 
     public function configureFields(string $pageName): iterable
@@ -212,11 +212,11 @@ class UserCrudController extends AbstractCrudController
                 ->renderAsHtml(),
 
             DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
-                    ->setFormat('dd/MM/YYYY HH:mm')
-                    ->onlyOnIndex()
-                    ->formatValue(function ($value, $entity) {
-                        return $value ? $value->format('d/m/Y H:i') : ' ';
-                    }),
+                ->setFormat('dd/MM/YYYY HH:mm')
+                ->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    return $value ? $value->format('d/m/Y H:i') : ' ';
+                }),
 
             BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
                 ->renderAsSwitch(true)

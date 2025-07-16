@@ -89,7 +89,7 @@
                         <a href="{{ ea_url()
                             .setController('App\\Controller\\Admin\\UserCrudController')
                             .setAction('index')
-                            .set('filters[hasTemporaryInvestorAccess][value]', 1)
+                            .set('filters[temporaryInvestorAccessStart][comparison]', 'not_null')
                             .generateUrl() }}" class="stats-eye ms-2">
                             <i class="fas fa-eye text-gray-800"></i>
                         </a>

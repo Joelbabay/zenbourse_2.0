@@ -80,8 +80,9 @@ class DashboardController extends AbstractDashboardController
             } else {
                 $totalTemporaryInvestorAccessExpired++;
             }
-            $totalTemporaryInvestorAccess = $totalTemporaryInvestorAccessActive + $totalTemporaryInvestorAccessExpired;
         }
+
+        $totalTemporaryInvestorAccess = $totalTemporaryInvestorAccessActive + $totalTemporaryInvestorAccessExpired;
 
         return $this->render('admin/dashboard.html.twig', [
             'stats' => $stats,
