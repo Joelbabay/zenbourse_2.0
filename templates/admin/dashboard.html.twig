@@ -120,43 +120,34 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-danger shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                    Messagerie  
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ stats.total_contacts }} message{{ stats.total_contacts > 1 ? 's' : '' }}
-                                </div>
-                                <div class="mt-2">
-                                    {% if unreadContacts > 0 %}
-                                        <span class="badge bg-danger text-white rounded-pill px-3 py-2" title="Non lus" style="font-size:1rem;">
-                                            {{ unreadContacts }} non lu{{ unreadContacts > 1 ? 's' : '' }} <i class="fas fa-envelope-open-text"></i>
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-success text-white rounded-pill px-3 py-2" style="font-size:1rem;">
-                                            Tous les messages sont lus <i class="fas fa-check"></i>
-                                        </span>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-envelope fa-2x text-gray-300"></i>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <a href="{{ ea_url()
-                                .setController('App\\Controller\\Admin\\ContactCrudController')
-                                .setAction('index')
-                                .generateUrl() }}" 
-                               class="btn btn-info btn-sm">
-                                <i class="fas fa-inbox me-1"></i>
-                                Voir la boîte mail
-                            </a>
-                        </div>
+            <!-- Messagerie -->
+            <div class="col-xl-3 col-md-4 mb-4">
+                <div class="card border-left-danger custom-stats-card p-0 shadow">
+                    <div class="py-3 stats-header d-flex align-items-center px-3 py-2">
+                        <span class="stats-title flex-grow-1"><em><strong>Messagerie</strong></em></span>
+                        <span class="stats-value">{{ stats.total_contacts }}</span>
+                        <a href="{{ ea_url()
+                            .setController('App\\Controller\\Admin\\ContactCrudController')
+                            .setAction('index')
+                            .generateUrl() }}" class="stats-eye ms-2">
+                            <i class="fas fa-eye text-danger"></i>
+                        </a>
+                    </div>
+                    <div class="mb-2 stats-subblock d-flex align-items-center px-3 py-2" style="background: #dc3545; color: #fff;">
+                        <span class="flex-grow-1">non lu{{ (unreadContacts > 1) ? 's' : ''}}</span>
+                        <span class="stats-value">{{ unreadContacts }}</span>
+                        <a href="{{ ea_url()
+                            .setController('App\\Controller\\Admin\\ContactCrudController')
+                            .setAction('index')
+                            .set('filters[isRead][value]', 0)
+                            .generateUrl() }}" class="stats-eye ms-2">
+                            <i class="fas fa-eye text-white"></i>
+                        </a>
+                    </div>
+                    <div class="mb-2 stats-subblock d-flex align-items-center px-3 py-2" style="background: #f8f9fa; color: #888;">
+                        <span class="flex-grow-1 fst-italic">Boîte de réception Zenbourse</span>
+                        <span class="stats-value"></span>
+                        <span class="stats-eye ms-2"></span>
                     </div>
                 </div>
             </div>
@@ -351,57 +342,4 @@
         </div>
     </div>
 
-    <style>
-        .border-left-primary {
-            border-left: 0.25rem solid #4e73df !important;
-        }
-        .border-left-success {
-            border-left: 0.25rem solid #1cc88a !important;
-        }
-        .border-left-info {
-            border-left: 0.25rem solid #36b9cc !important;
-        }
-        .border-left-warning {
-            border-left: 0.25rem solid #f6c23e !important;
-        }
-        .text-gray-800 {
-            color: #5a5c69 !important;
-        }
-        .text-gray-300 {
-            color: #dddfeb !important;
-        }
-        .font-weight-bold {
-            font-weight: 700 !important;
-        }
-        .text-xs {
-            font-size: 0.7rem !important;
-        }
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid #e3e6f0;
-            border-radius: 0.35rem;
-        }
-        .card-header {
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 0;
-            background-color: #f8f9fc;
-            border-bottom: 1px solid #e3e6f0;
-        }
-        .shadow {
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
-        }
-        .list-group-item {
-            border: none;
-            border-bottom: 1px solid #e3e6f0;
-        }
-        .list-group-item:last-child {
-            border-bottom: none;
-        }
-    </style>
 {% endblock %} 

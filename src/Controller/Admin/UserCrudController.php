@@ -204,7 +204,7 @@ class UserCrudController extends AbstractCrudController
                         if ($hasTemp && $now <= $dateEnd) {
                             return '<span class="badge bg-warning text-dark fw-bold">Accès temporaire actif<br><small>Expire le ' . $dateEnd->format('d/m/Y') . '</small></span>';
                         } else {
-                            return '<span class="badge bg-danger text-white fw-bold">Accès temporaire expiré<br><small>Expiré le ' . $dateEnd->format('d/m/Y') . '</small></span>';
+                            return '<span class="badge bg-danger text-white fw-bold">Accès temporaire expiré<br><small>Le ' . $dateEnd->format('d/m/Y') . '</small></span>';
                         }
                     }
                     return ' ';
@@ -327,9 +327,10 @@ class UserCrudController extends AbstractCrudController
             $entityInstance->setPassword($encodedPassword);
         }
 
-        if ($user->getHasTemporaryInvestorAccess() && !$user->getTemporaryInvestorAccessStart()) {
+        if ($user->getHasTemporaryInvestorAccess()) {
             $user->setTemporaryInvestorAccessStart(new \DateTime());
         }
+
         if (!$user->getHasTemporaryInvestorAccess()) {
             $user->setTemporaryInvestorAccessStart(null);
         }
