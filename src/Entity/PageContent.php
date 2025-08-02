@@ -23,6 +23,9 @@ class PageContent
     #[ORM\JoinColumn(nullable: false)]
     private ?Menu $menu = null;
 
+    // Champ virtuel pour le formulaire (non mappé en base de données)
+    private ?string $section = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -58,6 +61,23 @@ class PageContent
     public function setMenu(Menu $menu): static
     {
         $this->menu = $menu;
+        return $this;
+    }
+
+    // Getters et setters pour le champ virtuel section
+    public function getSection(): ?string
+    {
+        // Si on a un menu, on retourne sa section
+        if ($this->menu) {
+            return $this->menu->getSection();
+        }
+        // Sinon on retourne la valeur du champ virtuel
+        return $this->section;
+    }
+
+    public function setSection(?string $section): static
+    {
+        $this->section = $section;
         return $this;
     }
 }

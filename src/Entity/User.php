@@ -480,13 +480,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->temporaryInvestorAccessStart;
     }
-    
+
     public function setTemporaryInvestorAccessStart(?\DateTimeInterface $temporaryInvestorAccessStart): static
     {
         $this->temporaryInvestorAccessStart = $temporaryInvestorAccessStart;
 
         return $this;
-    }   
+    }
 
     public function getHasTemporaryInvestorAccess(): ?bool
     {
@@ -506,14 +506,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             return false;
         }
         $now = new \DateTime();
-        $end = (clone $this->temporaryInvestorAccessStart)->modify('+10 days');
+        $startDate = new \DateTime($this->temporaryInvestorAccessStart->format('Y-m-d H:i:s'));
+        $end = $startDate->add(new \DateInterval('P10D'));
         if ($now <= $end) {
             return true;
         }
         $this->hasTemporaryInvestorAccess = false;
         return false;
     }
-    
+
+    #[ORM\PostLoad]
+    public function checkTemporaryAccessExpiration(): void
+    {
+        // Vérifie si l'accès temporaire a expiré
+        if ($this->hasTemporaryInvestorAccess && $this->temporaryInvestorAccessStart) {
+            $now = new \DateTime();
+            $startDate = new \DateTime($this->temporaryInvestorAccessStart->format('Y-m-d H:i:s'));
+            $end = $startDate->add(new \DateInterval('P10D'));
+
+            if ($now > $end) {
+                // L'accès a expiré, on le désactive
+                $this->hasTemporaryInvestorAccess = false;
+
+                // On marque l'entité comme modifiée pour que Doctrine la persiste
+                // Note: Cette méthode sera appelée automatiquement par Doctrine
+                // lors du prochain flush() de l'EntityManager
+            }
+        }
+    }
+
     public function getBadgeTemporaryInvestorAccess(): ?string
     {
         return null;

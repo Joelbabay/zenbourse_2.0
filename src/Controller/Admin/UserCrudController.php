@@ -199,7 +199,8 @@ class UserCrudController extends AbstractCrudController
                     $start = $entity->getTemporaryInvestorAccessStart();
                     $hasTemp = $entity->getHasTemporaryInvestorAccess();
                     if ($start) {
-                        $dateEnd = (clone $start)->modify('+10 days');
+                        $startDate = new \DateTime($start->format('Y-m-d H:i:s'));
+                        $dateEnd = $startDate->add(new \DateInterval('P10D'));
                         $now = new \DateTime();
                         if ($hasTemp && $now <= $dateEnd) {
                             return '<span class="badge bg-warning text-dark fw-bold">Accès temporaire actif<br><small>Expire le ' . $dateEnd->format('d/m/Y') . '</small></span>';

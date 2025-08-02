@@ -19,7 +19,7 @@
                         {% set route = app.request.get('_route') %}
                         {% set isHome = route starts with 'app_home' or route starts with 'app_user' %}
                         {% set isInvestisseur = route starts with 'investisseur' %}
-                        {% set isIntraday = route starts with 'intraday' %}
+                        {% set isIntraday = route starts with 'app_intraday_page' %}
 
                         {# Affichage des boutons méthode selon la route et l'utilisateur #}
                         {% if isHome %}
@@ -28,12 +28,12 @@
                                     <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1 text-nowrap me-2" href="{{ path('investisseur_la-methode') }}">METHODE INVESTISSEUR</a>
                                 {% endif %}
                                 {% if app.user.isIntraday %}
-                                    <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 text-nowrap" href="{{ path('intraday_methode') }}">METHODE INTRADAY</a>
+                                    <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 text-nowrap" href="{{ path('app_intraday_page', {'slug': 'la-methode-1'}) }}">METHODE INTRADAY</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
                         {% if isInvestisseur and app.user and app.user.isIntraday %}
-                            <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 me-2" href="{{ path('intraday_methode') }}">METHODE INTRADAY</a>
+                            <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 me-2" href="{{ path('app_intraday_page', {'slug': 'la-methode-1'}) }}">METHODE INTRADAY</a>
                         {% endif %}
                         {% if isIntraday %}
                             <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1" href="{{ path('investisseur_la-methode') }}">METHODE INVESTISSEUR</a>
@@ -85,7 +85,7 @@
         </div>
     </div>
     {# Menus contextuels #}
-    {% if route matches '/^(home|app)/' %}
+    {% if route matches '/^(home|app_home)/' %}
         {% include 'partials/menu_home.html.twig' %}
     {% endif %}
     {% if isInvestisseur %}

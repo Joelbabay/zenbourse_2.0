@@ -61,6 +61,18 @@ class AppExtension extends AbstractExtension
             if ($currentRoute === $menu->getRoute()) {
                 return true;
             }
+        } elseif ($menu->getSection() === 'INTRADAY') {
+            // Pour les menus INTRADAY, comparer avec le slug
+            if ($currentRoute === 'app_intraday_page') {
+                $request = $this->requestStack->getCurrentRequest();
+                if ($request) {
+                    $currentSlug = $request->get('slug');
+                    return $currentSlug === $menu->getSlug();
+                }
+            }
+            if ($currentRoute === $menu->getRoute()) {
+                return true;
+            }
         } else {
             // Gestion spéciale pour le parent Bibliothèque sur les routes dynamiques
             if (
@@ -186,6 +198,11 @@ class AppExtension extends AbstractExtension
             'home'
         ];
 
+        // Routes INTRADAY qui utilisent la route dynamique
+        $intradayRoutes = [
+            'app_intraday_page'
+        ];
+
         // Routes de bibliothèque qui utilisent la route dynamique (fallback)
         $bibliothequeRoutes = [
             'investisseur_bibliotheque_bulles-type-1',
@@ -200,6 +217,8 @@ class AppExtension extends AbstractExtension
 
         try {
             if (in_array($route, $routesWithSlug)) {
+                return $this->urlGenerator->generate($route, ['slug' => $slug]);
+            } elseif (in_array($route, $intradayRoutes)) {
                 return $this->urlGenerator->generate($route, ['slug' => $slug]);
             } elseif (in_array($route, $bibliothequeRoutes)) {
                 // Utiliser la route dynamique pour toutes les catégories de bibliothèque
