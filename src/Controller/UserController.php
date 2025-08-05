@@ -41,23 +41,9 @@ final class UserController extends AbstractController
 
         // Traitement du formulaire des informations personnelles
         if ($profileForm->isSubmitted() && $profileForm->isValid()) {
-            $newEmail = $profileForm->get('email')->getData();
-
-            // Vérifier si l'email a changé et s'il n'est pas déjà utilisé
-            if ($newEmail !== $user->getEmail()) {
-                $existingUser = $userRepository->findOneBy(['email' => $newEmail]);
-                if ($existingUser && $existingUser->getId() !== $user->getId()) {
-                    $profileForm->get('email')->addError(new \Symfony\Component\Form\FormError('Cette adresse email est déjà utilisée.'));
-                } else {
-                    $em->flush();
-                    $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
-                    return $this->redirectToRoute('app_user_profile');
-                }
-            } else {
-                $em->flush();
-                $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
-                return $this->redirectToRoute('app_user_profile');
-            }
+            $em->flush();
+            $this->addFlash('success', 'Vos informations ont été mises à jour avec succès.');
+            return $this->redirectToRoute('app_user_profile');
         }
 
         // Traitement du formulaire de changement de mot de passe
