@@ -33,7 +33,7 @@ class PageContentCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Contenus de page')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Pages : création, modification, suppression.')
             ->setPageTitle(Crud::PAGE_EDIT, 'Modification')
             ->setPageTitle(Crud::PAGE_NEW, 'Création')
             ->showEntityActionsInlined()

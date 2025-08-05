@@ -27,7 +27,7 @@ class BibliothequeController extends AbstractController
         return null;
     }
 
-    #[Route('/', name: 'investisseur_bibliotheque')]
+    #[Route('', name: 'investisseur_bibliotheque')]
     public function index(): Response
     {
         if ($resp = $this->checkInvestorAccess()) {

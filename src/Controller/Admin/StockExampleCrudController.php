@@ -22,9 +22,7 @@ class StockExampleCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Exemple de stock')
-            ->setEntityLabelInPlural('Exemples de stocks')
-            ->setPageTitle('index', 'Gestion des exemples de stocks')
+            ->setPageTitle('index', 'Pages de la bibliothèque : création, modification, suppression.')
             ->setPageTitle('new', 'Ajouter un exemple de stock')
             ->setPageTitle('edit', 'Modifier l\'exemple de stock')
             ->setDefaultSort(['category' => 'ASC', 'title' => 'ASC'])

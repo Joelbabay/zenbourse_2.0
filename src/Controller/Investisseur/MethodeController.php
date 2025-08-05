@@ -27,7 +27,7 @@ class MethodeController extends AbstractController
         return null;
     }
 
-    #[Route('/', name: 'investisseur_la-methode')]
+    #[Route('', name: 'investisseur_la-methode')]
     public function investisseur_methode(): Response
     {
         if ($resp = $this->checkInvestorAccess()) {

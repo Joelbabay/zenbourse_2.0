@@ -39,7 +39,7 @@ class MenuCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Menus')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Liens de navigation : création, modification, suppression.')
             ->setPageTitle(Crud::PAGE_EDIT, 'Modification')
             ->setPageTitle(Crud::PAGE_NEW, 'Création')
             ->showEntityActionsInlined()

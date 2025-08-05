@@ -45,7 +45,7 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Les utilisateurs')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs : création, suppression, accès aux méthodes')
             ->setPageTitle(Crud::PAGE_EDIT, 'Informations utilisateur')
             ->setPageTitle(Crud::PAGE_NEW, 'Créer un utilisateur')
             ->setEntityLabelInSingular('Utilisateur')

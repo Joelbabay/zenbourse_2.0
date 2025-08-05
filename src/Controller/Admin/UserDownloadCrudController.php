@@ -23,7 +23,7 @@ class UserDownloadCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes ayant téléchargé la liste')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Personnes ayant téléchargé la liste des valeurs 2020')
             ->setEntityLabelInSingular('Liste des Utilisateurs Ayant Téléchargé le Fichier')
             ->setEntityLabelInPlural('Liste des Utilisateurs Ayant Téléchargé le Fichier')
             ->setDefaultSort(['createdAt' => 'DESC'])
