@@ -25,7 +25,7 @@
                         {% if isHome %}
                             {% if app.user %}
                                 {% if app.user.isInvestisseur or app.user.hasTemporaryInvestorAccess %}
-                                    <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1 text-nowrap me-2" href="{{ path('app_investisseur_page', {'slug': 'la-methode'}) }}">METHODE INVESTISSEUR</a>
+                                    <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1 text-nowrap me-2" href="{{ path('app_investisseur_page', {'slug': 'presentation'}) }}">METHODE INVESTISSEUR</a>
                                 {% endif %}
                                 {% if app.user.isIntraday %}
                                     <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 text-nowrap" href="{{ path('app_intraday_page', {'slug': 'presentation-2'}) }}">METHODE INTRADAY</a>
@@ -36,7 +36,7 @@
                             <a class="btn btn-sm btn-light border-0 btn-intraday px-3 rounded-1 me-2" href="{{ path('app_intraday_page', {'slug': 'presentation-2'}) }}">METHODE INTRADAY</a>
                         {% endif %}
                         {% if isIntraday %}
-                            <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1" href="{{ path('app_investisseur_page', {'slug': 'la-methode'}) }}">METHODE INVESTISSEUR</a>
+                            <a class="btn btn-sm btn-light border-0 btn-investisseur px-3 rounded-1" href="{{ path('app_investisseur_page', {'slug': 'presentation'}) }}">METHODE INVESTISSEUR</a>
                         {% endif %}
 
                         {# Dropdown utilisateur #}
