@@ -111,6 +111,17 @@ class MenuCrudController extends AbstractCrudController
     {
         $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
 
+        // Ajouter le champ menuorder
+        $formBuilder->add('menuorder', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, [
+            'label' => 'Position',
+            'required' => false,
+            'help' => 'Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.',
+            'attr' => [
+                'min' => 1,
+                'placeholder' => 'Position automatique'
+            ]
+        ]);
+
         // Remplacer le champ parent par un EntityType personnalisé
         $formBuilder->add('parent', EntityType::class, [
             'class' => Menu::class,
@@ -152,6 +163,17 @@ class MenuCrudController extends AbstractCrudController
     public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
         $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
+
+        // Ajouter le champ menuorder
+        $formBuilder->add('menuorder', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, [
+            'label' => 'Position',
+            'required' => false,
+            'help' => 'Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.',
+            'attr' => [
+                'min' => 1,
+                'placeholder' => 'Position actuelle: ' . ($entityDto->getInstance()->getMenuorder() ?? 'Non définie')
+            ]
+        ]);
 
         // Remplacer le champ parent par un EntityType personnalisé
         $formBuilder->add('parent', EntityType::class, [
@@ -293,24 +315,147 @@ class MenuCrudController extends AbstractCrudController
     private function handleMenuPosition(EntityManagerInterface $entityManager, Menu $menu, ?int $oldPosition): void
     {
         $newPosition = $menu->getMenuorder();
+        $section = $menu->getSection();
+        $parent = $menu->getParent();
+
+        // Validation de base
+        if ($newPosition !== null && $newPosition < 1) {
+            throw new \InvalidArgumentException('La position doit être supérieure ou égale à 1');
+        }
 
         // Si aucune position n'est spécifiée, placer en dernière position
         if ($newPosition === null || $newPosition === 0) {
-            $lastPosition = $this->getLastPositionForSection($entityManager, $menu->getSection());
+            $lastPosition = $this->getLastPositionForSectionAndParent($entityManager, $section, $parent);
             $menu->setMenuorder($lastPosition + 1);
             return;
         }
 
-        // Vérifier si la position est déjà occupée par un autre menu
-        $existingMenu = $this->getMenuAtPosition($entityManager, $menu->getSection(), $newPosition, $menu->getId());
+        // Si c'est une modification et que la position n'a pas changé, ne rien faire
+        if ($oldPosition !== null && $oldPosition === $newPosition) {
+            return;
+        }
 
-        if ($existingMenu) {
-            // Déplacer tous les menus à partir de cette position vers le haut
-            $this->shiftMenusFromPosition($entityManager, $menu->getSection(), $newPosition, $oldPosition);
+        // Récupérer tous les menus de la même section et du même parent
+        $existingMenus = $this->getAllMenusInSectionAndParent($entityManager, $section, $parent, $menu->getId());
+
+        // Vérifier si la position demandée est valide
+        $maxPosition = count($existingMenus) + 1;
+        if ($newPosition > $maxPosition) {
+            $newPosition = $maxPosition;
+            $menu->setMenuorder($newPosition);
+        }
+
+        // Réorganiser tous les menus pour éviter les conflits
+        $this->reorganizeMenuPositions($entityManager, $section, $parent, $menu, $oldPosition, $newPosition);
+    }
+
+    private function getAllMenusInSectionAndParent(EntityManagerInterface $entityManager, string $section, ?Menu $parent, ?int $excludeId = null): array
+    {
+        $repository = $entityManager->getRepository(Menu::class);
+        $qb = $repository->createQueryBuilder('m')
+            ->where('m.section = :section')
+            ->setParameter('section', $section);
+
+        if ($parent) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $parent);
+        } else {
+            $qb->andWhere('m.parent IS NULL');
+        }
+
+        if ($excludeId) {
+            $qb->andWhere('m.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        return $qb->orderBy('m.menuorder', 'ASC')
+            ->addOrderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function reorganizeMenuPositions(EntityManagerInterface $entityManager, string $section, ?Menu $parent, Menu $menu, ?int $oldPosition, int $newPosition): void
+    {
+        // Récupérer tous les menus existants (sans le menu en cours de modification)
+        $existingMenus = $this->getAllMenusInSectionAndParent($entityManager, $section, $parent, $menu->getId());
+
+        // Créer un tableau temporaire des positions
+        $positions = [];
+        $currentPosition = 1;
+
+        // Traiter d'abord les menus avant la nouvelle position
+        foreach ($existingMenus as $existingMenu) {
+            if ($currentPosition < $newPosition) {
+                $positions[$existingMenu->getId()] = $currentPosition;
+                $currentPosition++;
+            } else {
+                break;
+            }
+        }
+
+        // Placer le menu en cours de modification
+        $positions[$menu->getId()] = $newPosition;
+        $currentPosition++;
+
+        // Traiter les menus restants
+        foreach ($existingMenus as $existingMenu) {
+            if (!isset($positions[$existingMenu->getId()])) {
+                $positions[$existingMenu->getId()] = $currentPosition;
+                $currentPosition++;
+            }
+        }
+
+        // Appliquer les nouvelles positions
+        foreach ($positions as $menuId => $position) {
+            if ($menuId === $menu->getId()) {
+                $menu->setMenuorder($position);
+            } else {
+                $existingMenu = $entityManager->getRepository(Menu::class)->find($menuId);
+                if ($existingMenu) {
+                    $existingMenu->setMenuorder($position);
+                }
+            }
+        }
+
+        // Validation finale : s'assurer qu'il n'y a pas de doublons
+        $this->validateAndFixPositions($entityManager, $section, $parent);
+    }
+
+    private function validateAndFixPositions(EntityManagerInterface $entityManager, string $section, ?Menu $parent): void
+    {
+        $menus = $this->getAllMenusInSectionAndParent($entityManager, $section, $parent);
+
+        // Vérifier s'il y a des doublons
+        $positions = [];
+        $duplicates = [];
+
+        foreach ($menus as $menu) {
+            $pos = $menu->getMenuorder();
+            if (isset($positions[$pos])) {
+                $duplicates[] = $pos;
+            }
+            $positions[$pos] = $menu->getId();
+        }
+
+        // S'il y a des doublons, réorganiser complètement
+        if (!empty($duplicates)) {
+            $this->completeReorganization($entityManager, $section, $parent);
         }
     }
 
-    private function getMenuAtPosition(EntityManagerInterface $entityManager, string $section, int $position, ?int $excludeId = null): ?Menu
+    private function completeReorganization(EntityManagerInterface $entityManager, string $section, ?Menu $parent): void
+    {
+        $menus = $this->getAllMenusInSectionAndParent($entityManager, $section, $parent);
+
+        // Réassigner toutes les positions de manière séquentielle
+        $position = 1;
+        foreach ($menus as $menu) {
+            $menu->setMenuorder($position);
+            $position++;
+        }
+    }
+
+    private function getMenuAtPosition(EntityManagerInterface $entityManager, string $section, ?Menu $parent, int $position, ?int $excludeId = null): ?Menu
     {
         $repository = $entityManager->getRepository(Menu::class);
         $qb = $repository->createQueryBuilder('m')
@@ -319,41 +464,97 @@ class MenuCrudController extends AbstractCrudController
             ->setParameter('section', $section)
             ->setParameter('position', $position);
 
+        if ($parent) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $parent);
+        } else {
+            $qb->andWhere('m.parent IS NULL');
+        }
+
         if ($excludeId) {
             $qb->andWhere('m.id != :excludeId')
                 ->setParameter('excludeId', $excludeId);
         }
 
-        return $qb->getQuery()->getOneOrNullResult();
+        // Utiliser getResult() au lieu de getOneOrNullResult() pour éviter l'erreur
+        $results = $qb->getQuery()->getResult();
+
+        // Retourner le premier résultat trouvé ou null
+        return !empty($results) ? $results[0] : null;
     }
 
-    private function shiftMenusFromPosition(EntityManagerInterface $entityManager, string $section, int $position, ?int $oldPosition): void
+    private function getMenusToShift(EntityManagerInterface $entityManager, string $section, ?Menu $parent, int $newPosition, ?int $excludeId = null): array
+    {
+        $repository = $entityManager->getRepository(Menu::class);
+        $qb = $repository->createQueryBuilder('m')
+            ->where('m.section = :section');
+
+        if ($parent) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $parent);
+        }
+
+        $qb->andWhere('m.menuorder >= :newPosition')
+            ->setParameter('section', $section)
+            ->setParameter('newPosition', $newPosition)
+            ->orderBy('m.menuorder', 'ASC');
+
+        if ($excludeId) {
+            $qb->andWhere('m.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    private function shiftMenusUp(EntityManagerInterface $entityManager, string $section, ?Menu $parent, int $fromPosition, int $toPosition, ?int $excludeId = null): void
     {
         $repository = $entityManager->getRepository(Menu::class);
 
-        // Récupérer tous les menus de la section qui doivent être déplacés
-        $menusToShift = $repository->createQueryBuilder('m')
-            ->where('m.section = :section')
-            ->andWhere('m.menuorder >= :position')
+        $qb = $repository->createQueryBuilder('m')
+            ->where('m.section = :section');
+
+        if ($parent) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $parent);
+        }
+
+        $qb->andWhere('m.menuorder >= :fromPosition')
+            ->andWhere('m.menuorder <= :toPosition')
             ->setParameter('section', $section)
-            ->setParameter('position', $position)
-            ->orderBy('m.menuorder', 'DESC') // Important : traiter du plus grand au plus petit
-            ->getQuery()
+            ->setParameter('fromPosition', $fromPosition)
+            ->setParameter('toPosition', $toPosition)
+            ->orderBy('m.menuorder', 'ASC');
+
+        if ($excludeId) {
+            $qb->andWhere('m.id != :excludeId')
+                ->setParameter('excludeId', $excludeId);
+        }
+
+        $menusToShift = $qb->getQuery()
             ->getResult();
 
-        // Déplacer chaque menu vers la position suivante
+        // Décaler chaque menu vers le haut
         foreach ($menusToShift as $menuToShift) {
-            $menuToShift->setMenuorder($menuToShift->getMenuorder() + 1);
+            if ($menuToShift->getId() !== $excludeId) {
+                $menuToShift->setMenuorder($menuToShift->getMenuorder() + 1);
+            }
         }
     }
 
-    private function getLastPositionForSection(EntityManagerInterface $entityManager, string $section): int
+    private function getLastPositionForSectionAndParent(EntityManagerInterface $entityManager, string $section, ?Menu $parent): int
     {
         $repository = $entityManager->getRepository(Menu::class);
-        $lastMenu = $repository->createQueryBuilder('m')
-            ->where('m.section = :section')
-            ->setParameter('section', $section)
-            ->orderBy('m.menuorder', 'DESC')
+        $qb = $repository->createQueryBuilder('m')
+            ->where('m.section = :section');
+
+        if ($parent) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $parent);
+        }
+
+        $lastMenu = $qb->orderBy('m.menuorder', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
