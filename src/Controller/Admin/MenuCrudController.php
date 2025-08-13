@@ -222,6 +222,10 @@ class MenuCrudController extends AbstractCrudController
             $menu->setRoute('app_home_page');
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
+        } elseif ($menu->getSection() === 'INVESTISSEUR') {
+            $menu->setRoute('app_investisseur_page');
+            $slug = $this->menuService->generateSlug($menu->getLabel());
+            $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {
             $menu->setRoute('app_intraday_page');
             $slug = $this->menuService->generateSlug($menu->getLabel());
@@ -256,6 +260,10 @@ class MenuCrudController extends AbstractCrudController
 
         if ($menu->getSection() === 'HOME') {
             $menu->setRoute('app_home_page');
+            $slug = $this->menuService->generateSlug($menu->getLabel());
+            $menu->setSlug($slug);
+        } elseif ($menu->getSection() === 'INVESTISSEUR') {
+            $menu->setRoute('app_investisseur_page');
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {

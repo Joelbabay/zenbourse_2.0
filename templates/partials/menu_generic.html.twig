@@ -34,10 +34,10 @@
                 <nav class="navbar navbar-expand-lg text-uppercase p-0" style="font-weight: 400;">
                     <div class="container-fluid limited-width">
                         <a class="me-3 fw-bold" href="{{ menu_url(active_parent) }}">{{ active_parent.label }} -></a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav-{{ active_parent.route }}" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav-{{ active_parent.id }}" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarNav-{{ active_parent.route }}">
+                        <div class="collapse navbar-collapse" id="navbarNav-{{ active_parent.id }}">
                             <ul class="navbar-nav">
                                 {% for child in active_parent.children|sort((a, b) => a.menuorder <=> b.menuorder) %}
                                     {% set child_is_active = is_active_child(current_route, child) %}

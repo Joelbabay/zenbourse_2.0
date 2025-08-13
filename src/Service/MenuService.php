@@ -5,16 +5,19 @@ namespace App\Service;
 
 use App\Repository\MenuRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MenuService
 {
     private $menuRepository;
     private $entityManager;
+    private $requestStack;
 
-    public function __construct(MenuRepository $menuRepository, EntityManagerInterface $entityManager)
+    public function __construct(MenuRepository $menuRepository, EntityManagerInterface $entityManager, RequestStack $requestStack)
     {
         $this->menuRepository = $menuRepository;
         $this->entityManager = $entityManager;
+        $this->requestStack = $requestStack;
     }
 
     public function getMenuBySection(string $section): array
@@ -91,110 +94,69 @@ class MenuService
      */
     public function getActiveParentMenu(string $currentRoute, string $section): ?object
     {
-        // D'abord, chercher si la route actuelle correspond à un menu parent
-        $parentMenu = $this->menuRepository->findOneBy([
-            'section' => $section,
-            'parent' => null,
-            'route' => $currentRoute
-        ]);
+        // Gestion spéciale pour les routes dynamiques INVESTISSEUR
+        if ($section === 'INVESTISSEUR' && $currentRoute === 'app_investisseur_page') {
+            $request = $this->requestStack->getCurrentRequest();
+            if ($request) {
+                $currentSlug = $request->get('slug');
 
-        if ($parentMenu) {
-            // Charger le parent avec ses enfants via DQL
-            $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
-            $query = $this->entityManager->createQuery($dql);
-            $query->setParameter('id', $parentMenu->getId());
-            $result = $query->getResult();
+                // Debug: afficher le slug actuel
+                // error_log("Current slug: " . $currentSlug);
 
-            if (!empty($result)) {
-                return $result[0];
-            }
-        }
+                // D'abord chercher si le slug correspond à un menu parent
+                $parentMenu = $this->menuRepository->findOneBy([
+                    'section' => 'INVESTISSEUR',
+                    'parent' => null,
+                    'slug' => $currentSlug
+                ]);
 
-        // Si aucun parent n'est actif, chercher parmi les enfants pour trouver leur parent
-        $childMenu = $this->menuRepository->findOneBy([
-            'section' => $section,
-            'route' => $currentRoute
-        ]);
+                if ($parentMenu) {
+                    // Debug: afficher le parent trouvé
+                    // error_log("Found parent menu: " . $parentMenu->getLabel());
 
-        if ($childMenu && $childMenu->getParent()) {
-            // Charger le parent avec ses enfants via DQL
-            $parentId = $childMenu->getParent()->getId();
-            $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
-            $query = $this->entityManager->createQuery($dql);
-            $query->setParameter('id', $parentId);
-            $result = $query->getResult();
+                    // Charger le parent avec ses enfants
+                    $parentWithChildren = $this->menuRepository->find($parentMenu->getId());
+                    return $parentWithChildren;
+                }
 
-            if (!empty($result)) {
-                return $result[0];
-            }
-        }
+                // Sinon chercher si le slug correspond à un sous-menu
+                $childMenu = $this->menuRepository->findOneBy([
+                    'section' => 'INVESTISSEUR',
+                    'slug' => $currentSlug
+                ]);
 
-        // Gestion spéciale pour les routes dynamiques de la bibliothèque
-        if ($section === 'INVESTISSEUR' && ($currentRoute === 'investisseur_bibliotheque_category' || $currentRoute === 'investisseur_bibliotheque_detail')) {
-            // Chercher le parent "Bibliothèque"
-            $bibliothequeParent = $this->menuRepository->findOneBy([
-                'section' => 'INVESTISSEUR',
-                'parent' => null,
-                'label' => 'Bibliothèque'
-            ]);
+                if ($childMenu && $childMenu->getParent()) {
+                    // Debug: afficher l'enfant et son parent
+                    // error_log("Found child menu: " . $childMenu->getLabel() . " with parent: " . $childMenu->getParent()->getLabel());
 
-            if ($bibliothequeParent) {
-                // Charger le parent avec ses enfants via DQL
-                $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
-                $query = $this->entityManager->createQuery($dql);
-                $query->setParameter('id', $bibliothequeParent->getId());
-                $result = $query->getResult();
-
-                if (!empty($result)) {
-                    return $result[0];
+                    // Charger le parent avec ses enfants
+                    $parentWithChildren = $this->menuRepository->find($childMenu->getParent()->getId());
+                    return $parentWithChildren;
                 }
             }
         }
 
-        // Gestion spéciale pour les routes de détail des chandeliers japonais (PRIORITÉ)
-        if ($section === 'INVESTISSEUR' && $currentRoute === 'investisseur_methode_chandeliers_japonais_detail') {
-            // Chercher le parent "La Méthode" au lieu de "Chandeliers japonais"
-            $methodeParent = $this->menuRepository->findOneBy([
-                'section' => 'INVESTISSEUR',
+        // Gestion générique pour les autres sections
+        if ($currentRoute !== 'app_investisseur_page') {
+            // D'abord, chercher si la route actuelle correspond à un menu parent
+            $parentMenu = $this->menuRepository->findOneBy([
+                'section' => $section,
                 'parent' => null,
-                'label' => 'La Méthode'
+                'route' => $currentRoute
             ]);
 
-            if ($methodeParent) {
-                // Charger le parent avec ses enfants via DQL
-                $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
-                $query = $this->entityManager->createQuery($dql);
-                $query->setParameter('id', $methodeParent->getId());
-                $result = $query->getResult();
-
-                if (!empty($result)) {
-                    return $result[0];
-                }
+            if ($parentMenu) {
+                return $parentMenu;
             }
-        }
 
-        // Gestion générique pour les routes de détail qui commencent par une route parent
-        if ($section === 'INVESTISSEUR' && str_ends_with($currentRoute, '_detail')) {
-            // Extraire la route parent en supprimant '_detail'
-            $parentRoute = str_replace('_detail', '', $currentRoute);
-
-            // Chercher le menu enfant qui a cette route
+            // Si aucun parent n'est actif, chercher parmi les enfants pour trouver leur parent
             $childMenu = $this->menuRepository->findOneBy([
-                'section' => 'INVESTISSEUR',
-                'route' => $parentRoute
+                'section' => $section,
+                'route' => $currentRoute
             ]);
 
             if ($childMenu && $childMenu->getParent()) {
-                // Charger le parent avec ses enfants via DQL
-                $parentId = $childMenu->getParent()->getId();
-                $dql = "SELECT m, c FROM App\Entity\Menu m LEFT JOIN m.children c WHERE m.id = :id ORDER BY c.menuorder ASC";
-                $query = $this->entityManager->createQuery($dql);
-                $query->setParameter('id', $parentId);
-                $result = $query->getResult();
-
-                if (!empty($result)) {
-                    return $result[0];
-                }
+                return $childMenu->getParent();
             }
         }
 

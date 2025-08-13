@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Zenbourse - {{ pageContent ? pageContent.title : menu.label }}
+{% endblock %}
+
+{% block body %}
+    {% include 'partials/header.html.twig' %}
+    {% include 'partials/menu_investisseur.html.twig' %}
+    
+    <main class="custom-container mt-4">
+        <div class="row g-5" data-turbo="false" id="main-content">
+            <div class="col-md-9">
+                {% if pageContent and pageContent.content %}
+                    <div class="content-area">
+                        <div class="page-content">
+                            {{ pageContent.content|raw }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="content-area">
+                        <h1 class="page-title mb-4">{{ menu.label }}</h1>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="col-md-3">
+                {% include 'investisseur/widgets/sidebar.html.twig' %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/investisseur')]
 class InvestisseurController extends AbstractController
 {
-    private function checkInvestorAccess(): ?Response
+    /*private function checkInvestorAccess(): ?Response
     {
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
@@ -36,5 +36,5 @@ class InvestisseurController extends AbstractController
             return $resp;
         }
         return $this->render('investisseur/gestion.html.twig');
-    }
+    }*/
 }

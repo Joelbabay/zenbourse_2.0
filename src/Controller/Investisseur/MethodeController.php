@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_INVESTISSEUR')]
 class MethodeController extends AbstractController
 {
-    public function __construct(
+    /*public function __construct(
         private CandlestickPatternService $candlestickPatternService
     ) {}
 
@@ -90,5 +90,5 @@ class MethodeController extends AbstractController
             'currentRoute' => $request->get('_route'),
             'currentValue' => $slug,
         ]);
-    }
+    }*/
 }

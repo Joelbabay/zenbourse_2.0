@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_INVESTISSEUR')]
 class BibliothequeController extends AbstractController
 {
-    public function __construct(
+    /*public function __construct(
         private StockExampleService $stockExampleService
     ) {}
 
@@ -74,5 +74,5 @@ class BibliothequeController extends AbstractController
             'valueTitle' => $valueTitle,
             'category' => $category
         ]);
-    }
+    }*/
 }
