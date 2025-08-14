@@ -165,15 +165,9 @@ class Menu
         return $this->pageContent;
     }
 
-    public function setPageContent(PageContent $pageContent): static
+    public function setPageContent(?PageContent $pageContent): static
     {
-        // set the owning side of the relation if necessary
-        if ($pageContent->getMenu() !== $this) {
-            $pageContent->setMenu($this);
-        }
-
         $this->pageContent = $pageContent;
-
         return $this;
     }
 }

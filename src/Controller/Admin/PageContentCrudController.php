@@ -22,9 +22,21 @@ use Symfony\Component\Form\FormEvents;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use App\Entity\StockExample;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use App\Repository\MenuRepository;
 
 class PageContentCrudController extends AbstractCrudController
 {
+    private MenuRepository $menuRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(MenuRepository $menuRepository, EntityManagerInterface $entityManager)
+    {
+        $this->menuRepository = $menuRepository;
+        $this->entityManager = $entityManager;
+    }
+
     public static function getEntityFqcn(): string
     {
         return PageContent::class;
@@ -37,6 +49,7 @@ class PageContentCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_EDIT, 'Modification')
             ->setPageTitle(Crud::PAGE_NEW, 'Création')
             ->showEntityActionsInlined()
+            ->setDefaultSort(['menu.section' => 'ASC']) // Tri par défaut en ordre ascendant
             ->overrideTemplates([
                 'crud/new' => 'admin/page_content_new.html.twig',
                 'crud/edit' => 'admin/page_content_edit.html.twig'
@@ -69,175 +82,217 @@ class PageContentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            TextField::new('title', 'Titre'),
 
-            TextField::new('title', 'Titre')
-                ->setCssClass('text-primary')
-                ->setFormTypeOption('attr', [
-                    'class' => 'form-control form-control-lg',
-                    'placeholder' => 'Ex: Méthode d\'investissement',
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => 'Titre qui sera affiché sur la page'
-                ])
-                ->formatValue(function ($value, $entity) {
-                    return $value ?: '<span class="text-muted fst-italic">Aucun titre</span>';
-                })
-                ->renderAsHtml(),
-
-            // Champ de sélection de section (seulement lors de la création)
-            ChoiceField::new('section', 'Section')
+            ChoiceField::new('contentType', 'Type de contenu')
                 ->setChoices([
-                    'Accueil' => 'HOME',
-                    'Investisseur' => 'INVESTISSEUR',
-                    'Intraday' => 'INTRADAY'
+                    'Lier à un Menu' => 'menu',
+                    'Lier à un Ticker de la bibliothèque' => 'stock_example',
                 ])
-                ->setHelp('Sélectionnez d\'abord la section, puis le menu')
+                ->setHelp('Choisissez si ce contenu est pour une page de menu standard ou pour un ticker spécifique.')
                 ->onlyOnForms()
-                ->setFormTypeOption('attr', [
-                    'class' => 'form-select form-select-lg',
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => 'Choisissez la section principale',
-                    'id' => 'section-select',
-                    'onchange' => 'filterMenusBySection()'
-                ])
-                ->renderAsBadges([
-                    'HOME' => 'warning',
-                    'INVESTISSEUR' => 'success',
-                    'INTRADAY' => 'primary'
-                ]),
+                ->setFormTypeOption('attr', ['onchange' => 'toggleContentTypeFields()']),
 
-            // Colonne Section pour l'index
+            // Champs pour le type "Menu"
+            ChoiceField::new('section', 'Section du Menu')
+                ->setChoices([
+                    'ACCUEIL' => 'HOME',
+                    'INVESTISSEUR' => 'INVESTISSEUR',
+                    'INTRADAY' => 'INTRADAY',
+                ])
+                ->setHelp('Sélectionnez la section pour filtrer les menus.')
+                ->onlyOnForms()
+                ->setFormTypeOption('row_attr', ['class' => 'content-type-field content-type-menu']),
+
+            AssociationField::new('menu', 'Menu lié')
+                ->setHelp('Choisissez le menu auquel ce contenu sera lié.')
+                ->onlyOnForms()
+                ->setFormTypeOption('row_attr', ['class' => 'content-type-field content-type-menu']),
+
+            // Champ pour le type "StockExample"
+            AssociationField::new('stockExample', 'Ticker lié')
+                ->setHelp('Choisissez le ticker auquel ce contenu sera lié.')
+                ->setQueryBuilder(function ($queryBuilder) {
+                    return $queryBuilder->from(StockExample::class, 's')->orderBy('s.title', 'ASC');
+                })
+                ->onlyOnForms()
+                ->setFormTypeOption('row_attr', ['class' => 'content-type-field content-type-stock_example']),
+
+            TextareaField::new('content', 'Contenu')
+                ->onlyOnForms()
+                ->setFormTypeOption('attr', ['class' => 'ckeditor']),
+
+            // Colonnes pour l'index
+            AssociationField::new('menu', 'Menu Lié')->onlyOnIndex(),
             TextField::new('section', 'Section')
                 ->onlyOnIndex()
+                // ->setSortable(true) -> On ne peut pas trier sur cette colonne virtuelle
+                // ->setProperty('menu.section') -> car la source de donnée est multiple
                 ->formatValue(function ($value, $entity) {
+                    $sectionValue = null;
                     if ($entity->getMenu()) {
-                        $section = $entity->getMenu()->getSection();
-                        $sectionBadge = match ($section) {
+                        $sectionValue = $entity->getMenu()->getSection();
+                    } elseif ($entity->getStockExample()) {
+                        $sectionValue = 'INVESTISSEUR';
+                    }
+
+                    if ($sectionValue) {
+                        $badgeClass = match ($sectionValue) {
                             'HOME' => 'warning',
                             'INVESTISSEUR' => 'success',
                             'INTRADAY' => 'primary',
                             default => 'secondary'
                         };
-                        return sprintf(
-                            '<span class="badge badge-%s">%s</span>',
-                            $sectionBadge,
-                            $section
-                        );
+
+                        $sectionLabel = match ($sectionValue) {
+                            'HOME' => 'ACCUEIL',
+                            default => $sectionValue
+                        };
+
+                        return sprintf('<span class="badge badge-%s">%s</span>', $badgeClass, $sectionLabel);
                     }
-                    return '<span class="text-muted fst-italic">Aucune section</span>';
+
+                    return '<span class="text-muted">N/A</span>';
                 })
                 ->renderAsHtml(),
-
-            // Champ de menu pour la création
-            AssociationField::new('menu', 'Menu lié')
-                ->onlyOnForms()
-                ->setFormTypeOption('attr', [
-                    'class' => 'form-select form-select-lg',
-                    'data-bs-toggle' => 'tooltip',
-                    'title' => 'Sélectionnez le menu spécifique',
-                    'id' => 'menu-select'
-                ])
-                ->formatValue(function ($value, $entity) {
-                    if ($entity->getMenu()) {
-                        return '<span class="fw-semibold">' . $entity->getMenu()->getLabel() . '</span>';
-                    }
-                    return '<span class="text-muted fst-italic">Aucun menu</span>';
-                })
-                ->renderAsHtml(),
-
-            // Colonne Menu pour l'index
-            AssociationField::new('menu', 'Menu')
-                ->onlyOnIndex()
-                ->formatValue(function ($value, $entity) {
-                    if ($entity->getMenu()) {
-                        return '<span class="fw-semibold">' . $entity->getMenu()->getLabel() . '</span>';
-                    }
-                    return '<span class="text-muted fst-italic">Aucun menu</span>';
-                })
-                ->renderAsHtml(),
-
-            TextareaField::new('content', 'Contenu')
-                ->onlyOnForms()
-                ->setFormTypeOption('attr', [
-                    'class' => 'ckeditor',
-                    'rows' => '15',
-                    'placeholder' => 'Rédigez le contenu de votre page ici...',
-                    'title' => 'Utilisez l\'éditeur pour formater votre contenu'
-                ])
-                ->setColumns(11)
-                ->setNumOfRows(30)
         ];
     }
 
-    public function createNewFormBuilder(\EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto $entityDto, \EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore $formOptions, \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext $context): \Symfony\Component\Form\FormBuilderInterface
+    // Les méthodes createNewFormBuilder, createEditFormBuilder et updateMenuField
+    // ont été supprimées car la nouvelle logique dans configureFields
+    // gère maintenant la sélection du type de contenu et l'affichage des champs associés.
+    // Cette simplification rend le code plus facile à maintenir.
+
+    public function configureAssets(Assets $assets): Assets
     {
-        $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
+        // 1. Préparer les données des menus pour JavaScript
+        $allMenus = $this->menuRepository->findAll();
+        $menusData = [];
+        foreach ($allMenus as $menu) {
+            $menusData[] = [
+                'id' => $menu->getId(),
+                'label' => $menu->getLabel(),
+                'section' => $menu->getSection()
+            ];
+        }
 
-        // Remplacer le champ menu par un EntityType personnalisé
-        $formBuilder->add('menu', EntityType::class, [
-            'class' => Menu::class,
-            'choice_label' => function (Menu $menu) {
-                return $menu->getLabel() . ' (' . $menu->getSection() . ')';
-            },
-            'required' => true,
-            'help' => 'Sélectionnez le menu pour lequel vous voulez créer le contenu',
-            'query_builder' => function ($repository) {
-                return $repository->createQueryBuilder('m')
-                    ->orderBy('m.section', 'ASC')
-                    ->addOrderBy('m.menuorder', 'ASC');
-            }
-        ]);
+        // 2. Injecter les données et le script de pilotage
+        return $assets
+            ->addJsFile('https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js')
+            ->addHtmlContentToBody(sprintf(
+                '<script>
+                    window.allMenusData = %s;
+                </script>',
+                json_encode($menusData)
+            ))
+            ->addHtmlContentToBody('
+                <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const contentTypeSelect = document.querySelector(\'[name="PageContent[contentType]"]\');
+                    const sectionSelect = document.querySelector(\'[name="PageContent[section]"]\');
+                    const menuSelect = document.querySelector(\'[name="PageContent[menu]"]\');
 
-        // Écouteur pour mettre à jour dynamiquement les menus selon la section
-        $formBuilder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $pageContent = $event->getData();
-            $form = $event->getForm();
+                    const tomSelectInstance = menuSelect ? menuSelect.tomselect : null;
 
-            if ($pageContent && $pageContent->getMenu() && $pageContent->getMenu()->getSection()) {
-                $this->updateMenuField($form, $pageContent->getMenu()->getSection());
-            }
-        });
+                    function updateMenuOptions() {
+                        if (!tomSelectInstance || !sectionSelect) return;
+                        const selectedSection = sectionSelect.value;
+                        
+                        tomSelectInstance.clear();
+                        tomSelectInstance.clearOptions();
 
-        $formBuilder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            $data = $event->getData();
-            $form = $event->getForm();
+                        const filteredMenus = window.allMenusData.filter(menu => menu.section === selectedSection);
 
-            if (isset($data['section'])) {
-                $this->updateMenuField($form, $data['section']);
-            }
-        });
+                        tomSelectInstance.addOptions(filteredMenus.map(menu => ({ value: menu.id, text: menu.label })));
+                        tomSelectInstance.refreshOptions(false);
+                    }
+                    
+                    function toggleContentTypeFields() {
+                        if (!contentTypeSelect) return;
+                        const contentType = contentTypeSelect.value;
+                        const showMenuFields = contentType === "menu";
 
-        return $formBuilder;
+                        document.querySelectorAll(".content-type-menu").forEach(field => {
+                            field.closest(".form-group").style.display = showMenuFields ? "block" : "none";
+                        });
+
+                        document.querySelectorAll(".content-type-stock_example").forEach(field => {
+                            field.closest(".form-group").style.display = contentType === "stock_example" ? "block" : "none";
+                        });
+
+                        if (showMenuFields) {
+                            updateMenuOptions();
+                        }
+                    }
+
+                    if (contentTypeSelect) {
+                        contentTypeSelect.addEventListener("change", toggleContentTypeFields);
+                    }
+
+                    if (sectionSelect) {
+                        sectionSelect.addEventListener("change", updateMenuOptions);
+                    }
+                    
+                    // Initialisation
+                    toggleContentTypeFields();
+                });
+                </script>
+            ');
     }
 
-    public function createEditFormBuilder(\EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto $entityDto, \EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore $formOptions, \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext $context): \Symfony\Component\Form\FormBuilderInterface
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
+        /** @var PageContent $pageContent */
+        $pageContent = $entityInstance;
 
-        // Supprimer les champs section et menu lors de la modification
-        $formBuilder->remove('section');
-        $formBuilder->remove('menu');
+        // Gérer la nouvelle association
+        if ($currentMenu = $pageContent->getMenu()) {
+            $currentMenu->setPageContent($pageContent);
+            $entityManager->persist($currentMenu);
+        }
 
-        return $formBuilder;
+        // Assurer la cohérence (ne lier qu'à un seul type)
+        $this->ensureAssociationConsistency($pageContent);
+
+        parent::persistEntity($entityManager, $pageContent);
     }
 
-    private function updateMenuField($form, string $section): void
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if ($form->has('menu')) {
-            $form->remove('menu');
-            $form->add('menu', EntityType::class, [
-                'class' => Menu::class,
-                'choice_label' => function (Menu $menu) {
-                    return $menu->getLabel() . ' (' . $menu->getSection() . ')';
-                },
-                'required' => true,
-                'help' => 'Sélectionnez le menu pour lequel vous voulez créer/modifier le contenu',
-                'query_builder' => function ($repository) use ($section) {
-                    return $repository->createQueryBuilder('m')
-                        ->where('m.section = :section')
-                        ->setParameter('section', $section)
-                        ->orderBy('m.menuorder', 'ASC');
-                }
-            ]);
+        /** @var PageContent $pageContent */
+        $pageContent = $entityInstance;
+
+        // Récupérer l'état original de l'entité avant les modifications du formulaire
+        $originalUnitOfWork = $entityManager->getUnitOfWork();
+        $originalData = $originalUnitOfWork->getOriginalEntityData($pageContent);
+        $originalMenu = $originalData['menu'] ?? null;
+
+        $currentMenu = $pageContent->getMenu();
+
+        // 1. Gérer la dissociation de l'ancien menu
+        if ($originalMenu && $originalMenu !== $currentMenu) {
+            $originalMenu->setPageContent(null);
+            $entityManager->persist($originalMenu);
+        }
+
+        // 2. Gérer la nouvelle association
+        if ($currentMenu) {
+            $currentMenu->setPageContent($pageContent);
+            $entityManager->persist($currentMenu);
+        }
+
+        // 3. Assurer la cohérence (ne lier qu'à un seul type)
+        $this->ensureAssociationConsistency($pageContent);
+
+        parent::updateEntity($entityManager, $pageContent);
+    }
+
+    private function ensureAssociationConsistency(PageContent $pageContent): void
+    {
+        if ($pageContent->getContentType() === 'menu') {
+            $pageContent->setStockExample(null);
+        } elseif ($pageContent->getContentType() === 'stock_example') {
+            $pageContent->setMenu(null);
         }
     }
 }

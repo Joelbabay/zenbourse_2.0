@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\StockExampleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\PageContent;
 
 #[ORM\Entity(repositoryClass: StockExampleRepository::class)]
 class StockExample
@@ -49,6 +50,9 @@ class StockExample
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\OneToOne(mappedBy: 'stockExample', cascade: ['persist', 'remove'])]
+    private ?PageContent $pageContent = null;
 
     public function __construct()
     {
@@ -192,9 +196,31 @@ class StockExample
         return $this;
     }
 
+    public function getPageContent(): ?PageContent
+    {
+        return $this->pageContent;
+    }
+
+    public function setPageContent(?PageContent $pageContent): static
+    {
+        // set the owning side of the relation if necessary
+        if ($pageContent !== null && $pageContent->getStockExample() !== $this) {
+            $pageContent->setStockExample($this);
+        }
+
+        $this->pageContent = $pageContent;
+
+        return $this;
+    }
+
     #[ORM\PreUpdate]
     public function updateTimestamp(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    public function __toString(): string
+    {
+        return $this->title ?? 'Nouvel exemple de stock';
     }
 }

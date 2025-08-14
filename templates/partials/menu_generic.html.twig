@@ -1,5 +1,6 @@
 {# Template générique pour les menus avec sous-menus #}
 {# Variables attendues : section, menu_class, nav_class #}
+{% set current_route = app.request.attributes.get('_route') %}
 
 <div class="zen-menu {{ menu_class|default('') }}">
     <nav class="navbar navbar-expand-lg text-uppercase {{ nav_class|default('main-nav main-nav-g') }} p-0">
@@ -10,7 +11,6 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    {% set current_route = app.request.attributes.get('_route') %}
                     {% for item in get_menu(section) %}
                         {% set is_active = is_active_menu(current_route, item) %}
                         <li class="nav-item">
@@ -25,12 +25,10 @@
     </nav>
 
     <!-- Sous-menu dans une nouvelle div -->
-    <div class="sub-menu-container bg-light">
+    {% set active_parent = get_active_parent_menu(current_route, section) %}
+    <div class="sub-menu-container bg-light {% if active_parent and active_parent.children is not empty %}border-bottom{% endif %}">
         <div class="sub">
-            {% set current_route = app.request.attributes.get('_route') %}
-            {% set active_parent = get_active_parent_menu(current_route, section) %}
-            
-            {% if active_parent and active_parent.children|length > 0 %}
+            {% if active_parent and active_parent.children is not empty %}
                 <nav class="navbar navbar-expand-lg text-uppercase p-0" style="font-weight: 400;">
                     <div class="container-fluid limited-width">
                         <a class="me-3 fw-bold" href="{{ menu_url(active_parent) }}">{{ active_parent.label }} -></a>

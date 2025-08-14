@@ -94,7 +94,6 @@ class MenuCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')->hideOnForm(),
 
             TextField::new('label', 'Label')
                 ->setHelp('Le nom affiché du menu')
@@ -105,17 +104,17 @@ class MenuCrudController extends AbstractCrudController
                 ->setDisabled(true)
                 ->hideOnIndex()->hideOnForm(),
 
-            ChoiceField::new('section')
+            ChoiceField::new('section', 'Section')
                 ->setChoices([
-                    'Accueil' => 'HOME',
-                    'Investisseur' => 'INVESTISSEUR',
-                    'Intraday' => 'INTRADAY'
+                    'ACCUEIL' => 'HOME',
+                    'INVESTISSEUR' => 'INVESTISSEUR',
+                    'INTRADAY' => 'INTRADAY'
                 ])
-                ->setHelp('Sélectionnez la section du menu')
+                ->setRequired(true)
                 ->renderAsBadges([
                     'HOME' => 'warning',
-                    'INVESTISSEUR' => 'primary',
-                    'INTRADAY' => 'success'
+                    'INVESTISSEUR' => 'success',
+                    'INTRADAY' => 'primary'
                 ]),
 
             IntegerField::new('menuorder', 'Position')

@@ -79,13 +79,13 @@ class AppExtension extends AbstractExtension
                 return false;
             }
 
-            // A parent menu is active if we are on its page, or one of its child pages.
+            // A parent menu is active if we are on its page, or one of its child pages, or a ticker detail page.
             if ($currentRoute === 'app_investisseur_page') {
                 $slugFromRoute = $request->attributes->get('slug');
                 return $slugFromRoute === $menu->getSlug();
             }
 
-            if ($currentRoute === 'app_investisseur_child_page') {
+            if ($currentRoute === 'app_investisseur_child_page' || $currentRoute === 'app_investisseur_stock_detail') {
                 $parentSlugFromRoute = $request->attributes->get('parentSlug');
                 return $parentSlugFromRoute === $menu->getSlug();
             }
@@ -130,17 +130,17 @@ class AppExtension extends AbstractExtension
 
         // The logic is only for children of INVESTISSEUR section
         if ($parent && $parent->getSection() === 'INVESTISSEUR') {
-            // Only on a child page route can a child be active
+            // A child is active if we are on its page, or one of its ticker detail pages.
             if ($currentRoute === 'app_investisseur_child_page') {
-                $parentSlugFromRoute = $request->attributes->get('parentSlug');
                 $childSlugFromRoute = $request->attributes->get('childSlug');
-
-                // The active child is the one whose parent's slug and its own slug match the route parameters
-                if ($parentSlugFromRoute && $childSlugFromRoute) {
-                    return $parentSlugFromRoute === $parent->getSlug() && $childSlugFromRoute === $childSlug;
-                }
+                return $childSlugFromRoute === $childSlug;
             }
-            // On a parent page or other INVESTISSEUR pages, no child is directly active this way.
+
+            if ($currentRoute === 'app_investisseur_stock_detail') {
+                $childSlugFromRoute = $request->attributes->get('childSlug');
+                return $childSlugFromRoute === $childSlug;
+            }
+
             return false;
         }
 

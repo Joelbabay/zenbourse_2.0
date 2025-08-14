@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Zenbourse - Bibliothèque : {{ stockExample.title }}
+{% endblock %}
+
+{% block body %}
+    {# En-tête principal de la page #}
+    {% include 'partials/header.html.twig' %}
+    
+    <main class="custom-container mt-4">
+        <div class="row g-5" id="main-content">
+            {# Colonne principale pour le contenu détaillé du ticker #}
+            <div class="col-md-9">
+                <div class="content-area p-2">
+                    <h1 class="page-title mb-3">{{ pageContent.title ?? stockExample.title }}</h1>
+                    
+                    <hr>
+                    
+                    {% if pageContent and pageContent.content %}
+                        <div class="page-content">
+                            {{ pageContent.content|raw }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Aucun contenu n'a encore été rédigé pour cet élément.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {# Colonne de droite pour la sidebar avec la liste des tickers #}
+            <div class="col-md-3">
+                {% include 'investisseur/widgets/sidebar-stocks.html.twig' with {
+                    'valueTitle': categoryTitle,
+                    'stocks': stocksForSidebar,
+                    'category': childMenu.slug,
+                    'currentValue': currentTickerSlug
+                } %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

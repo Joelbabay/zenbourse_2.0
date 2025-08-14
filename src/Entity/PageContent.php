@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PageContentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\StockExample;
 
 #[ORM\Entity(repositoryClass: PageContentRepository::class)]
 class PageContent
@@ -19,12 +20,19 @@ class PageContent
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $content = null;
 
-    #[ORM\OneToOne(inversedBy: 'pageContent', cascade: ['persist'], orphanRemoval: false)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(targetEntity: Menu::class, inversedBy: 'pageContent')]
+    #[ORM\JoinColumn(nullable: true)] // Rendre la relation optionnelle
     private ?Menu $menu = null;
+
+    #[ORM\OneToOne(inversedBy: 'pageContent', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)] // Rendre la relation optionnelle
+    private ?StockExample $stockExample = null;
 
     // Champ virtuel pour le formulaire (non mappé en base de données)
     private ?string $section = null;
+
+    // Champ virtuel pour le formulaire
+    private ?string $contentType = null;
 
     public function getId(): ?int
     {
@@ -58,9 +66,20 @@ class PageContent
         return $this->menu;
     }
 
-    public function setMenu(Menu $menu): static
+    public function setMenu(?Menu $menu): static
     {
         $this->menu = $menu;
+        return $this;
+    }
+
+    public function getStockExample(): ?StockExample
+    {
+        return $this->stockExample;
+    }
+
+    public function setStockExample(?StockExample $stockExample): static
+    {
+        $this->stockExample = $stockExample;
         return $this;
     }
 
@@ -78,6 +97,23 @@ class PageContent
     public function setSection(?string $section): static
     {
         $this->section = $section;
+        return $this;
+    }
+
+    public function getContentType(): ?string
+    {
+        if ($this->getMenu() !== null) {
+            return 'menu';
+        }
+        if ($this->getStockExample() !== null) {
+            return 'stock_example';
+        }
+        return $this->contentType;
+    }
+
+    public function setContentType(?string $contentType): self
+    {
+        $this->contentType = $contentType;
         return $this;
     }
 }

@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Repository\MenuRepository;
 use App\Repository\PageContentRepository;
 use App\Service\CarouselService;
+use App\Service\StockExampleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\Request;
 
 class PageController extends AbstractController
 {
@@ -60,6 +62,7 @@ class PageController extends AbstractController
     public function show_investisseur_child(
         MenuRepository $menuRepo,
         PageContentRepository $contentRepo,
+        StockExampleService $stockExampleService, // Ajouter le service ici
         string $parentSlug,
         string $childSlug
     ): Response {
@@ -94,12 +97,69 @@ class PageController extends AbstractController
 
         $pageContent = $contentRepo->findOneBy(['menu' => $childMenu]);
 
+        // Récupérer les tickers pour la sidebar
+        $stocksForSidebar = $stockExampleService->getExamplesByCategory($childSlug);
+
         return $this->render('investisseur/page.html.twig', [
             'menu' => $childMenu,
             'parentMenu' => $parentMenu,
             'pageContent' => $pageContent,
             'parentSlug' => $parentSlug,
-            'childSlug' => $childSlug
+            'childSlug' => $childSlug,
+            'stocksForSidebar' => $stocksForSidebar, // Passer les tickers
+            'categoryTitle' => $stockExampleService->getCategoryTitle($childSlug) // Passer le titre
+        ]);
+    }
+
+    #[Route('/investisseur/{parentSlug}/{childSlug}/{tickerSlug}', name: 'app_investisseur_stock_detail', requirements: [
+        'parentSlug' => '[a-z0-9-]+',
+        'childSlug' => '[a-z0-9-]+',
+        'tickerSlug' => '[a-z0-9-]+'
+    ])]
+    public function show_stock_detail(
+        MenuRepository $menuRepo,
+        StockExampleService $stockExampleService,
+        string $parentSlug,
+        string $childSlug,
+        string $tickerSlug
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
+            $this->addFlash('danger', 'Vous n\'avez pas accès à cette section.');
+            return $this->redirectToRoute('home');
+        }
+
+        // 1. Valider et récupérer le menu parent (ex: "bibliotheque")
+        $parentMenu = $menuRepo->findOneBy(['slug' => $parentSlug, 'section' => 'INVESTISSEUR', 'parent' => null]);
+        if (!$parentMenu) {
+            throw $this->createNotFoundException('Menu principal de la bibliothèque non trouvé.');
+        }
+
+        // 2. Valider et récupérer le menu enfant (ex: "bulles-type-1")
+        $childMenu = $menuRepo->findOneBy(['slug' => $childSlug, 'section' => 'INVESTISSEUR', 'parent' => $parentMenu]);
+        if (!$childMenu) {
+            throw $this->createNotFoundException('Catégorie de la bibliothèque non trouvée.');
+        }
+
+        // 3. Récupérer les détails du ticker et son contenu associé
+        $stockExample = $stockExampleService->getExampleBySlug($tickerSlug);
+        if (!$stockExample || $stockExample->getCategory() !== $childSlug) {
+            throw $this->createNotFoundException('Exemple boursier non trouvé dans cette catégorie.');
+        }
+        $pageContent = $stockExample->getPageContent();
+
+        // 4. Récupérer tous les tickers de la même catégorie pour la sidebar
+        $stocksForSidebar = $stockExampleService->getExamplesByCategory($childSlug);
+
+        return $this->render('investisseur/stock_detail.html.twig', [
+            'parentMenu' => $parentMenu,
+            'childMenu' => $childMenu,
+            'stockExample' => $stockExample,
+            'pageContent' => $pageContent, // Passer le contenu à Twig
+            'stocksForSidebar' => $stocksForSidebar,
+            'categoryTitle' => $stockExampleService->getCategoryTitle($childSlug),
+            'currentTickerSlug' => $tickerSlug
         ]);
     }
 
