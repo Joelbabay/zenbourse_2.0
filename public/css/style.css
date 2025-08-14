@@ -586,20 +586,20 @@ label.required:after {
 }
 
 .footer-title {
-  color: #cbdfd1;
+  color: #ffffff;
   font-weight: 700;
   font-size: 1.5rem;
   margin-bottom: 1rem;
 }
 
 .footer-description {
-  color: #b8c5c0;
+  color: #ffffff;
   line-height: 1.6;
   font-size: 0.95rem;
 }
 
 .footer-section-title {
-  color: #cbdfd1;
+  color: #ffffff;
   font-weight: 600;
   font-size: 1.1rem;
   margin-bottom: 1.2rem;
@@ -693,7 +693,7 @@ label.required:after {
 }
 
 .footer-bottom {
-  background: rgba(0, 0, 0, 0.2);
+  background: #262133;
   padding: 1rem 0;
   border-top: 1px solid rgba(203, 223, 209, 0.1);
   position: relative;

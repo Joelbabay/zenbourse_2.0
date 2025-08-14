@@ -74,34 +74,23 @@ class AppExtension extends AbstractExtension
                 return true;
             }
         } elseif ($menu->getSection() === 'INVESTISSEUR') {
-            // Gestion spéciale pour les menus INVESTISSEUR avec route dynamique
+            $request = $this->requestStack->getCurrentRequest();
+            if (!$request) {
+                return false;
+            }
+
+            // A parent menu is active if we are on its page, or one of its child pages.
             if ($currentRoute === 'app_investisseur_page') {
-                $request = $this->requestStack->getCurrentRequest();
-                if ($request) {
-                    $currentSlug = $request->get('slug');
-
-                    // Vérifier si le slug correspond au menu actuel
-                    if ($currentSlug === $menu->getSlug()) {
-                        return true;
-                    }
-
-                    // Vérifier si c'est un menu parent actif (pour les sous-menus)
-                    // Seulement si ce menu a des enfants ET que le slug actuel correspond à un de ses enfants
-                    if ($menu->getChildren()->count() > 0) {
-                        foreach ($menu->getChildren() as $child) {
-                            if ($child->getSlug() === $currentSlug) {
-                                return true;
-                            }
-                        }
-                    }
-                }
+                $slugFromRoute = $request->attributes->get('slug');
+                return $slugFromRoute === $menu->getSlug();
             }
 
-            // Pour la compatibilité, vérifier aussi l'ancienne route si elle existe
-            // Mais seulement si ce n'est pas la route dynamique INVESTISSEUR
-            if ($currentRoute === $menu->getRoute() && $currentRoute !== 'app_investisseur_page') {
-                return true;
+            if ($currentRoute === 'app_investisseur_child_page') {
+                $parentSlugFromRoute = $request->attributes->get('parentSlug');
+                return $parentSlugFromRoute === $menu->getSlug();
             }
+
+            return false;
         } else {
             // Gestion générique pour les autres sections
             if (str_ends_with($currentRoute, '_detail')) {
@@ -132,15 +121,27 @@ class AppExtension extends AbstractExtension
     public function isActiveChild(string $currentRoute, Menu $child): bool
     {
         $request = $this->requestStack->getCurrentRequest();
+        if (!$request) {
+            return false;
+        }
+
         $childSlug = $child->getSlug();
         $parent = $child->getParent();
 
-        // Gestion spéciale pour les sous-menus INVESTISSEUR avec route dynamique
-        if ($parent && $parent->getSection() === 'INVESTISSEUR' && $currentRoute === 'app_investisseur_page') {
-            if ($request) {
-                $currentSlug = $request->get('slug');
-                return $currentSlug === $childSlug;
+        // The logic is only for children of INVESTISSEUR section
+        if ($parent && $parent->getSection() === 'INVESTISSEUR') {
+            // Only on a child page route can a child be active
+            if ($currentRoute === 'app_investisseur_child_page') {
+                $parentSlugFromRoute = $request->attributes->get('parentSlug');
+                $childSlugFromRoute = $request->attributes->get('childSlug');
+
+                // The active child is the one whose parent's slug and its own slug match the route parameters
+                if ($parentSlugFromRoute && $childSlugFromRoute) {
+                    return $parentSlugFromRoute === $parent->getSlug() && $childSlugFromRoute === $childSlug;
+                }
             }
+            // On a parent page or other INVESTISSEUR pages, no child is directly active this way.
+            return false;
         }
 
         // Comparaison directe avec la route du menu enfant (seulement pour les routes statiques)
@@ -182,6 +183,18 @@ class AppExtension extends AbstractExtension
         try {
             if (in_array($route, $dynamicRoutes)) {
                 return $this->urlGenerator->generate($route, ['slug' => $slug]);
+            } elseif ($route === 'app_investisseur_child_page') {
+                // Route hiérarchique pour les sous-menus investisseur
+                $parent = $menu->getParent();
+                if ($parent) {
+                    return $this->urlGenerator->generate($route, [
+                        'parentSlug' => $parent->getSlug(),
+                        'childSlug' => $slug
+                    ]);
+                } else {
+                    // Fallback si pas de parent
+                    return $this->urlGenerator->generate('app_investisseur_page', ['slug' => $slug]);
+                }
             } else {
                 return $this->urlGenerator->generate($route);
             }

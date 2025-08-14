@@ -95,49 +95,59 @@ class MenuService
     public function getActiveParentMenu(string $currentRoute, string $section): ?object
     {
         // Gestion spéciale pour les routes dynamiques INVESTISSEUR
-        if ($section === 'INVESTISSEUR' && $currentRoute === 'app_investisseur_page') {
+        if ($section === 'INVESTISSEUR' && ($currentRoute === 'app_investisseur_page' || $currentRoute === 'app_investisseur_child_page')) {
             $request = $this->requestStack->getCurrentRequest();
             if ($request) {
-                $currentSlug = $request->get('slug');
+                // Les paramètres de route sont dans attributes, pas dans query
+                $currentSlug = $request->attributes->get('slug') ?: $request->attributes->get('childSlug');
+                $parentSlug = $request->attributes->get('parentSlug');
 
-                // Debug: afficher le slug actuel
-                // error_log("Current slug: " . $currentSlug);
+                // Si on a un parentSlug, c'est une route enfant
+                if ($parentSlug && !empty($parentSlug)) {
+                    $parentMenu = $this->menuRepository->findOneBy([
+                        'section' => 'INVESTISSEUR',
+                        'parent' => null,
+                        'slug' => $parentSlug
+                    ]);
 
-                // D'abord chercher si le slug correspond à un menu parent
-                $parentMenu = $this->menuRepository->findOneBy([
-                    'section' => 'INVESTISSEUR',
-                    'parent' => null,
-                    'slug' => $currentSlug
-                ]);
-
-                if ($parentMenu) {
-                    // Debug: afficher le parent trouvé
-                    // error_log("Found parent menu: " . $parentMenu->getLabel());
-
-                    // Charger le parent avec ses enfants
-                    $parentWithChildren = $this->menuRepository->find($parentMenu->getId());
-                    return $parentWithChildren;
+                    if ($parentMenu) {
+                        // Charger le parent avec ses enfants
+                        $parentWithChildren = $this->menuRepository->find($parentMenu->getId());
+                        return $parentWithChildren;
+                    }
                 }
 
-                // Sinon chercher si le slug correspond à un sous-menu
-                $childMenu = $this->menuRepository->findOneBy([
-                    'section' => 'INVESTISSEUR',
-                    'slug' => $currentSlug
-                ]);
+                // Sinon, chercher si le slug correspond à un menu parent
+                if ($currentSlug) {
+                    $parentMenu = $this->menuRepository->findOneBy([
+                        'section' => 'INVESTISSEUR',
+                        'parent' => null,
+                        'slug' => $currentSlug
+                    ]);
 
-                if ($childMenu && $childMenu->getParent()) {
-                    // Debug: afficher l'enfant et son parent
-                    // error_log("Found child menu: " . $childMenu->getLabel() . " with parent: " . $childMenu->getParent()->getLabel());
+                    if ($parentMenu) {
+                        // Charger le parent avec ses enfants
+                        $parentWithChildren = $this->menuRepository->find($parentMenu->getId());
+                        return $parentWithChildren;
+                    }
 
-                    // Charger le parent avec ses enfants
-                    $parentWithChildren = $this->menuRepository->find($childMenu->getParent()->getId());
-                    return $parentWithChildren;
+                    // Sinon chercher si le slug correspond à un sous-menu
+                    $childMenu = $this->menuRepository->findOneBy([
+                        'section' => 'INVESTISSEUR',
+                        'slug' => $currentSlug
+                    ]);
+
+                    if ($childMenu && $childMenu->getParent()) {
+                        // Charger le parent avec ses enfants
+                        $parentWithChildren = $this->menuRepository->find($childMenu->getParent()->getId());
+                        return $parentWithChildren;
+                    }
                 }
             }
         }
 
         // Gestion générique pour les autres sections
-        if ($currentRoute !== 'app_investisseur_page') {
+        if ($currentRoute !== 'app_investisseur_page' && $currentRoute !== 'app_investisseur_child_page') {
             // D'abord, chercher si la route actuelle correspond à un menu parent
             $parentMenu = $this->menuRepository->findOneBy([
                 'section' => $section,

@@ -1,0 +1,12 @@
+{# templates/admin/fields/menu_position.html.twig #}
+{% if field.value is not null %}
+    {% if entity.instance.parent %}
+        <span class="badge badge-secondary">
+            {{ entity.instance.parent.menuorder }}.{{ field.value }}
+        </span>
+    {% else %}
+        <span class="badge badge-primary">
+            {{ field.value }}
+        </span>
+    {% endif %}
+{% endif %}

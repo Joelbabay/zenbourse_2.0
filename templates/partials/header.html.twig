@@ -18,7 +18,7 @@
                         {# Préparation des variables Twig simplifier les conditions #}
                         {% set route = app.request.get('_route') %}
                         {% set isHome = route starts with 'app_home' or route starts with 'app_user' %}
-                        {% set isInvestisseur = route starts with 'app_investisseur_page' %}
+                        {% set isInvestisseur = route starts with 'app_investisseur' %}
                         {% set isIntraday = route starts with 'app_intraday_page' %}
 
                         {# Affichage des boutons méthode selon la route et l'utilisateur #}

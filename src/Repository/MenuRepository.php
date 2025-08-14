@@ -108,6 +108,42 @@ class MenuRepository extends ServiceEntityRepository
         return trim($text, '-');
     }
 
+    /**
+     * Trouve le menu voisin (précédent ou suivant) pour un menu donné.
+     * C'est la logique clé pour les actions "Monter" et "Descendre".
+     */
+    public function findNeighbor(Menu $menu, string $direction): ?Menu
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.section = :section')
+            ->setParameter('section', $menu->getSection());
+
+        // Gère la contrainte du parent : on ne déplace que parmi les frères
+        if ($menu->getParent()) {
+            $qb->andWhere('m.parent = :parent')
+                ->setParameter('parent', $menu->getParent());
+        } else {
+            $qb->andWhere('m.parent IS NULL');
+        }
+
+        // Logique pour trouver le voisin
+        if ($direction === 'up') {
+            $qb->andWhere('m.menuorder < :currentOrder')
+                ->setParameter('currentOrder', $menu->getMenuorder())
+                ->orderBy('m.menuorder', 'DESC');
+        } elseif ($direction === 'down') {
+            $qb->andWhere('m.menuorder > :currentOrder')
+                ->setParameter('currentOrder', $menu->getMenuorder())
+                ->orderBy('m.menuorder', 'ASC');
+        } else {
+            return null; // Direction non valide
+        }
+
+        return $qb->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Menu[] Returns an array of Menu objects
     //     */

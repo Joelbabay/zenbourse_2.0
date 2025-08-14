@@ -32,6 +32,7 @@ class PageController extends AbstractController
     #[Route('/investisseur/{slug}', name: 'app_investisseur_page', requirements: ['slug' => '[a-z0-9-]+'])]
     public function show_investisseur(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $slug): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
@@ -49,6 +50,56 @@ class PageController extends AbstractController
             'menu' => $menu,
             'pageContent' => $pageContent,
             'slug' => $slug
+        ]);
+    }
+
+    #[Route('/investisseur/{parentSlug}/{childSlug}', name: 'app_investisseur_child_page', requirements: [
+        'parentSlug' => '[a-z0-9-]+',
+        'childSlug' => '[a-z0-9-]+'
+    ])]
+    public function show_investisseur_child(
+        MenuRepository $menuRepo,
+        PageContentRepository $contentRepo,
+        string $parentSlug,
+        string $childSlug
+    ): Response {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
+            $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
+            return $this->redirectToRoute('home');
+        }
+
+        // Récupérer le menu parent
+        $parentMenu = $menuRepo->findOneBy([
+            'slug' => $parentSlug,
+            'section' => 'INVESTISSEUR',
+            'parent' => null // Pas de parent = menu principal
+        ]);
+
+        if (!$parentMenu) {
+            throw $this->createNotFoundException('Menu parent non trouvé');
+        }
+
+        // Récupérer le sous-menu
+        $childMenu = $menuRepo->findOneBy([
+            'slug' => $childSlug,
+            'section' => 'INVESTISSEUR',
+            'parent' => $parentMenu
+        ]);
+
+        if (!$childMenu) {
+            throw $this->createNotFoundException('Sous-menu non trouvé');
+        }
+
+        $pageContent = $contentRepo->findOneBy(['menu' => $childMenu]);
+
+        return $this->render('investisseur/page.html.twig', [
+            'menu' => $childMenu,
+            'parentMenu' => $parentMenu,
+            'pageContent' => $pageContent,
+            'parentSlug' => $parentSlug,
+            'childSlug' => $childSlug
         ]);
     }
 

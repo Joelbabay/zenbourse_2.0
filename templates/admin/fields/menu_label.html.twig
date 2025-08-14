@@ -1,0 +1,11 @@
+{# templates/admin/fields/menu_label.html.twig #}
+{% if field.value %}
+    {% if entity.instance.parent %}
+        <span style="padding-left: 20px;">
+            └─ {{ field.value }}
+            <small class="text-muted"><em>(Parent : {{ entity.instance.parent.label }})</em></small>
+        </span>
+    {% else %}
+        <strong>{{ field.value }}</strong>
+    {% endif %}
+{% endif %}

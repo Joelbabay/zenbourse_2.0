@@ -21,6 +21,12 @@ use Symfony\Component\Form\FormEvents;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\Response;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 
 class MenuCrudController extends AbstractCrudController
 {
@@ -39,10 +45,15 @@ class MenuCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_INDEX, 'Liens de navigation : création, modification, suppression.')
-            ->setPageTitle(Crud::PAGE_EDIT, 'Modification')
-            ->setPageTitle(Crud::PAGE_NEW, 'Création')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Navigation : gestion hiérarchique des menus')
+            ->setPageTitle(Crud::PAGE_EDIT, 'Modification du menu')
+            ->setPageTItle(Crud::PAGE_NEW, 'Création d\'un menu')
             ->showEntityActionsInlined()
+            ->setDefaultSort([
+                'section' => 'ASC',
+                'parent' => 'ASC', // Menus parents en premier
+                'menuorder' => 'ASC'
+            ])
             ->overrideTemplates([
                 'crud/new' => 'admin/menu_form.html.twig',
                 'crud/edit' => 'admin/menu_edit_form.html.twig'
@@ -51,7 +62,19 @@ class MenuCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        // Action pour monter un élément dans la liste
+        $moveUp = Action::new('moveUp', false, 'fa fa-arrow-up')
+            ->linkToCrudAction('moveUp') // Pointe vers la méthode moveUp()
+            ->setCssClass('btn btn-link text-success');
+
+        // Action pour descendre un élément dans la liste
+        $moveDown = Action::new('moveDown', false, 'fa fa-arrow-down')
+            ->linkToCrudAction('moveDown') // Pointe vers la méthode moveDown()
+            ->setCssClass('btn btn-link text-danger');
+
         return $actions
+            ->add(Crud::PAGE_INDEX, $moveUp)
+            ->add(Crud::PAGE_INDEX, $moveDown)
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action
                     ->setIcon('fas fa-edit')
@@ -63,7 +86,9 @@ class MenuCrudController extends AbstractCrudController
                     ->setIcon('fas fa-trash')
                     ->setLabel(false)
                     ->addCssClass('btn btn-link text-danger');
-            });
+            })
+            // Réorganise les boutons pour que les flèches soient en premier
+            ->reorder(Crud::PAGE_INDEX, ['moveUp', 'moveDown', Action::EDIT, Action::DELETE]);
     }
 
     public function configureFields(string $pageName): iterable
@@ -71,12 +96,14 @@ class MenuCrudController extends AbstractCrudController
         return [
             IdField::new('id')->hideOnForm(),
 
-            TextField::new('label')
-                ->setHelp('Le nom affiché du menu'),
+            TextField::new('label', 'Label')
+                ->setHelp('Le nom affiché du menu')
+                ->setTemplatePath('admin/fields/menu_label.html.twig'),
 
             TextField::new('slug')
                 ->setHelp('Laissez vide pour générer automatiquement à partir du label')
-                ->setDisabled(true),
+                ->setDisabled(true)
+                ->hideOnIndex()->hideOnForm(),
 
             ChoiceField::new('section')
                 ->setChoices([
@@ -86,14 +113,15 @@ class MenuCrudController extends AbstractCrudController
                 ])
                 ->setHelp('Sélectionnez la section du menu')
                 ->renderAsBadges([
-                    'HOME' => 'success',
+                    'HOME' => 'warning',
                     'INVESTISSEUR' => 'primary',
-                    'INTRADAY' => 'warning'
+                    'INTRADAY' => 'success'
                 ]),
 
             IntegerField::new('menuorder', 'Position')
-                ->setHelp('Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.')
-                ->setRequired(false),
+                ->setHelp('La position est gérée automatiquement avec les flèches d\'action.')
+                ->setTemplatePath('admin/fields/menu_position.html.twig')
+                ->hideOnForm(), // On cache le champ du formulaire
 
             TextField::new('parent')
                 ->setHelp('Menu parent (seuls les menus de la même section sont affichés)')
@@ -103,24 +131,14 @@ class MenuCrudController extends AbstractCrudController
                         return $entity->getParent()->getLabel() . ' (' . $entity->getParent()->getSection() . ')';
                     }
                     return 'Aucun parent';
-                }),
+                })
+                ->hideOnIndex(),
         ];
     }
 
     public function createNewFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
         $formBuilder = parent::createNewFormBuilder($entityDto, $formOptions, $context);
-
-        // Ajouter le champ menuorder
-        $formBuilder->add('menuorder', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, [
-            'label' => 'Position',
-            'required' => false,
-            'help' => 'Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.',
-            'attr' => [
-                'min' => 1,
-                'placeholder' => 'Position automatique'
-            ]
-        ]);
 
         // Remplacer le champ parent par un EntityType personnalisé
         $formBuilder->add('parent', EntityType::class, [
@@ -163,17 +181,6 @@ class MenuCrudController extends AbstractCrudController
     public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
     {
         $formBuilder = parent::createEditFormBuilder($entityDto, $formOptions, $context);
-
-        // Ajouter le champ menuorder
-        $formBuilder->add('menuorder', \Symfony\Component\Form\Extension\Core\Type\IntegerType::class, [
-            'label' => 'Position',
-            'required' => false,
-            'help' => 'Ordre d\'affichage du menu (1, 2, 3...). Laissez vide pour placer automatiquement en dernière position.',
-            'attr' => [
-                'min' => 1,
-                'placeholder' => 'Position actuelle: ' . ($entityDto->getInstance()->getMenuorder() ?? 'Non définie')
-            ]
-        ]);
 
         // Remplacer le champ parent par un EntityType personnalisé
         $formBuilder->add('parent', EntityType::class, [
@@ -245,7 +252,13 @@ class MenuCrudController extends AbstractCrudController
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INVESTISSEUR') {
-            $menu->setRoute('app_investisseur_page');
+            // Si c'est un sous-menu (avec parent), on utilise la route enfant
+            if ($menu->getParent()) {
+                $menu->setRoute('app_investisseur_child_page');
+            } else {
+                // Si c'est un menu parent, on utilise la route parent
+                $menu->setRoute('app_investisseur_page');
+            }
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {
@@ -285,7 +298,13 @@ class MenuCrudController extends AbstractCrudController
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INVESTISSEUR') {
-            $menu->setRoute('app_investisseur_page');
+            // Si c'est un sous-menu (avec parent), on utilise la route enfant
+            if ($menu->getParent()) {
+                $menu->setRoute('app_investisseur_child_page');
+            } else {
+                // Si c'est un menu parent, on utilise la route parent
+                $menu->setRoute('app_investisseur_page');
+            }
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {
@@ -574,5 +593,66 @@ class MenuCrudController extends AbstractCrudController
         }
 
         return $baseRoute . '_' . $slug;
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        // Crée un tri complexe : d'abord par section, puis par parent (nulls first), puis par ordre
+        // La fonction IDENTITY() est utilisée pour récupérer l'ID de la relation parent.
+        // Cela permet de regrouper les enfants avec leur parent.
+        $queryBuilder
+            ->addSelect('CASE WHEN entity.parent IS NULL THEN 0 ELSE IDENTITY(entity.parent) END AS HIDDEN parent_order')
+            ->orderBy('entity.section', 'ASC')
+            ->addOrderBy('parent_order', 'ASC')
+            ->addOrderBy('entity.menuorder', 'ASC');
+
+        return $queryBuilder;
+    }
+
+    public function moveUp(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    {
+        return $this->move($context, $entityManager, $adminUrlGenerator, 'up');
+    }
+
+    public function moveDown(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    {
+        return $this->move($context, $entityManager, $adminUrlGenerator, 'down');
+    }
+
+    private function move(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, string $direction): Response
+    {
+        $menuToMove = $context->getEntity()->getInstance();
+        if (!$menuToMove instanceof Menu) {
+            $this->addFlash('error', 'Impossible de trouver l\'élément à déplacer.');
+            return $this->redirect($this->generateDefaultUrl($adminUrlGenerator));
+        }
+
+        $repository = $entityManager->getRepository(Menu::class);
+        $swapWith = $repository->findNeighbor($menuToMove, $direction);
+
+        if ($swapWith) {
+            $orderToMove = $menuToMove->getMenuorder();
+            $orderToSwap = $swapWith->getMenuorder();
+
+            $menuToMove->setMenuorder($orderToSwap);
+            $swapWith->setMenuorder($orderToMove);
+
+            $entityManager->flush();
+            $this->addFlash('success', 'La position du menu a été mise à jour.');
+        } else {
+            $this->addFlash('warning', 'Le déplacement est impossible (déjà en première ou dernière position).');
+        }
+
+        return $this->redirect($this->generateDefaultUrl($adminUrlGenerator));
+    }
+
+    private function generateDefaultUrl(AdminUrlGenerator $adminUrlGenerator): string
+    {
+        return $adminUrlGenerator
+            ->setController(self::class)
+            ->setAction(Action::INDEX)
+            ->generateUrl();
     }
 }
