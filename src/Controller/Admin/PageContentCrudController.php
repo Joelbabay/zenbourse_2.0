@@ -196,15 +196,22 @@ class PageContentCrudController extends AbstractCrudController
 
                     function updateMenuOptions() {
                         if (!tomSelectInstance || !sectionSelect) return;
-                        const selectedSection = sectionSelect.value;
                         
-                        tomSelectInstance.clear();
+                        const selectedSection = sectionSelect.value;
+                        const currentValue = tomSelectInstance.getValue();
+                        
                         tomSelectInstance.clearOptions();
 
                         const filteredMenus = window.allMenusData.filter(menu => menu.section === selectedSection);
-
                         tomSelectInstance.addOptions(filteredMenus.map(menu => ({ value: menu.id, text: menu.label })));
-                        tomSelectInstance.refreshOptions(false);
+                        
+                        // Re-appliquer la valeur si elle est toujours valide, sinon effacer.
+                        const currentSelectionIsValid = filteredMenus.some(menu => menu.id == currentValue);
+                        if (currentSelectionIsValid) {
+                            tomSelectInstance.setValue(currentValue);
+                        } else {
+                            tomSelectInstance.clear();
+                        }
                     }
                     
                     function toggleContentTypeFields() {
