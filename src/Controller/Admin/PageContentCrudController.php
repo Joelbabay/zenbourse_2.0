@@ -127,7 +127,11 @@ class PageContentCrudController extends AbstractCrudController
                 ->setFormTypeOption('attr', ['class' => 'ckeditor']),
 
             // Colonnes pour l'index
-            AssociationField::new('menu', 'Menu Lié')->onlyOnIndex(),
+            AssociationField::new('menu', 'Menu Lié')
+                ->onlyOnIndex()
+                ->formatValue(function ($value) {
+                    return $value ? mb_strtoupper($value, 'UTF-8') : null;
+                }),
             TextField::new('section', 'Section')
                 ->onlyOnIndex()
                 // ->setSortable(true) -> On ne peut pas trier sur cette colonne virtuelle
@@ -170,9 +174,21 @@ class PageContentCrudController extends AbstractCrudController
         $section = $this->getContext()->getRequest()->query->get('section');
 
         if ($section) {
-            $queryBuilder->leftJoin('entity.menu', 'm')
-                ->andWhere('m.section = :section')
-                ->setParameter('section', $section);
+            $queryBuilder->leftJoin('entity.menu', 'm');
+
+            if ($section === 'INVESTISSEUR') {
+                // Pour la section INVESTISSEUR, on inclut les contenus liés aux menus de cette section
+                // ET les contenus liés à un StockExample (qui appartiennent implicitement à cette section).
+                $queryBuilder->andWhere($queryBuilder->expr()->orX(
+                    'm.section = :section',
+                    'entity.stockExample IS NOT NULL'
+                ))
+                    ->setParameter('section', $section);
+            } else {
+                // Pour les autres sections, le filtrage simple suffit.
+                $queryBuilder->andWhere('m.section = :section')
+                    ->setParameter('section', $section);
+            }
         }
 
         return $queryBuilder;
