@@ -13,10 +13,6 @@
             {# Colonne principale pour le contenu détaillé du ticker #}
             <div class="col-md-9">
                 <div class="content-area p-2">
-                    <h1 class="page-title mb-3">{{ pageContent.title ?? stockExample.title }}</h1>
-                    
-                    <hr>
-                    
                     {% if pageContent and pageContent.content %}
                         <div class="page-content">
                             {{ pageContent.content|raw }}
