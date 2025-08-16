@@ -12,6 +12,16 @@
         <div class="row g-5" id="main-content">
             {# Colonne principale pour le contenu détaillé du ticker #}
             <div class="col-md-9">
+                <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                    <div class="cnt-title d-flex align-items-center">
+                        <span class="fi fi-{{ stockExample.flag }}" style="font-size: 40px"></span>
+                        <span class="mx-3 fw-bold" style="font-size: 20px">
+                            {{ stockExample.title }} - {{ stockExample.ticker }}
+                        </span>
+                    </div>
+                    <div class="cnt-section">
+                    </div>
+                </div>
                 <div class="content-area p-2">
                     {% if pageContent and pageContent.content %}
                         <div class="page-content">
