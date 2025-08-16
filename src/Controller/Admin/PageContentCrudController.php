@@ -25,6 +25,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use App\Entity\StockExample;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use App\Repository\MenuRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 
 class PageContentCrudController extends AbstractCrudController
 {
@@ -156,6 +160,38 @@ class PageContentCrudController extends AbstractCrudController
                 })
                 ->renderAsHtml(),
         ];
+    }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
+
+        // Récupérer la section depuis les paramètres de la requête
+        $section = $this->getContext()->getRequest()->query->get('section');
+
+        if ($section) {
+            $queryBuilder->leftJoin('entity.menu', 'm')
+                ->andWhere('m.section = :section')
+                ->setParameter('section', $section);
+        }
+
+        return $queryBuilder;
+    }
+
+    public function createEntity(string $entityFqcn)
+    {
+        $pageContent = parent::createEntity($entityFqcn);
+
+        // Récupérer la section depuis les paramètres de la requête
+        $section = $this->getContext()->getRequest()->query->get('section');
+
+        if ($section) {
+            // Pré-remplir la section et le type de contenu
+            $pageContent->setSection($section);
+            $pageContent->setContentType('menu'); // On assume que c'est pour un menu
+        }
+
+        return $pageContent;
     }
 
     // Les méthodes createNewFormBuilder, createEditFormBuilder et updateMenuField

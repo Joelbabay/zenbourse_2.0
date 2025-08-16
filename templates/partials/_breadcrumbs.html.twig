@@ -1,0 +1,17 @@
+{# templates/partials/_breadcrumbs.html.twig #}
+{% set breadcrumbs = generate_breadcrumbs() %}
+
+{% if breadcrumbs|length > 1 %}
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            {% for crumb in breadcrumbs %}
+                {% if loop.last %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ crumb.label }}</li>
+                {% else %}
+                    <li class="breadcrumb-item"><a href="{{ crumb.url }}">{{ crumb.label }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% endif %}
+

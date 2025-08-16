@@ -34,6 +34,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('is_active_child', [$this, 'isActiveChild']),
             new TwigFunction('get_active_parent_menu', [$this, 'getActiveParentMenu']),
             new TwigFunction('menu_url', [$this, 'generateMenuUrl']),
+            new TwigFunction('generate_breadcrumbs', [$this, 'generateBreadcrumbs']),
         ];
     }
 
@@ -202,5 +203,50 @@ class AppExtension extends AbstractExtension
             // En cas d'erreur, retourner une URL par défaut
             return '#';
         }
+    }
+
+    public function generateBreadcrumbs(): array
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if (!$request) {
+            return [];
+        }
+
+        $crumbs = [];
+
+        // 1. Toujours ajouter l'accueil
+        $crumbs[] = ['label' => 'Accueil', 'url' => $this->urlGenerator->generate('app_home_page', ['slug' => 'accueil'])];
+
+        $route = $request->attributes->get('_route');
+        $parentSlug = $request->attributes->get('parentSlug');
+        $childSlug = $request->attributes->get('childSlug');
+        $tickerSlug = $request->attributes->get('tickerSlug');
+
+        // 2. Gérer les pages de la section Investisseur (les plus complexes)
+        if (str_starts_with($route, 'app_investisseur')) {
+            $crumbs[] = ['label' => 'Investisseur', 'url' => $this->urlGenerator->generate('app_investisseur_page', ['slug' => 'presentation'])];
+
+            if ($parentSlug) {
+                $parentMenu = $this->menuService->getMenuBySlug($parentSlug);
+                if ($parentMenu) {
+                    $crumbs[] = ['label' => $parentMenu->getLabel(), 'url' => $this->generateMenuUrl($parentMenu)];
+                }
+            }
+
+            if ($childSlug) {
+                $childMenu = $this->menuService->getMenuBySlug($childSlug);
+                if ($childMenu) {
+                    $crumbs[] = ['label' => $childMenu->getLabel(), 'url' => $this->generateMenuUrl($childMenu)];
+                }
+            }
+
+            if ($tickerSlug) {
+                // Pour le ticker, on ne met pas de lien car c'est la page active
+                $crumbs[] = ['label' => 'Détail de la valeur'];
+            }
+        }
+        // 3. Ajouter ici la logique pour les autres sections (HOME, INTRADAY) si nécessaire
+
+        return $crumbs;
     }
 }

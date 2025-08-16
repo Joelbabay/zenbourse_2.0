@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class FrontCustomAuthenticator extends AbstractLoginFormAuthenticator
+class FrontCustomAuthenticator /*extends AbstractLoginFormAuthenticator*/
 {
 
     use TargetPathTrait;
@@ -32,16 +32,16 @@ class FrontCustomAuthenticator extends AbstractLoginFormAuthenticator
         return $this->router->generate('home_login');
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    /*public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
         return new RedirectResponse($this->router->generate('investisseur_presentation'));
-    }
+    }*/
 
-    public function authenticate(Request $request): Passport
+    /*public function authenticate(Request $request): Passport
     {
         // TODO: Implement authenticate() method.
         $username = $request->request->get('username');
@@ -52,5 +52,5 @@ class FrontCustomAuthenticator extends AbstractLoginFormAuthenticator
             new UserBadge($username),
             new PasswordCredentials($password)
         );
-    }
+    }*/
 }

@@ -69,6 +69,7 @@ class DashboardController extends AbstractDashboardController
             ->getQuery()
             ->getResult();
 
+        $totalTemporaryInvestorAccess = 0;
         $totalTemporaryInvestorAccessActive = 0;
         $totalTemporaryInvestorAccessExpired = 0;
         $now = new \DateTime();
@@ -516,8 +517,24 @@ class DashboardController extends AbstractDashboardController
             ->setController(InterestedUsersCrudController::class);
         yield MenuItem::linkToCrud('Méthode Intraday', 'fa fa-star', IntradayRequest::class)
             ->setController(IntradayRequestCrudController::class);
-        yield MenuItem::linkToCrud('Liens de navigation', 'fa fa-list', Menu::class);
-        yield MenuItem::linkToCrud('Gestion des pages', 'fa fa-edit', PageContent::class);
+
+        yield MenuItem::subMenu('Liens de navigation', 'fa fa-list')->setSubItems([
+            MenuItem::linkToCrud('ACCUEIL', 'fa fa-home', Menu::class)
+                ->setQueryParameter('section', 'HOME'),
+            MenuItem::linkToCrud('INVESTISSEUR', 'fa fa-chart-line', Menu::class)
+                ->setQueryParameter('section', 'INVESTISSEUR'),
+            MenuItem::linkToCrud('INTRADAY', 'fa fa-chart-line', Menu::class)
+                ->setQueryParameter('section', 'INTRADAY'),
+        ]);
+        yield MenuItem::subMenu('Gestion des pages', 'fa fa-edit')->setSubItems([
+            MenuItem::linkToCrud('ACCUEIL', 'fa fa-home', PageContent::class)
+                ->setQueryParameter('section', 'HOME'),
+            MenuItem::linkToCrud('INVESTISSEUR', 'fa fa-chart-line', PageContent::class)
+                ->setQueryParameter('section', 'INVESTISSEUR'),
+            MenuItem::linkToCrud('INTRADAY', 'fa fa-chart-line', PageContent::class)
+                ->setQueryParameter('section', 'INTRADAY'),
+        ]);
+
         yield MenuItem::linkToCrud('Images du carrousel', 'fa fa-images', CarouselImage::class);
         yield MenuItem::linkToCrud('Gestion des pages de la bibliothèque', 'fa fa-chart-line', StockExample::class)
             ->setController(StockExampleCrudController::class);

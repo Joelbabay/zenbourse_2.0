@@ -184,4 +184,9 @@ class MenuService
     {
         return $this->menuRepository->slugExists($slug, $excludeId);
     }
+
+    public function getMenuBySlug(string $slug): ?object
+    {
+        return $this->menuRepository->findOneBy(['slug' => $slug]);
+    }
 }

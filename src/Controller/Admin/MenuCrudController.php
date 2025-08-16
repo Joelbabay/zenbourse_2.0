@@ -598,6 +598,14 @@ class MenuCrudController extends AbstractCrudController
     {
         $queryBuilder = parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
+        // Récupérer la section depuis les paramètres de la requête
+        $section = $this->getContext()->getRequest()->query->get('section');
+
+        if ($section) {
+            $queryBuilder->andWhere('entity.section = :section')
+                ->setParameter('section', $section);
+        }
+
         // Crée un tri complexe : d'abord par section, puis par parent (nulls first), puis par ordre
         // La fonction IDENTITY() est utilisée pour récupérer l'ID de la relation parent.
         // Cela permet de regrouper les enfants avec leur parent.
