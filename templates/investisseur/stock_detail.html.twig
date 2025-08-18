@@ -38,6 +38,7 @@
             
             {# Colonne de droite pour la sidebar avec la liste des tickers #}
             <div class="col-md-3">
+                {% include 'investisseur/widgets/sidebar.html.twig' %}
                 {% include 'investisseur/widgets/sidebar-stocks.html.twig' with {
                     'valueTitle': categoryTitle,
                     'stocks': stocksForSidebar,

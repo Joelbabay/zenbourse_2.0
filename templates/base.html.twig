@@ -225,7 +225,7 @@
           const listItem = document.createElement("li");
           const link = document.createElement("a");
           link.href = `#${heading.id}`;
-          link.textContent = heading.textContent;
+          link.textContent = heading.textContent.trim();
           link.style.cursor = "pointer";
           link.style.textDecoration = "none";
 

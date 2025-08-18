@@ -113,6 +113,8 @@ class DashboardController extends AbstractDashboardController
             ->addCssFile('/css/admin.css')
             ->addHtmlContentToHead('<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.css" />')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.umd.js"></script>')
+            ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/46.0.1/translations/fr.umd.js"></script>"')
+            ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5-premium-features/46.0.1/translations/fr.umd.js"></script>"')
             ->addHtmlContentToBody("
             <script>
                 const {
@@ -198,6 +200,7 @@ class DashboardController extends AbstractDashboardController
                  ClassicEditor
                     .create( document.querySelector( '.ckeditor' ), {
                         licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzY5ODg3OTksImp0aSI6IjI3ZmZjNmZjLTA4ZGItNDg1MS1iZDdkLThmNmIwM2I5Zjk5NiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCJdLCJ2YyI6IjA1NzIwN2I0In0.hm5C4s5dGb2wmhGMqp9462Jinh5lrTcIPAboSivr4H2B86gtqHTS_IJp-3CJQk7VHzTZjpb-Ayv4jlxU5qpSRQ',
+                        language: 'fr',
                         plugins: [ Alignment, Autoformat,
                             AutoImage,
                             Autosave,
@@ -321,7 +324,7 @@ class DashboardController extends AbstractDashboardController
                                 'outdent',
                                 'indent'
                             ],
-                            shouldNotGroupWhenFull: false
+                            shouldNotGroupWhenFull: true,
                         },
                         fullscreen: {
                             onEnterCallback: container =>

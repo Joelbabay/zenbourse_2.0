@@ -1,6 +1,6 @@
 <div class="position-sticky" style="top: 12.5rem;">
     <div class="sidebar p-4 mb-3 bg-light rounded">
-        <h4 class="fst-italic text-center">{{ categoryTitle }}</h4>
+        <h4 class="fst-italic text-center mb-3">{{ categoryTitle }}</h4>
         {% for stock in stocksForSidebar %}
             {# La classe 'active' est ajoutée si le slug du stock courant correspond au 'currentTickerSlug' passé par le contrôleur #}
             {% set activeClass = (currentTickerSlug is defined and stock.slug == currentTickerSlug) ? 'bg-green' : '' %}
@@ -8,7 +8,7 @@
                 <div class="mr-2">
                     <span class="fi fi-{{ stock.flag }}" style="font-size: 30px"></span>
                 </div>
-                <div class="px-3">
+                <div class="px-3" style="font-size: 17px;">
                     <a href="{{ path('app_investisseur_stock_detail', {'parentSlug': parentMenu.slug, 'childSlug': childMenu.slug, 'tickerSlug': stock.slug}) }}" class="text-dark">
                         {{ stock.title }}
                     </a>
