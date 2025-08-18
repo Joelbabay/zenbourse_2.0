@@ -111,6 +111,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Assets::new()
             ->addCssFile('/css/admin.css')
+            ->addHtmlContentToBody('<script>document.documentElement.setAttribute(\'data-turbo\', \'false\');</script>')
             ->addHtmlContentToHead('<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.css" />')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.umd.js"></script>')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/46.0.1/translations/fr.umd.js"></script>"')
