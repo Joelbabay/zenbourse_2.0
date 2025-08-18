@@ -5,7 +5,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse menu-home" id="navbarNav">
-            <span class="navbar-text me-3 fw-bold text-dark" style="color: #370028;">ZENBOURSE -></span>
+            <div class="navbar-text me-3 fw-bold text-dark" style="color: #370028;">ZENBOURSE <i class="ms-2 fa-solid fa-angle-right"></i></div>
             <ul class="navbar-nav">
                 {% set current_route = app.request.attributes.get('_route') %}
                 {% for item in get_menu('HOME') %}

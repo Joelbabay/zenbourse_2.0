@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,11 +50,6 @@ class MenuCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_EDIT, 'Modification du menu')
             ->setPageTItle(Crud::PAGE_NEW, 'Création d\'un menu')
             ->showEntityActionsInlined()
-            ->setDefaultSort([
-                'section' => 'ASC',
-                'parent' => 'ASC', // Menus parents en premier
-                'menuorder' => 'ASC'
-            ])
             ->overrideTemplates([
                 'crud/new' => 'admin/menu_form.html.twig',
                 'crud/edit' => 'admin/menu_edit_form.html.twig'
@@ -98,6 +94,10 @@ class MenuCrudController extends AbstractCrudController
             TextField::new('label', 'Label')
                 ->setHelp('Le nom affiché du menu')
                 ->setTemplatePath('admin/fields/menu_label.html.twig'),
+
+            BooleanField::new('isActive', 'Actif')
+                ->setHelp('Si ce menu doit être visible sur le site public.')
+                ->renderAsSwitch(),
 
             TextField::new('slug')
                 ->setHelp('Laissez vide pour générer automatiquement à partir du label')
@@ -565,7 +565,8 @@ class MenuCrudController extends AbstractCrudController
     {
         $repository = $entityManager->getRepository(Menu::class);
         $qb = $repository->createQueryBuilder('m')
-            ->where('m.section = :section');
+            ->where('m.section = :section')
+            ->setParameter('section', $section);
 
         if ($parent) {
             $qb->andWhere('m.parent = :parent')
@@ -606,13 +607,20 @@ class MenuCrudController extends AbstractCrudController
                 ->setParameter('section', $section);
         }
 
-        // Crée un tri complexe : d'abord par section, puis par parent (nulls first), puis par ordre
-        // La fonction IDENTITY() est utilisée pour récupérer l'ID de la relation parent.
-        // Cela permet de regrouper les enfants avec leur parent.
+        // Jointure pour accéder aux informations du parent
+        $queryBuilder->leftJoin('entity.parent', 'p');
+
+        // Crée un tri hiérarchique :
+        // 1. D'abord par section.
+        // 2. Ensuite, on regroupe les enfants avec leur parent en utilisant le `menuorder` du parent.
+        // 3. Puis, on affiche le parent avant ses enfants dans le groupe.
+        // 4. Enfin, on trie les enfants entre eux par leur propre `menuorder`.
         $queryBuilder
-            ->addSelect('CASE WHEN entity.parent IS NULL THEN 0 ELSE IDENTITY(entity.parent) END AS HIDDEN parent_order')
+            ->addSelect('CASE WHEN entity.parent IS NULL THEN entity.menuorder ELSE p.menuorder END AS HIDDEN group_order')
+            ->addSelect('CASE WHEN entity.parent IS NULL THEN 0 ELSE 1 END AS HIDDEN parent_first')
             ->orderBy('entity.section', 'ASC')
-            ->addOrderBy('parent_order', 'ASC')
+            ->addOrderBy('group_order', 'ASC')
+            ->addOrderBy('parent_first', 'ASC')
             ->addOrderBy('entity.menuorder', 'ASC');
 
         return $queryBuilder;

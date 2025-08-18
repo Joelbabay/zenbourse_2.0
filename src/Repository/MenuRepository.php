@@ -41,11 +41,30 @@ class MenuRepository extends ServiceEntityRepository
             ->leftJoin('m.children', 'c')
             ->where('m.section = :section')
             ->andWhere('m.parent IS NULL')
+            ->andWhere('m.isActive = :isActive')
             ->setParameter('section', $section)
+            ->setParameter('isActive', true)
             ->orderBy('m.menuorder', 'ASC')
             ->addOrderBy('c.menuorder', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Trouve le premier menu actif pour une section donnée, trié par ordre.
+     */
+    public function findFirstActiveBySection(string $section): ?Menu
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.section = :section')
+            ->andWhere('m.isActive = :isActive')
+            ->andWhere('m.parent IS NULL') // On ne cible que les menus principaux
+            ->setParameter('section', $section)
+            ->setParameter('isActive', true)
+            ->orderBy('m.menuorder', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

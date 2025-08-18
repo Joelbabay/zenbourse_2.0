@@ -40,6 +40,9 @@ class Menu
     #[ORM\Column]
     private ?int $menuorder = null;
 
+    #[ORM\Column]
+    private ?bool $isActive = true;
+
     #[ORM\OneToOne(mappedBy: 'menu', cascade: ['persist', 'remove'])]
     private ?PageContent $pageContent = null;
 
@@ -151,6 +154,18 @@ class Menu
     public function setMenuorder(int $menuorder): static
     {
         $this->menuorder = $menuorder;
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

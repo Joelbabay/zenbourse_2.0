@@ -29,10 +29,10 @@
                     <div class="col-sm-5 fw-bold">Mon / mes accès</div>
                     <div class="col-sm-7 d-flex gap-2">
                         {% if user.isInvestisseur %}
-                            <a href="{{ path('investisseur_la-methode') }}" class="btn btn-success px-4 py-2" style="background:#7fffd4; border:none; color:#222; font-weight:600;">Méthode Investisseur</a>
+                            <a href="{{ get_first_menu_url('INVESTISSEUR') }}" class="btn btn-success" style="background:#7fffd4; border:none; color:#222;">Méthode Investisseur</a>
                         {% endif %}
                         {% if user.isIntraday %}
-                            <a href="{{ path('app_intraday_page', {'slug': 'presentation-2'}) }}" class="btn btn-info px-4 py-2" style="background:#7ffcff; border:none; color:#222; font-weight:600;">Méthode Intraday</a>
+                            <a href="{{ get_first_menu_url('INTRADAY') }}" class="btn btn-primary" style="background:#7ffcff; border:none; color:#222;">Méthode Intraday</a>
                         {% endif %}
                     </div>
                 </div>

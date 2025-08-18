@@ -17,7 +17,7 @@ class PageController extends AbstractController
     #[Route('/{slug}', name: 'app_home_page', requirements: ['slug' => '[a-z0-9-]+'])]
     public function show(MenuRepository $menuRepo, PageContentRepository $contentRepo, CarouselService $carouselService, string $slug): Response
     {
-        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'HOME']);
+        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'HOME', 'isActive' => true]);
         if (!$menu) {
             throw $this->createNotFoundException('Page non trouvée');
         }
@@ -38,10 +38,10 @@ class PageController extends AbstractController
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
-        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INVESTISSEUR']);
+        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INVESTISSEUR', 'isActive' => true]);
         if (!$menu) {
             throw $this->createNotFoundException('Page investisseur non trouvée');
         }
@@ -70,14 +70,15 @@ class PageController extends AbstractController
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès à la méthode Investisseur.');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
         // Récupérer le menu parent
         $parentMenu = $menuRepo->findOneBy([
             'slug' => $parentSlug,
             'section' => 'INVESTISSEUR',
-            'parent' => null // Pas de parent = menu principal
+            'parent' => null, // Pas de parent = menu principal
+            'isActive' => true
         ]);
 
         if (!$parentMenu) {
@@ -88,7 +89,8 @@ class PageController extends AbstractController
         $childMenu = $menuRepo->findOneBy([
             'slug' => $childSlug,
             'section' => 'INVESTISSEUR',
-            'parent' => $parentMenu
+            'parent' => $parentMenu,
+            'isActive' => true
         ]);
 
         if (!$childMenu) {
@@ -127,17 +129,17 @@ class PageController extends AbstractController
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès à cette section.');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
         // 1. Valider et récupérer le menu parent (ex: "bibliotheque")
-        $parentMenu = $menuRepo->findOneBy(['slug' => $parentSlug, 'section' => 'INVESTISSEUR', 'parent' => null]);
+        $parentMenu = $menuRepo->findOneBy(['slug' => $parentSlug, 'section' => 'INVESTISSEUR', 'parent' => null, 'isActive' => true]);
         if (!$parentMenu) {
             throw $this->createNotFoundException('Menu principal de la bibliothèque non trouvé.');
         }
 
         // 2. Valider et récupérer le menu enfant (ex: "bulles-type-1")
-        $childMenu = $menuRepo->findOneBy(['slug' => $childSlug, 'section' => 'INVESTISSEUR', 'parent' => $parentMenu]);
+        $childMenu = $menuRepo->findOneBy(['slug' => $childSlug, 'section' => 'INVESTISSEUR', 'parent' => $parentMenu, 'isActive' => true]);
         if (!$childMenu) {
             throw $this->createNotFoundException('Catégorie de la bibliothèque non trouvée.');
         }
@@ -167,7 +169,7 @@ class PageController extends AbstractController
     #[IsGranted('ROLE_INTRADAY')]
     public function show_intraday(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $slug): Response
     {
-        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INTRADAY']);
+        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INTRADAY', 'isActive' => true]);
         if (!$menu) {
             throw $this->createNotFoundException('Page intraday non trouvée');
         }

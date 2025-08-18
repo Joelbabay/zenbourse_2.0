@@ -35,12 +35,24 @@ class AppExtension extends AbstractExtension
             new TwigFunction('get_active_parent_menu', [$this, 'getActiveParentMenu']),
             new TwigFunction('menu_url', [$this, 'generateMenuUrl']),
             new TwigFunction('generate_breadcrumbs', [$this, 'generateBreadcrumbs']),
+            new TwigFunction('get_first_menu_url', [$this, 'getFirstMenuUrl']),
         ];
     }
 
     public function getMenu(string $section): array
     {
         return $this->menuService->getMenuBySection($section);
+    }
+
+    public function getFirstMenuUrl(string $section): string
+    {
+        $menu = $this->menuService->getMenuRepository()->findFirstActiveBySection($section);
+
+        if ($menu) {
+            return $this->generateMenuUrl($menu);
+        }
+
+        return '#'; // URL de secours si aucun menu n'est trouvé
     }
 
     public function getMenuWithChildren(string $section): array
