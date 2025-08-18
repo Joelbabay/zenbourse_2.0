@@ -1,5 +1,5 @@
 <div class="position-sticky" style="top: 13rem;">
-    <div class="mb-2 investisseur">
+    <div class="mb-2 investisseur" style="font-size: 20px;">
 		<ul id="h2-list" class="py-2">
 		</ul>
 	</div>
@@ -12,7 +12,7 @@
                 <div class="mr-2">
                     <span class="fi fi-{{ stock.flag }}" style="font-size: 30px"></span>
                 </div>
-                <div class="px-3" style="font-size: 17px;">
+                <div class="px-3" style="font-size: 18px;">
                     <a href="{{ path('app_investisseur_stock_detail', {'parentSlug': parentMenu.slug, 'childSlug': childMenu.slug, 'tickerSlug': stock.slug}) }}" class="text-dark">
                         {{ stock.title }}
                     </a>
