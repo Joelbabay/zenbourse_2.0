@@ -636,9 +636,9 @@ class MenuCrudController extends AbstractCrudController
         if ($menu) {
             $menu->setIsActive(!$menu->isIsActive());
             $entityManager->flush();
-            $this->addFlash('success', 'Le statut du menu a été mis à jour.');
+            // $this->addFlash('success', 'Le statut du menu a été mis à jour.');
         } else {
-            $this->addFlash('error', 'Menu non trouvé.');
+            //$this->addFlash('error', 'Menu non trouvé.');
         }
 
         // Redirige vers la page d'où l'action a été initiée (en conservant les filtres, la page, etc.)
@@ -674,7 +674,7 @@ class MenuCrudController extends AbstractCrudController
             $swapWith->setMenuorder($orderToMove);
 
             $entityManager->flush();
-            $this->addFlash('success', 'La position du menu a été mise à jour.');
+            //$this->addFlash('success', 'La position du menu a été mise à jour.');
         } else {
             $this->addFlash('warning', 'Le déplacement est impossible (déjà en première ou dernière position).');
         }

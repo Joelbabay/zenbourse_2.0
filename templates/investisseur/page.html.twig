@@ -24,7 +24,6 @@
             </div>
             
             <div class="col-md-3">
-                {% include 'investisseur/widgets/sidebar.html.twig' %}
                 {% if stocksForSidebar is defined and stocksForSidebar is not empty %}
                     {# Le menu enfant est passé via la variable 'menu' dans ce contexte #}
                     {% include 'investisseur/widgets/sidebar-stocks.html.twig' with {
@@ -34,6 +33,9 @@
                         'childMenu': menu,
                         'currentTickerSlug': currentTickerSlug | default(null)
                     } %}
+                {% else %}
+                    {# Afficher la sidebar par défaut si pas de tickers #}
+                    {% include 'investisseur/widgets/sidebar.html.twig' %}
                 {% endif %}
             </div>
         </div>
