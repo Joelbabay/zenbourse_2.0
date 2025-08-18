@@ -95,9 +95,12 @@ class MenuCrudController extends AbstractCrudController
                 ->setHelp('Le nom affiché du menu')
                 ->setTemplatePath('admin/fields/menu_label.html.twig'),
 
-            BooleanField::new('isActive', 'Actif')
+            BooleanField::new('isActive', 'État')
                 ->setHelp('Si ce menu doit être visible sur le site public.')
-                ->renderAsSwitch(),
+                // Utilise un template personnalisé sur l'index pour contourner le problème de la requête PATCH
+                ->setTemplatePath($pageName === Crud::PAGE_INDEX ? 'admin/fields/is_active_toggle.html.twig' : null)
+                // Garde l'interrupteur classique sur les pages de création/modification
+                ->renderAsSwitch($pageName !== Crud::PAGE_INDEX),
 
             TextField::new('slug')
                 ->setHelp('Laissez vide pour générer automatiquement à partir du label')
@@ -624,6 +627,22 @@ class MenuCrudController extends AbstractCrudController
             ->addOrderBy('entity.menuorder', 'ASC');
 
         return $queryBuilder;
+    }
+
+    public function toggleIsActive(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    {
+        /** @var Menu $menu */
+        $menu = $context->getEntity()->getInstance();
+        if ($menu) {
+            $menu->setIsActive(!$menu->isIsActive());
+            $entityManager->flush();
+            $this->addFlash('success', 'Le statut du menu a été mis à jour.');
+        } else {
+            $this->addFlash('error', 'Menu non trouvé.');
+        }
+
+        // Redirige vers la page d'où l'action a été initiée (en conservant les filtres, la page, etc.)
+        return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
     }
 
     public function moveUp(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response

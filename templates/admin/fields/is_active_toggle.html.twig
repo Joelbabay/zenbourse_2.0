@@ -1,0 +1,12 @@
+<div class="custom-toggle-container">
+    {% set url = ea_url()
+        .setController('App\\Controller\\Admin\\MenuCrudController')
+        .setAction('toggleIsActive')
+        .setEntityId(entity.primaryKeyValue) %}
+    
+    <a href="{{ url }}" class="custom-toggle {{ field.value ? 'is-active' : 'is-inactive' }}">
+        <span class="custom-toggle-handle"></span>
+        <span class="custom-toggle-label on"></span>
+        <span class="custom-toggle-label off"></span>
+    </a>
+</div>
