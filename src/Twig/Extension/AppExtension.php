@@ -141,23 +141,20 @@ class AppExtension extends AbstractExtension
         $childSlug = $child->getSlug();
         $parent = $child->getParent();
 
-        // The logic is only for children of INVESTISSEUR section
-        if ($parent && $parent->getSection() === 'INVESTISSEUR') {
-            // A child is active if we are on its page, or one of its ticker detail pages.
-            if ($currentRoute === 'app_investisseur_child_page') {
-                $childSlugFromRoute = $request->attributes->get('childSlug');
-                return $childSlugFromRoute === $childSlug;
+        if ($parent) {
+            // Logique pour les sections avec sous-menus dynamiques
+            if ($parent->getSection() === 'INVESTISSEUR') {
+                if ($currentRoute === 'app_investisseur_child_page' || $currentRoute === 'app_investisseur_stock_detail') {
+                    return $request->attributes->get('childSlug') === $childSlug;
+                }
+            } elseif ($parent->getSection() === 'INTRADAY') {
+                if ($currentRoute === 'app_intraday_child_page') {
+                    return $request->attributes->get('childSlug') === $childSlug;
+                }
             }
-
-            if ($currentRoute === 'app_investisseur_stock_detail') {
-                $childSlugFromRoute = $request->attributes->get('childSlug');
-                return $childSlugFromRoute === $childSlug;
-            }
-
-            return false;
         }
 
-        // Comparaison directe avec la route du menu enfant (seulement pour les routes statiques)
+        // Comparaison directe avec la route du menu enfant (pour les routes statiques)
         if ($currentRoute === $child->getRoute()) {
             return true;
         }
@@ -196,8 +193,8 @@ class AppExtension extends AbstractExtension
         try {
             if (in_array($route, $dynamicRoutes)) {
                 return $this->urlGenerator->generate($route, ['slug' => $slug]);
-            } elseif ($route === 'app_investisseur_child_page') {
-                // Route hiérarchique pour les sous-menus investisseur
+            } elseif ($route === 'app_investisseur_child_page' || $route === 'app_intraday_child_page') {
+                // Route hiérarchique pour les sous-menus
                 $parent = $menu->getParent();
                 if ($parent) {
                     return $this->urlGenerator->generate($route, [
@@ -205,8 +202,9 @@ class AppExtension extends AbstractExtension
                         'childSlug' => $slug
                     ]);
                 } else {
-                    // Fallback si pas de parent
-                    return $this->urlGenerator->generate('app_investisseur_page', ['slug' => $slug]);
+                    // Fallback si pas de parent (devrait être géré par la logique du dessus)
+                    $fallbackRoute = ($menu->getSection() === 'INTRADAY') ? 'app_intraday_page' : 'app_investisseur_page';
+                    return $this->urlGenerator->generate($fallbackRoute, ['slug' => $slug]);
                 }
             } else {
                 return $this->urlGenerator->generate($route);

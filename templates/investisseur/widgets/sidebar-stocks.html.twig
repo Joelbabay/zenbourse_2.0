@@ -5,7 +5,7 @@
 	</div>
     <div class="sidebar p-4 mb-3">
         <h4 class="fst-italic text-center mb-3">{{ categoryTitle }}</h4>
-        {% for stock in stocksForSidebar %}
+        {% for stock in stocksForSidebar | sort((a, b) => a.title <=> b.title) %}
             {# La classe 'active' est ajoutée si le slug du stock courant correspond au 'currentTickerSlug' passé par le contrôleur #}
             {% set activeClass = (currentTickerSlug is defined and stock.slug == currentTickerSlug) ? 'bg-green' : '' %}
             <div class="d-flex py-2 px-2 w-100 align-items-center {{ activeClass }}">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="px-3" style="font-size: 18px;">
                     <a href="{{ path('app_investisseur_stock_detail', {'parentSlug': parentMenu.slug, 'childSlug': childMenu.slug, 'tickerSlug': stock.slug}) }}" class="text-dark">
-                        {{ stock.title }}
+                        {{ stock.title | upper }}
                     </a>
                 </div>
             </div>

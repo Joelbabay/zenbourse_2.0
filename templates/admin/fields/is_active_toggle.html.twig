@@ -1,6 +1,7 @@
 <div class="custom-toggle-container">
+ {% set currentController = app.request.attributes.get('_controller')[0] %}
     {% set url = ea_url()
-        .setController('App\\Controller\\Admin\\MenuCrudController')
+        .setController(currentController)
         .setAction('toggleIsActive')
         .setEntityId(entity.primaryKeyValue) %}
     

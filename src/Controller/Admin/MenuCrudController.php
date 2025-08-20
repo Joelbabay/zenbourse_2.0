@@ -28,6 +28,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class MenuCrudController extends AbstractCrudController
 {
@@ -264,7 +265,11 @@ class MenuCrudController extends AbstractCrudController
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {
-            $menu->setRoute('app_intraday_page');
+            if ($menu->getParent()) {
+                $menu->setRoute('app_intraday_child_page');
+            } else {
+                $menu->setRoute('app_intraday_page');
+            }
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         }
@@ -310,7 +315,11 @@ class MenuCrudController extends AbstractCrudController
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         } elseif ($menu->getSection() === 'INTRADAY') {
-            $menu->setRoute('app_intraday_page');
+            if ($menu->getParent()) {
+                $menu->setRoute('app_intraday_child_page');
+            } else {
+                $menu->setRoute('app_intraday_page');
+            }
             $slug = $this->menuService->generateSlug($menu->getLabel());
             $menu->setSlug($slug);
         }
@@ -645,17 +654,17 @@ class MenuCrudController extends AbstractCrudController
         return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
     }
 
-    public function moveUp(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    public function moveUp(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, RequestStack $requestStack): Response
     {
-        return $this->move($context, $entityManager, $adminUrlGenerator, 'up');
+        return $this->move($context, $entityManager, $adminUrlGenerator, 'up', $requestStack);
     }
 
-    public function moveDown(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    public function moveDown(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, RequestStack $requestStack): Response
     {
-        return $this->move($context, $entityManager, $adminUrlGenerator, 'down');
+        return $this->move($context, $entityManager, $adminUrlGenerator, 'down', $requestStack);
     }
 
-    private function move(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, string $direction): Response
+    private function move(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, string $direction, RequestStack $requestStack): Response
     {
         $menuToMove = $context->getEntity()->getInstance();
         if (!$menuToMove instanceof Menu) {
@@ -679,7 +688,24 @@ class MenuCrudController extends AbstractCrudController
             $this->addFlash('warning', 'Le déplacement est impossible (déjà en première ou dernière position).');
         }
 
-        return $this->redirect($this->generateDefaultUrl($adminUrlGenerator));
+        $currentRequest = $requestStack->getMainRequest();
+
+        // Get all query parameters from the current request
+        $currentQueryParams = $currentRequest->query->all();
+
+        // Create the new URL by setting the controller and action
+        // and passing all the original query parameters
+        $redirectUrl = $adminUrlGenerator
+            ->setController($context->getCrud()->getControllerFqcn())
+            ->setAction('index')
+            ->setAll($currentQueryParams); // This is the key line
+
+        // Remove the 'entityId' and any 'action' from the new URL
+        // since we're redirecting to the index page
+        $redirectUrl->unset('entityId');
+        $redirectUrl->unset('crudAction');
+
+        return $this->redirect($redirectUrl->generateUrl() . '&section=' . $menuToMove->getSection());
     }
 
     private function generateDefaultUrl(AdminUrlGenerator $adminUrlGenerator): string

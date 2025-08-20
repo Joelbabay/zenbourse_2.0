@@ -169,16 +169,50 @@ class PageController extends AbstractController
     #[IsGranted('ROLE_INTRADAY')]
     public function show_intraday(MenuRepository $menuRepo, PageContentRepository $contentRepo, string $slug): Response
     {
-        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INTRADAY', 'isActive' => true]);
+        $menu = $menuRepo->findOneBy(['slug' => $slug, 'section' => 'INTRADAY', 'isActive' => true, 'parent' => null]);
         if (!$menu) {
             throw $this->createNotFoundException('Page intraday non trouvée');
         }
 
         $pageContent = $contentRepo->findOneBy(['menu' => $menu]);
 
+        // Si le menu a des enfants, on les passe au template
+        $children = $menu->getChildren()->filter(fn($child) => $child->isIsActive());
+
         return $this->render('intraday/page.html.twig', [
             'menu' => $menu,
             'pageContent' => $pageContent,
+            'children' => $children
+        ]);
+    }
+
+    #[Route('/intraday/{parentSlug}/{childSlug}', name: 'app_intraday_child_page', requirements: [
+        'parentSlug' => '[a-z0-9-]+',
+        'childSlug' => '[a-z0-9-]+'
+    ])]
+    #[IsGranted('ROLE_INTRADAY')]
+    public function show_intraday_child(
+        MenuRepository $menuRepo,
+        PageContentRepository $contentRepo,
+        string $parentSlug,
+        string $childSlug
+    ): Response {
+        $parentMenu = $menuRepo->findOneBy(['slug' => $parentSlug, 'section' => 'INTRADAY', 'parent' => null, 'isActive' => true]);
+        if (!$parentMenu) {
+            throw $this->createNotFoundException('Menu parent intraday non trouvé');
+        }
+
+        $childMenu = $menuRepo->findOneBy(['slug' => $childSlug, 'section' => 'INTRADAY', 'parent' => $parentMenu, 'isActive' => true]);
+        if (!$childMenu) {
+            throw $this->createNotFoundException('Sous-menu intraday non trouvé');
+        }
+
+        $pageContent = $contentRepo->findOneBy(['menu' => $childMenu]);
+
+        return $this->render('intraday/page.html.twig', [
+            'menu' => $childMenu,
+            'parentMenu' => $parentMenu,
+            'pageContent' => $pageContent
         ]);
     }
 }
