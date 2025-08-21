@@ -90,18 +90,21 @@ class MenuCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $isActiveField = BooleanField::new('isActive', 'État')
+            ->setHelp('Si ce menu doit être visible sur le site public.');
+
+        // Si nous sommes sur la page d'index, on personnalise le champ
+        if ($pageName === Crud::PAGE_INDEX) {
+            $isActiveField->setTemplatePath('admin/fields/is_active_toggle.html.twig');
+        }
+
         return [
 
             TextField::new('label', 'Label')
                 ->setHelp('Le nom affiché du menu')
                 ->setTemplatePath('admin/fields/menu_label.html.twig'),
 
-            BooleanField::new('isActive', 'État')
-                ->setHelp('Si ce menu doit être visible sur le site public.')
-                // Utilise un template personnalisé sur l'index pour contourner le problème de la requête PATCH
-                ->setTemplatePath($pageName === Crud::PAGE_INDEX ? 'admin/fields/is_active_toggle.html.twig' : null)
-                // Garde l'interrupteur classique sur les pages de création/modification
-                ->renderAsSwitch($pageName !== Crud::PAGE_INDEX),
+            $isActiveField,
 
             TextField::new('slug')
                 ->setHelp('Laissez vide pour générer automatiquement à partir du label')
