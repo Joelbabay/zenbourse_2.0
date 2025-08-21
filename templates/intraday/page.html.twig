@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	Zenbourse - {{ pageContent.title }}
+	Zenbourse - {{ pageContent ? pageContent.title : menu.label }}
 {% endblock %}
 
 {% block body %}
@@ -9,7 +9,16 @@
     <main class="custom-container mt-4" >
         <div class="row g-5" data-turbo="false" id="main-content">
             <div class="col-md-9">
-                {{ pageContent.content|raw }}
+                {% if pageContent and pageContent.content %}
+                    <div class="page-content">
+                        {{ pageContent.content|raw }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Aucun contenu n'a encore été rédigé pour cet élément.
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-3">
 				{% include 'intraday/widgets/sidebar.html.twig' %}

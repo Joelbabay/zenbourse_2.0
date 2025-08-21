@@ -95,7 +95,7 @@ class MenuService
     public function getActiveParentMenu(string $currentRoute, string $section): ?object
     {
         // Gère toutes les routes de la section INVESTISSEUR
-        if ($section === 'INVESTISSEUR' && in_array($currentRoute, ['app_investisseur_page', 'app_investisseur_child_page', 'app_investisseur_stock_detail'])) {
+        if (in_array($currentRoute, ['app_investisseur_page', 'app_investisseur_child_page', 'app_intraday_page', 'app_investisseur_stock_detail', 'app_intraday_child_page'])) {
             $request = $this->requestStack->getCurrentRequest();
             if ($request) {
                 $parentSlug = $request->attributes->get('parentSlug');
@@ -103,7 +103,7 @@ class MenuService
 
                 // Pour les pages enfant ou détail de ticker, le parentSlug est l'identifiant fiable.
                 if ($parentSlug) {
-                    $parentMenu = $this->menuRepository->findOneBy(['slug' => $parentSlug, 'parent' => null, 'section' => 'INVESTISSEUR', 'isActive' => true]);
+                    $parentMenu = $this->menuRepository->findOneBy(['slug' => $parentSlug, 'parent' => null, 'section' => $section, 'isActive' => true]);
                     if ($parentMenu) {
                         return $this->menuRepository->find($parentMenu->getId()); // find() pour charger les enfants
                     }
@@ -112,13 +112,13 @@ class MenuService
                 // Pour les pages parent (ou les enfants consultés directement via slug)
                 if ($slug) {
                     // Est-ce le slug d'un menu parent ?
-                    $parentMenu = $this->menuRepository->findOneBy(['slug' => $slug, 'parent' => null, 'section' => 'INVESTISSEUR', 'isActive' => true]);
+                    $parentMenu = $this->menuRepository->findOneBy(['slug' => $slug, 'parent' => null, 'section' => $section, 'isActive' => true]);
                     if ($parentMenu) {
                         return $this->menuRepository->find($parentMenu->getId());
                     }
 
                     // Sinon, est-ce le slug d'un menu enfant ? Si oui, on retourne son parent.
-                    $childMenu = $this->menuRepository->findOneBy(['slug' => $slug, 'section' => 'INVESTISSEUR', 'isActive' => true]);
+                    $childMenu = $this->menuRepository->findOneBy(['slug' => $slug, 'section' => $section, 'isActive' => true]);
                     if ($childMenu && $childMenu->getParent() && $childMenu->getParent()->isIsActive()) {
                         return $this->menuRepository->find($childMenu->getParent()->getId());
                     }

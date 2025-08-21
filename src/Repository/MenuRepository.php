@@ -84,10 +84,15 @@ class MenuRepository extends ServiceEntityRepository
      */
     public function findFirstActiveBySection(string $section): ?Menu
     {
-        return $this->findOneBy([
-            'section' => $section,
-            'isActive' => true
-        ], ['menuorder' => 'ASC']);
+        return $this->createQueryBuilder('m')
+            ->where('m.isActive = :isActive')
+            ->andWhere('m.section = :section')
+            ->setParameter('isActive', true)
+            ->setParameter('section', $section)
+            ->orderBy('m.menuorder', 'ASC') // Le tri est crucial
+            ->setMaxResults(1) // Ne retourne qu'un seul résultat
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

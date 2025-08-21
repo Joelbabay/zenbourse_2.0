@@ -5,7 +5,7 @@
             <header class="blog-header py-3 ">
                 <div class="row flex-nowrap justify-content-between align-items-center">
                     <div class="col-3 ps-0">
-                        <a class="header-logo d-flex align-items-center navbar-brand" href="/accueil">
+                        <a class="header-logo d-flex align-items-center navbar-brand" href="{{get_first_menu_url('HOME')}}">
                             {#<img src="{{ asset('images/logo/zenbourse-logo.svg') }}" alt="Logo" width="25" class="d-inline-block align-text-center">#}
                             <span class="text-uppercase text-white">zenbourse</span>
                         </a>
@@ -19,7 +19,7 @@
                         {% set route = app.request.get('_route') %}
                         {% set isHome = route starts with 'app_home' or route starts with 'app_user' %}
                         {% set isInvestisseur = app.request.get('_route') starts with 'app_investisseur' %}
-                        {% set isIntraday = app.request.get('_route') starts with 'app_intraday_page' %}
+                        {% set isIntraday = app.request.get('_route') starts with 'app_intraday' %}
 
                         {# Affichage des boutons méthode selon la route et l'utilisateur #}
                         {% if isHome %}
