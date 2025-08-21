@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Menu;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @extends ServiceEntityRepository<Menu>
@@ -16,9 +17,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MenuRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private SluggerInterface $slugger;
+    public function __construct(ManagerRegistry $registry, SluggerInterface $slugger)
     {
         parent::__construct($registry, Menu::class);
+        $this->slugger = $slugger;
     }
 
     /**
@@ -85,5 +88,40 @@ class MenuRepository extends ServiceEntityRepository
             'section' => $section,
             'isActive' => true
         ], ['menuorder' => 'ASC']);
+    }
+
+    /**
+     * Génère un slug unique pour un menu.
+     */
+    public function generateUniqueSlug(string $label, ?int $excludeId = null): string
+    {
+        $baseSlug = $this->slugger->slug($label)->lower();
+        $slug = $baseSlug;
+        $counter = 1;
+
+        // Boucle pour s'assurer que le slug est unique
+        while ($this->slugExists($slug, $excludeId)) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Vérifie si un slug existe déjà en base de données.
+     */
+    private function slugExists(string $slug, ?int $excludeId = null): bool
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.slug = :slug')
+            ->setParameter('slug', $slug);
+
+        if ($excludeId !== null) {
+            $qb->andWhere('m.id != :id')
+                ->setParameter('id', $excludeId);
+        }
+
+        return $qb->getQuery()->getOneOrNullResult() !== null;
     }
 }

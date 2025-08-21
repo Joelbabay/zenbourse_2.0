@@ -64,7 +64,9 @@ class StockExampleCrudController extends AbstractCrudController
             ->setRequired(true)
             ->setMaxLength(10);
 
-        yield TextField::new('flag', 'Drapeau pays')
+        yield TextField::new('flag', 'Drapeau pays')->formatValue(function ($value, $entity) {
+            return $value ? '<i style="font-size: 30px;" class="fi fi-' . $value . '"></i>' : null;
+        })->addCssClass('d-flex justify-content-center')
             ->setHelp('Code pays du titre (ex: US, FR, DE)')
             ->setColumns(6)
             ->setRequired(true)

@@ -113,6 +113,7 @@ class DashboardController extends AbstractDashboardController
             ->addCssFile('/css/admin.css')
             ->addHtmlContentToBody('<script>document.documentElement.setAttribute(\'data-turbo\', \'false\');</script>')
             ->addHtmlContentToHead('<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.css" />')
+            ->addHtmlContentToHead('<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css"/>')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/45.0.0/ckeditor5.umd.js"></script>')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5/46.0.1/translations/fr.umd.js"></script>"')
             ->addHtmlContentToHead('<script src="https://cdn.ckeditor.com/ckeditor5-premium-features/46.0.1/translations/fr.umd.js"></script>"')
