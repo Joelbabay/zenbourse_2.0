@@ -55,7 +55,17 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
             }
         }
 
-        // Redirection par défaut si aucune autre condition n'est remplie
+        // Redirection par défaut vers le premier menu de la section HOME
+        $firstHomeMenu = $this->entityManager->getRepository(Menu::class)->findOneBy(
+            ['section' => 'HOME', 'isActive' => true],
+            ['menuorder' => 'ASC']
+        );
+
+        if ($firstHomeMenu) {
+            return new RedirectResponse($this->router->generate('app_home_page', ['slug' => $firstHomeMenu->getSlug()]));
+        }
+
+        // Fallback si aucun menu HOME n'est trouvé
         return new RedirectResponse($this->router->generate('app_home_page', ['slug' => 'accueil']));
     }
 }

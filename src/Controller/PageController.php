@@ -130,7 +130,7 @@ class PageController extends AbstractController
         $user = $this->getUser();
         if (!$user || (!$user->isInvestisseur() && !$user->hasValidTemporaryInvestorAccess())) {
             $this->addFlash('danger', 'Vous n\'avez pas accès à cette section.');
-            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
+            return $this->redirectToRoute('home');
         }
 
         // 1. Valider et récupérer le menu parent (ex: "bibliotheque")

@@ -52,7 +52,7 @@ class ContactController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre message a été bien envoyer');
-            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
+            return $this->redirectToRoute('home');
         }
 
         return $this->render('home/contact.html.twig', [

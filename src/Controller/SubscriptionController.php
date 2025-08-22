@@ -28,6 +28,24 @@ class SubscriptionController extends AbstractController
         $this->passwordHasher = $passwordHasher;
     }
 
+    private function getFirstSectionMenu(String $section)
+    {
+        $firstMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
+            ['section' => $section, 'isActive' => true],
+            ['menuorder' => 'ASC']
+        );
+
+        if ($firstMenu) {
+            if ($section === "INVESTISSEUR") {
+                return $this->redirectToRoute('app_investisseur_page', ['slug' => $firstMenu->getSlug()]);
+            } elseif ($section === "INTRADAY") {
+                return $this->redirectToRoute('app_intraday_page', ['slug' => $firstMenu->getSlug()]);
+            }
+        }
+        //fallback
+        return $this->redirectToRoute('home');
+    }
+
     #[Route('/subscribe/investisseur', name: 'home_investisseur_subscription')]
     public function subscribeInvestisseur(Request $request): Response
     {
@@ -36,7 +54,7 @@ class SubscriptionController extends AbstractController
             'investisseur',
             new InvestisseurRequest(),
             'Votre demande d\'adhésion à la méthode investisseur a été soumise avec succès.',
-            'investisseur_methode',
+            $this->getFirstSectionMenu('INVESTISSEUR'),
             'subscription/investisseur-subscription.html.twig'
         );
     }
@@ -49,7 +67,7 @@ class SubscriptionController extends AbstractController
             'intraday',
             new IntradayRequest(),
             'Votre demande d\'adhésion à la méthode intraday a été soumise avec succès.',
-            'intraday_methode',
+            $this->getFirstSectionMenu('INTRADAY'),
             'subscription/intraday-subscription.html.twig',
             true
         );
@@ -74,6 +92,18 @@ class SubscriptionController extends AbstractController
 
         if ($user && ($isIntraday ? $user->isInterestedInIntradayMethode() : $user->isInterestedInInvestorMethod())) {
             $this->addFlash('info', sprintf('Votre demande sur la méthode %s est en cours de validation', ucfirst($subscriptionType)));
+
+            // Redirection vers le premier menu actif de la section HOME
+            $firstHomeMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
+                ['section' => 'HOME', 'isActive' => true],
+                ['menuorder' => 'ASC']
+            );
+
+            if ($firstHomeMenu) {
+                return $this->redirectToRoute('app_home_page', ['slug' => $firstHomeMenu->getSlug()]);
+            }
+
+            // Fallback si aucun menu HOME n'est trouvé
             return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
@@ -134,7 +164,18 @@ class SubscriptionController extends AbstractController
 
             $this->addFlash('success', $successMessage);
 
-            return $this->redirectToRoute('home');
+            // Redirection vers le premier menu actif de la section HOME
+            $firstHomeMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
+                ['section' => 'HOME', 'isActive' => true],
+                ['menuorder' => 'ASC']
+            );
+
+            if ($firstHomeMenu) {
+                return $this->redirectToRoute('app_home_page', ['slug' => $firstHomeMenu->getSlug()]);
+            }
+
+            // Fallback si aucun menu HOME n'est trouvé
+            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
         }
 
         return $this->render($template, [
