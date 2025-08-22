@@ -1,4 +1,3 @@
-console.log("hello");
 /*document.addEventListener("DOMContentLoaded", function() {
     const investisseurCheckbox = document.querySelector(
         '.js-investisseur-checkbox input[type="checkbox"]'

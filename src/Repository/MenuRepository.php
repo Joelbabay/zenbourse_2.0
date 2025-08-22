@@ -87,6 +87,7 @@ class MenuRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->where('m.isActive = :isActive')
             ->andWhere('m.section = :section')
+            ->andWhere('m.parent IS NULL')
             ->setParameter('isActive', true)
             ->setParameter('section', $section)
             ->orderBy('m.menuorder', 'ASC') // Le tri est crucial

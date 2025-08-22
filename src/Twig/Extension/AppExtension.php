@@ -36,6 +36,7 @@ class AppExtension extends AbstractExtension
             new TwigFunction('menu_url', [$this, 'generateMenuUrl']),
             new TwigFunction('generate_breadcrumbs', [$this, 'generateBreadcrumbs']),
             new TwigFunction('get_first_menu_url', [$this, 'getFirstMenuUrl']),
+            new TwigFunction('get_debugCurrentRequest', [$this, 'debugCurrentRequest']),
         ];
     }
 
@@ -75,14 +76,22 @@ class AppExtension extends AbstractExtension
                 return true;
             }
         } elseif ($menu->getSection() === 'INTRADAY') {
-            // Pour les menus INTRADAY, comparer avec le slug
-            if ($currentRoute === 'app_intraday_page') {
-                $request = $this->requestStack->getCurrentRequest();
-                if ($request) {
-                    $currentSlug = $request->get('slug');
-                    return $currentSlug === $menu->getSlug();
-                }
+            $request = $this->requestStack->getCurrentRequest();
+            if (!$request) {
+                return false;
             }
+
+            // A parent menu is active if we are on its page, or one of its child pages
+            if ($currentRoute === 'app_intraday_page') {
+                $slugFromRoute = $request->attributes->get('slug');
+                return $slugFromRoute === $menu->getSlug();
+            }
+
+            if ($currentRoute === 'app_intraday_child_page') {
+                $parentSlugFromRoute = $request->attributes->get('parentSlug');
+                return $parentSlugFromRoute === $menu->getSlug();
+            }
+
             if ($currentRoute === $menu->getRoute()) {
                 return true;
             }
@@ -119,8 +128,8 @@ class AppExtension extends AbstractExtension
             }
         }
 
-        // Vérifier si la route actuelle correspond à celle des enfants (sauf pour INVESTISSEUR déjà géré)
-        if ($menu->getSection() !== 'INVESTISSEUR') {
+        // Vérifier si la route actuelle correspond à celle des enfants (sauf pour INVESTISSEUR et INTRADAY déjà gérés)
+        if ($menu->getSection() !== 'INVESTISSEUR' && $menu->getSection() !== 'INTRADAY') {
             foreach ($menu->getChildren() as $child) {
                 if ($currentRoute === $child->getRoute()) {
                     return true;
@@ -258,5 +267,10 @@ class AppExtension extends AbstractExtension
         // 3. Ajouter ici la logique pour les autres sections (HOME, INTRADAY) si nécessaire
 
         return $crumbs;
+    }
+
+    public function debugCurrentRequest(): array
+    {
+        return $this->menuService->debugCurrentRequest();
     }
 }

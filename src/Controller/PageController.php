@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\MenuRepository;
 use App\Repository\PageContentRepository;
 use App\Service\CarouselService;
+use App\Service\MenuService;
 use App\Service\StockExampleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -195,8 +196,10 @@ class PageController extends AbstractController
         MenuRepository $menuRepo,
         PageContentRepository $contentRepo,
         string $parentSlug,
-        string $childSlug
+        string $childSlug,
+        MenuService $menuService
     ): Response {
+        $debugInfo = $menuService->debugCurrentRequest();
         $parentMenu = $menuRepo->findOneBy(['slug' => $parentSlug, 'section' => 'INTRADAY', 'parent' => null, 'isActive' => true]);
         if (!$parentMenu) {
             throw $this->createNotFoundException('Menu parent intraday non trouvé');
@@ -212,7 +215,8 @@ class PageController extends AbstractController
         return $this->render('intraday/page.html.twig', [
             'menu' => $childMenu,
             'parentMenu' => $parentMenu,
-            'pageContent' => $pageContent
+            'pageContent' => $pageContent,
+            'debugInfo' => $debugInfo
         ]);
     }
 }
