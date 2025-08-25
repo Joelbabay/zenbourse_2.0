@@ -342,8 +342,13 @@ class DashboardController extends AbstractDashboardController
                         fontFamily: {
                             options: [
                                     'default', 
+                                    'Arial, Helvetica',
+                                    'Calibri, sans-serif',
+                                    'Georgia, serif',
+                                    'Sans-serif',
                                     'Impact',
                                     'Segoe UI',
+                                    'Verdana',
                                     'Ubuntu, Arial, sans-serif',
                                     'Ubuntu Mono, Courier New, Courier, monospace'
                                 ],
