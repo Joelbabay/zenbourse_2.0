@@ -10,11 +10,11 @@
             {% set activeClass = (currentTickerSlug is defined and stock.slug == currentTickerSlug) ? 'bg-green' : '' %}
             <div class="d-flex py-2 px-2 w-100 align-items-center {{ activeClass }}">
                 <div class="mr-2">
-                    <span class="fi fi-{{ stock.flag }}" style="font-size: 30px"></span>
+                    <span class="fi fi-{{ stock.flag | lower }}" style="font-size: 30px"></span>
                 </div>
                 <div class="px-3" style="font-size: 18px;">
-                    <a href="{{ path('app_investisseur_stock_detail', {'parentSlug': parentMenu.slug, 'childSlug': childMenu.slug, 'tickerSlug': stock.slug}) }}" class="text-dark">
-                        {{ stock.title | upper }}
+                    <a href="{{ path('app_investisseur_stock_detail', {'parentSlug': parentMenu.slug, 'childSlug': childMenu.slug, 'tickerSlug': stock.slug}) }}" class="text-dark text-nowrap">
+                        {{ stock.title | upper | u.truncate(19, '...')}}
                     </a>
                 </div>
             </div>

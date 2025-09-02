@@ -53,7 +53,8 @@ class PageContentCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_EDIT, 'Modification')
             ->setPageTitle(Crud::PAGE_NEW, 'Création')
             ->showEntityActionsInlined()
-            ->setDefaultSort(['menu.section' => 'ASC']) // Tri par défaut en ordre ascendant
+            ->setDefaultSort(['title' => 'ASC'])
+            //->setDefaultSort(['menu.section' => 'ASC']) // Tri par défaut en ordre ascendant
             ->overrideTemplates([
                 'crud/new' => 'admin/page_content_new.html.twig',
                 'crud/edit' => 'admin/page_content_edit.html.twig'

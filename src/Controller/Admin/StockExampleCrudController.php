@@ -43,7 +43,7 @@ class StockExampleCrudController extends AbstractCrudController
             ->setPageTitle('index', 'Exemples de stocks : gestion de la bibliothèque')
             ->setPageTitle('new', 'Ajouter un exemple de stock')
             ->setPageTitle('edit', 'Modifier l\'exemple de stock')
-            ->setDefaultSort(['category' => 'ASC', 'title' => 'ASC'])
+            ->setDefaultSort(['title' => 'ASC'])
             ->setSearchFields(['title', 'ticker', 'category'])
             ->setHelp('new', 'Ajoutez un nouvel exemple de stock pour enrichir la bibliothèque.')
             ->setHelp('edit', 'Modifiez les propriétés de cet exemple de stock.')
@@ -65,7 +65,7 @@ class StockExampleCrudController extends AbstractCrudController
             ->setMaxLength(10);
 
         yield TextField::new('flag', 'Drapeau pays')->formatValue(function ($value, $entity) {
-            return $value ? '<i style="font-size: 30px;" class="fi fi-' . $value . '"></i>' : null;
+            return $value ? '<i style="font-size: 30px;" class="fi fi-' . strtolower($value) . '"></i>' : null;
         })->addCssClass('d-flex justify-content-center')
             ->setHelp('Code pays du titre (ex: US, FR, DE)')
             ->setColumns(6)
@@ -201,6 +201,16 @@ class StockExampleCrudController extends AbstractCrudController
     {
         /** @var StockExample $stockExample */
         $stockExample = $entityInstance;
+
+        // Récupérer l'ancien titre pour comparer
+        $oldTitle = $entityManager->getUnitOfWork()->getOriginalEntityData($stockExample)['title'] ?? null;
+        $newTitle = $stockExample->getTitle();
+
+        // Si le titre a changé, mettre à jour le slug
+        if ($oldTitle !== $newTitle) {
+            $newSlug = $this->generateSlug($newTitle);
+            $stockExample->setSlug($newSlug);
+        }
 
         // Mettre à jour le timestamp
         $stockExample->setUpdatedAt(new \DateTimeImmutable());
