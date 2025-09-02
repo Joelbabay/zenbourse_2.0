@@ -109,6 +109,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureAssets(): Assets
     {
+        $ckeditorLicenseKey = $_ENV['CKEDITOR_LICENSE_KEY'];
         return Assets::new()
             ->addCssFile('/css/admin.css')
             ->addHtmlContentToBody('<script>document.documentElement.setAttribute(\'data-turbo\', \'false\');</script>')
@@ -201,7 +202,7 @@ class DashboardController extends AbstractDashboardController
                  
                  ClassicEditor
                     .create( document.querySelector( '.ckeditor' ), {
-                        licenseKey: 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NzY5ODg3OTksImp0aSI6IjI3ZmZjNmZjLTA4ZGItNDg1MS1iZDdkLThmNmIwM2I5Zjk5NiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCJdLCJ2YyI6IjA1NzIwN2I0In0.hm5C4s5dGb2wmhGMqp9462Jinh5lrTcIPAboSivr4H2B86gtqHTS_IJp-3CJQk7VHzTZjpb-Ayv4jlxU5qpSRQ',
+                        licenseKey: '{$ckeditorLicenseKey}',
                         language: 'fr',
                         plugins: [ Alignment, Autoformat,
                             AutoImage,
