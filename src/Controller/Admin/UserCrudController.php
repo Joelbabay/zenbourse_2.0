@@ -19,9 +19,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\NullFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository as OrmEntityRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
+use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @method User getUser()
@@ -50,15 +55,19 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_NEW, 'Créer un utilisateur')
             ->setEntityLabelInSingular('Utilisateur')
             ->setEntityLabelInPlural('Utilisateurs')
-            ->setDefaultSort(['createdAt' => 'DESC'])
+            ->setDefaultSort(['lastname' => 'ASC'])
             ->showEntityActionsInlined();
         //->overrideTemplates(['label/null' => 'admin/labels/null_label.html.twig']);
     }
 
     public function configureActions(Actions $actions): Actions
     {
+        $toggleAction = Action::new('toggleBoolean', false)
+            ->linkToCrudAction('toggleBoolean')
+            ->setHtmlAttributes(['data-action' => 'toggle']);
 
         return $actions
+            ->add(Crud::PAGE_INDEX, $toggleAction)
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('fa fa-plus')->setLabel('Créer un utilisateur');
             })
@@ -81,6 +90,8 @@ class UserCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         return $filters
+            ->add(TextFilter::new('lastname'))
+            ->add(TextFilter::new('firstname'))
             ->add(
                 ChoiceFilter::new('statut', 'Statut')
                     ->setChoices([
@@ -129,6 +140,19 @@ class UserCrudController extends AbstractCrudController
             TextField::new('firstname', 'Prénom'),
             TextField::new('email', 'E-mail'),
             TextField::new('password')->onlyOnForms(),
+
+            // Champs booléens pour le formulaire
+            BooleanField::new('isInvestisseur', 'Accès Investisseur')
+                ->onlyOnForms()
+                ->setFormTypeOptions([
+                    'attr' => ['class' => 'js-investisseur-checkbox']
+                ]),
+            BooleanField::new('isIntraday', 'Accès Intraday')
+                ->onlyOnForms()
+                ->setFormTypeOptions([
+                    'attr' => ['class' => 'js-intraday-checkbox']
+                ]),
+
             ChoiceField::new('statut')
                 ->renderAsBadges([
                     'INVITE' => 'warning',
@@ -169,23 +193,17 @@ class UserCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
-            BooleanField::new('isInvestisseur', 'Investisseur')->setFormTypeOptions([
-                'mapped' => true,
-                'attr' => [
-                    'class' => 'js-investisseur-checkbox'
-                ]
-            ]),
+            BooleanField::new('isInvestisseur', 'Investisseur')
+                ->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig')
+                ->onlyOnIndex(),
             DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
-            BooleanField::new('isIntraday', 'Intraday')->setFormTypeOptions([
-                'mapped' => true,
-                'attr' => [
-                    'class' => 'js-intraday-checkbox'
-                ]
-            ]),
+            BooleanField::new('isIntraday', 'Intraday')
+                ->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig')
+                ->onlyOnIndex(),
             DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
@@ -337,5 +355,77 @@ class UserCrudController extends AbstractCrudController
         }
 
         parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    public function toggleBoolean(AdminContext $context, EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator): Response
+    {
+        /** @var User $user */
+        $user = $context->getEntity()->getInstance();
+        $fieldName = $context->getRequest()->query->get('field');
+
+        if (!$user || !$fieldName) {
+            return $this->redirect($adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
+        }
+
+        // Construire directement les méthodes avec le nom du champ tel quel
+        $getter = $fieldName; // isInvestisseur
+        $setter = 'set' . ucfirst($fieldName); // setIsInvestisseur
+
+        if (!method_exists($user, $getter) || !method_exists($user, $setter)) {
+            return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
+        }
+
+        // Inverser la valeur
+        $currentValue = $user->$getter();
+        $newValue = !$currentValue;
+        $user->$setter($newValue);
+
+        // Gérer les rôles
+        $roles = $user->getRoles();
+
+        // Gestion spéciale pour Investisseur
+        if ($fieldName === 'isInvestisseur') {
+            if ($newValue) {
+                // Activer investisseur
+                if (!$user->getInvestorAccessDate()) {
+                    $user->setInvestorAccessDate(new \DateTime());
+                }
+                if (!in_array('ROLE_INVESTISSEUR', $roles)) {
+                    $roles[] = 'ROLE_INVESTISSEUR';
+                }
+                $user->setInterestedInInvestorMethod(false);
+            } else {
+                // Désactiver investisseur (et intraday)
+                $user->setIsIntraday(false);
+                $user->setInvestorAccessDate(null);
+                $user->setIntradayAccessDate(null);
+                $roles = array_diff($roles, ['ROLE_INVESTISSEUR', 'ROLE_INTRADAY']);
+            }
+        }
+
+        // Gestion spéciale pour Intraday
+        if ($fieldName === 'isIntraday') {
+            if ($newValue) {
+                // Activer intraday (nécessite investisseur)
+                if (!$user->isInvestisseur()) {
+                    return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
+                }
+                if (!$user->getIntradayAccessDate()) {
+                    $user->setIntradayAccessDate(new \DateTime());
+                }
+                if (!in_array('ROLE_INTRADAY', $roles)) {
+                    $roles[] = 'ROLE_INTRADAY';
+                }
+            } else {
+                // Désactiver intraday
+                $user->setIntradayAccessDate(null);
+                $roles = array_diff($roles, ['ROLE_INTRADAY']);
+            }
+        }
+
+        $user->setRoles(array_unique(array_values($roles)));
+        $entityManager->flush();
+
+        return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
     }
 }

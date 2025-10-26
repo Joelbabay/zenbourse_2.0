@@ -10,7 +10,8 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 final class UserLoginListener
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private int $temporaryAccessDuration = 10
     ) {}
 
     #[AsEventListener(event: LoginSuccessEvent::class)]
@@ -41,7 +42,7 @@ final class UserLoginListener
             ? clone $startDate
             : \DateTime::createFromInterface($startDate);
 
-        $endDate = (clone $start)->add(new \DateInterval('P10D'));
+        $endDate = (clone $start)->add(new \DateInterval('P' . $this->temporaryAccessDuration . 'D'));
 
         if ($now > $endDate) {
             $user->setHasTemporaryInvestorAccess(false);

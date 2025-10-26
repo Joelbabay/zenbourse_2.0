@@ -171,3 +171,118 @@ thead {
 .custom-toggle.is-active .custom-toggle-handle {
   transform: translateX(21px); /* Ajusté pour la nouvelle taille */
 }
+
+/* Sidebar EasyAdmin - Design moderne en bleu */
+aside.sidebar {
+  background: linear-gradient(
+    180deg,
+    #5a7de8 0%,
+    #3d5fd8 50%,
+    #2947c7 100%
+  ) !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Tous les textes en blanc */
+aside.sidebar *,
+aside.sidebar .nav-link,
+aside.sidebar a,
+aside.sidebar .ea-sidebar-menu-item,
+aside.sidebar .ea-menu-item,
+aside.sidebar .ea-menu-item-label,
+aside.sidebar .menu-icon,
+aside.sidebar span,
+aside.sidebar i,
+aside.sidebar .navbar-brand,
+aside.sidebar .dropdown-toggle {
+  color: #ffffff !important;
+}
+
+/* Effet hover élégant */
+aside.sidebar .nav-link:hover,
+aside.sidebar a:hover,
+aside.sidebar .ea-menu-item:hover,
+aside.sidebar .ea-sidebar-menu-item:hover,
+aside.sidebar li:hover {
+  /*background-color: rgba(255, 255, 255, 0.15) !important;*/
+  color: #ffffff !important;
+  transform: translateX(3px);
+  transition: all 0.2s ease;
+}
+
+/* Couleur de fond pour l'élément actif */
+aside.sidebar .nav-link.active,
+aside.sidebar .ea-menu-item.active,
+aside.sidebar .ea-menu-item[aria-current="page"],
+aside.sidebar li.active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-left: 3px solid #ffffff !important;
+  padding-left: calc(1rem - 3px) !important;
+}
+
+/* Icônes en blanc */
+aside.sidebar i.fa,
+aside.sidebar i.fas,
+aside.sidebar i.far {
+  color: #ffffff !important;
+  filter: brightness(1.2);
+}
+
+/* Style pour les sous-menus */
+aside.sidebar .dropdown-menu {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+aside.sidebar .dropdown-item {
+  color: #333 !important;
+}
+
+aside.sidebar .dropdown-item:hover {
+  background-color: #f8f9fa !important;
+  color: #333 !important;
+}
+
+/* Style pour le lien "Voir le site" en bas comme un footer - Design simple */
+.ea-menu-item-link-to-site,
+aside.sidebar .ea-menu-item-link-to-site {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 250px !important;
+  padding: 16px 20px !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  color: #ffffff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: background-color 0.2s ease !important;
+  transform: none !important;
+}
+
+.ea-menu-item-link-to-site:hover,
+aside.sidebar .ea-menu-item-link-to-site:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.ea-menu-item-link-to-site i,
+aside.sidebar .ea-menu-item-link-to-site i {
+  color: #ffffff !important;
+  margin-right: 8px;
+}
+
+/* Désactiver l'effet hover sur li pour le lien "Voir le site" */
+aside.sidebar .ea-menu-item-link-to-site:hover ~ li,
+aside.sidebar li:has(.ea-menu-item-link-to-site):hover {
+  transform: none !important;
+}
+
+/* Ajuster le padding de la sidebar EasyAdmin pour éviter le chevauchement */
+aside.sidebar .nav,
+.ea-sidebar .nav {
+  padding-bottom: 70px !important;
+}

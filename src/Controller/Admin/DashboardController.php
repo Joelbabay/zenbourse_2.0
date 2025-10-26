@@ -549,5 +549,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Images du carrousel', 'fa fa-images', CarouselImage::class);
         yield MenuItem::linkToCrud('Gestion des pages de la bibliothèque', 'fa fa-chart-line', StockExample::class)
             ->setController(StockExampleCrudController::class);
+
+        // Lien vers le site en bas du menu
+        yield MenuItem::linkToUrl('Voir le site', 'fas fa-external-link-alt', '/')
+            ->setLinkRel('noopener noreferrer')
+            ->setLinkTarget('_blank')
+            ->setCssClass('ea-menu-item-link-to-site');
     }
 }
