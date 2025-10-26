@@ -193,9 +193,7 @@ class UserCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
-            BooleanField::new('isInvestisseur', 'Investisseur')
-                ->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig')
-                ->onlyOnIndex(),
+            BooleanField::new('isInvestisseur', 'Investisseur')->onlyOnIndex(),
             DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
