@@ -2,52 +2,49 @@
 
 namespace App\EventListener;
 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
 final class UserLoginListener
 {
-    private $entityManager;
+    public function __construct(
+        private EntityManagerInterface $entityManager
+    ) {}
 
-
-    public function __construct(EntityManagerInterface $entityManager)
+    #[AsEventListener(event: LoginSuccessEvent::class)]
+    public function onLoginSuccess(LoginSuccessEvent $event): void
     {
-        $this->entityManager = $entityManager;
-    }
-    #[AsEventListener(event: 'security.interactive_login')] //  <- attribut
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event): void
-    {
-        $user = $event->getAuthenticationToken()->getUser();
+        $user = $event->getUser();
 
-        if ($user instanceof \App\Entity\User) {
-            $user->setLastConnexion(new \DateTime());
-
-            // Vérifier et désactiver l'accès temporaire si expiré
-            $this->checkAndDisableExpiredTemporaryAccess($user);
-
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        if (!$user instanceof User) {
+            return;
         }
+
+        $user->setLastConnexion(new \DateTime());
+        $this->checkAndDisableExpiredTemporaryAccess($user);
+
+        $this->entityManager->flush();
     }
 
-    private function checkAndDisableExpiredTemporaryAccess(\App\Entity\User $user): void
+    private function checkAndDisableExpiredTemporaryAccess(User $user): void
     {
-        if ($user->getHasTemporaryInvestorAccess() && $user->getTemporaryInvestorAccessStart()) {
-            $now = new \DateTime();
-            $startDate = $user->getTemporaryInvestorAccessStart();
+        if (!$user->getHasTemporaryInvestorAccess() || !$user->getTemporaryInvestorAccessStart()) {
+            return;
+        }
 
-            // S'assurer qu'on a un objet DateTime
-            $start = $startDate instanceof \DateTime ? clone $startDate : new \DateTime($startDate->format('Y-m-d H:i:s'));
+        $now = new \DateTime();
+        $startDate = $user->getTemporaryInvestorAccessStart();
 
-            // Cloner pour ne pas modifier l'original
-            $endDate = clone $start;
-            $endDate->add(new \DateInterval('P10D'));
+        $start = $startDate instanceof \DateTime
+            ? clone $startDate
+            : \DateTime::createFromInterface($startDate);
 
-            if ($now > $endDate) {
-                // L'accès a expiré, on le désactive
-                $user->setHasTemporaryInvestorAccess(false);
-            }
+        $endDate = (clone $start)->add(new \DateInterval('P10D'));
+
+        if ($now > $endDate) {
+            $user->setHasTemporaryInvestorAccess(false);
         }
     }
 }
