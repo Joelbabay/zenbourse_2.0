@@ -36,7 +36,12 @@ final class UserLoginListener
         if ($user->getHasTemporaryInvestorAccess() && $user->getTemporaryInvestorAccessStart()) {
             $now = new \DateTime();
             $startDate = $user->getTemporaryInvestorAccessStart();
-            $endDate = $startDate instanceof \DateTime ? clone $startDate : new \DateTime($startDate->format('Y-m-d H:i:s'));
+
+            // S'assurer qu'on a un objet DateTime
+            $start = $startDate instanceof \DateTime ? clone $startDate : new \DateTime($startDate->format('Y-m-d H:i:s'));
+
+            // Cloner pour ne pas modifier l'original
+            $endDate = clone $start;
             $endDate->add(new \DateInterval('P10D'));
 
             if ($now > $endDate) {
