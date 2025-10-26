@@ -22,8 +22,27 @@ final class UserLoginListener
 
         if ($user instanceof \App\Entity\User) {
             $user->setLastConnexion(new \DateTime());
+
+            // Vérifier et désactiver l'accès temporaire si expiré
+            $this->checkAndDisableExpiredTemporaryAccess($user);
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
+        }
+    }
+
+    private function checkAndDisableExpiredTemporaryAccess(\App\Entity\User $user): void
+    {
+        if ($user->getHasTemporaryInvestorAccess() && $user->getTemporaryInvestorAccessStart()) {
+            $now = new \DateTime();
+            $startDate = $user->getTemporaryInvestorAccessStart();
+            $endDate = $startDate instanceof \DateTime ? clone $startDate : new \DateTime($startDate->format('Y-m-d H:i:s'));
+            $endDate->add(new \DateInterval('P10D'));
+
+            if ($now > $endDate) {
+                // L'accès a expiré, on le désactive
+                $user->setHasTemporaryInvestorAccess(false);
+            }
         }
     }
 }
