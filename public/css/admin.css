@@ -286,3 +286,34 @@ aside.sidebar .nav,
 .ea-sidebar .nav {
   padding-bottom: 70px !important;
 }
+
+/* Striped rows pour les tableaux EasyAdmin - Version plus agressive */
+body .ea-content table.table tbody tr:nth-of-type(odd),
+body .table-striped tbody tr:nth-of-type(odd),
+body table tbody tr:nth-of-type(odd) {
+  background-color: #ececec !important;
+}
+
+body .ea-content table.table tbody tr:nth-of-type(even),
+body .table-striped tbody tr:nth-of-type(even),
+body table tbody tr:nth-of-type(even) {
+  background-color: #ffffff !important;
+}
+
+body .ea-content table tbody tr:hover,
+body .table tbody tr:hover,
+body tbody tr:hover {
+  background-color: #e9ecef !important;
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* Override pour les cellules */
+body .ea-content table tbody tr:nth-of-type(odd) td,
+body table tbody tr:nth-of-type(odd) td {
+  background-color: transparent !important;
+}
+
+body .ea-content table tbody tr:nth-of-type(even) td,
+body table tbody tr:nth-of-type(even) td {
+  background-color: transparent !important;
+}
