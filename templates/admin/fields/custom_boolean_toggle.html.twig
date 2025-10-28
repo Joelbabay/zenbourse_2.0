@@ -1,21 +1,20 @@
-<div class="custom-toggle-container">
-    {# Récupérer le nom du contrôleur actuel #}
-    {% set currentController = app.request.attributes.get('_controller')[0] %}
-    
-    {# Construire l'URL pour l'action toggleBoolean #}
-    {% set url = ea_url()
-        .setController(currentController)
-        .setAction('toggleBoolean')
-        .setEntityId(entity.primaryKeyValue)
-        .set('field', field.property) %}
-    
-    {# Le toggle avec le label du champ #}
-    <a href="{{ url }}" 
-       class="custom-toggle {{ field.value ? 'is-active' : 'is-inactive' }}"
-       title="{{ field.value ? 'Désactiver' : 'Activer' }} {{ field.label }}">
-        <span class="custom-toggle-handle"></span>
-        <span class="custom-toggle-label on"></span>
-        <span class="custom-toggle-label off"></span>
-    </a>
-</div>
+{# admin/fields/custom_boolean_toggle.html.twig #}
 
+{% block body_javascript %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const investInput = document.querySelector('input[name="User[isInvestisseur]"]');
+            const intraInput = document.querySelector('input[name="User[isIntraday]"]');
+
+            if (!investInput || !intraInput) return;
+
+            const updateIntraday = () => {
+                intraInput.disabled = !investInput.checked;
+                if (!investInput.checked) intraInput.checked = false;
+            };
+
+            updateIntraday();
+            investInput.addEventListener('change', updateIntraday);
+        });
+    </script>
+{% endblock %}

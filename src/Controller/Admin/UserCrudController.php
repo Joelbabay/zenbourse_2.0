@@ -7,6 +7,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -50,6 +51,7 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setFormThemes(['admin/fields/custom_boolean_toggle.html.twig'])
             ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs : création, suppression, accès aux méthodes')
             ->setPageTitle(Crud::PAGE_EDIT, 'Informations utilisateur')
             ->setPageTitle(Crud::PAGE_NEW, 'Créer un utilisateur')
@@ -193,15 +195,19 @@ class UserCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
-            BooleanField::new('isInvestisseur', 'Investisseur')->onlyOnIndex(),
+            BooleanField::new('isInvestisseur', 'Investisseur')
+                ->renderAsSwitch()
+                ->onlyOnIndex(),
             DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
             BooleanField::new('isIntraday', 'Intraday')
-                ->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig')
-                ->onlyOnIndex(),
+                //->setFormTypeOption('disabled',  fn($user) => !$user || !$user->isInvestisseur())
+                ->onlyOnIndex()
+                ->renderAsSwitch(),
+            //->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig'),
             DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
@@ -300,28 +306,37 @@ class UserCrudController extends AbstractCrudController
         }
 
         $user = $entityInstance;
-
         $roles = $user->getRoles();
+        $originalUser = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
 
         if (!$user->isInvestisseur()) {
             $user->setIsIntraday(false);
         }
 
-        if ($user->isInvestisseur()) {
+        // --- INVESTISSEUR ---
+        if (!$user->isInvestisseur()) {
+            $user->setIsIntraday(false);
+            $roles = array_diff($roles, ['ROLE_INVESTISSEUR']);
+            $user->setIntradayAccessDate(null);
+        } else {
             $user->setInterestedInInvestorMethod(false);
-            if ($user->getInvestorAccessDate() === null || !in_array('ROLE_INVESTISSEUR', $roles)) {
+
+            // Détecter un changement de false -> true
+            $wasInvestor = $originalUser['isInvestisseur'] ?? false;
+            if (!$wasInvestor && $user->isInvestisseur()) {
+                // Mise à jour de la date à chaque activation
                 $user->setInvestorAccessDate(new \DateTime());
             }
+
             if (!in_array('ROLE_INVESTISSEUR', $roles)) {
                 $roles[] = 'ROLE_INVESTISSEUR';
             }
-        } else {
-            $roles = array_diff($roles, ['ROLE_INVESTISSEUR']);
-            $user->setIntradayAccessDate(null);
         }
 
+        // --- INTRADAY ---
         if ($user->isIntraday()) {
-            if ($user->getIntradayAccessDate() === null || !in_array('ROLE_INTRADAY', $roles)) {
+            $wasIntraday = $originalUser['isIntraday'] ?? false;
+            if (!$wasIntraday && $user->isIntraday()) {
                 $user->setIntradayAccessDate(new \DateTime());
             }
             if (!in_array('ROLE_INTRADAY', $roles)) {
@@ -331,24 +346,19 @@ class UserCrudController extends AbstractCrudController
             $roles = array_diff($roles, ['ROLE_INTRADAY']);
             $user->setIntradayAccessDate(null);
         }
+
         $entityInstance->setRoles(array_unique(array_values($roles)));
 
-        // Encoder le mot de passe s'il a été modifié
-        $originalUser = $entityManager->getUnitOfWork()->getOriginalEntityData($entityInstance);
-
-        if ($originalUser['password'] !== $user->getPassword()) {
-            $encodedPassword = $this->passwordHasher->hashPassword(
-                $entityInstance,
-                $user->getPassword()
-            );
+        // --- MOT DE PASSE ---
+        if (($originalUser['password'] ?? null) !== $user->getPassword()) {
+            $encodedPassword = $this->passwordHasher->hashPassword($entityInstance, $user->getPassword());
             $entityInstance->setPassword($encodedPassword);
         }
 
+        // --- ACCÈS TEMPORAIRE ---
         if ($user->getHasTemporaryInvestorAccess()) {
             $user->setTemporaryInvestorAccessStart(new \DateTime());
-        }
-
-        if (!$user->getHasTemporaryInvestorAccess()) {
+        } else {
             $user->setTemporaryInvestorAccessStart(null);
         }
 
@@ -425,5 +435,97 @@ class UserCrudController extends AbstractCrudController
         $entityManager->flush();
 
         return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
+    }
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets
+            ->addHtmlContentToHead('
+                 <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Pour la page INDEX (liste des utilisateurs)
+                    setTimeout(function() {
+                        const rows = document.querySelectorAll("tbody tr");
+                        
+                        rows.forEach(function(row) {
+                            const switches = row.querySelectorAll(".form-check-input");
+                            
+                            let investisseurSwitch = null;
+                            let intradaySwitch = null;
+                            
+                            switches.forEach(function(sw) {
+                                const url = sw.getAttribute("data-toggle-url");
+                                if (url && url.includes("fieldName=isInvestisseur")) {
+                                    investisseurSwitch = sw;
+                                } else if (url && url.includes("fieldName=isIntraday")) {
+                                    intradaySwitch = sw;
+                                }
+                            });
+                            
+                            if (!investisseurSwitch || !intradaySwitch) return;
+                            
+                            function updateIntradayState() {
+                                if (!investisseurSwitch.checked) {
+                                    intradaySwitch.disabled = true;
+                                    intradaySwitch.checked = false;
+                                    
+                                    const container = intradaySwitch.closest(".form-check");
+                                    if (container) {
+                                        container.style.opacity = "0.5";
+                                        container.style.cursor = "not-allowed";
+                                        container.style.pointerEvents = "none";
+                                    }
+                                } else {
+                                    intradaySwitch.disabled = false;
+                                    
+                                    const container = intradaySwitch.closest(".form-check");
+                                    if (container) {
+                                        container.style.opacity = "1";
+                                        container.style.cursor = "pointer";
+                                        container.style.pointerEvents = "auto";
+                                    }
+                                }
+                            }
+                            
+                            updateIntradayState();
+                            investisseurSwitch.addEventListener("change", function() {
+                                setTimeout(updateIntradayState, 100);
+                            });
+                        });
+                    }, 500);
+                    
+                    // Pour la page EDIT/NEW (formulaire)
+                    setTimeout(function() {
+                        const investisseurInput = document.querySelector("input[name*=\"[isInvestisseur]\"]");
+                        const intradayInput = document.querySelector("input[name*=\"[isIntraday]\"]");
+                        
+                        if (!investisseurInput || !intradayInput) return;
+                        
+                        function updateFormIntradayState() {
+                            if (!investisseurInput.checked) {
+                                intradayInput.disabled = true;
+                                intradayInput.checked = false;
+                                
+                                const container = intradayInput.closest(".form-check");
+                                if (container) {
+                                    container.style.opacity = "0.5";
+                                    container.style.cursor = "not-allowed";
+                                }
+                            } else {
+                                intradayInput.disabled = false;
+                                
+                                const container = intradayInput.closest(".form-check");
+                                if (container) {
+                                    container.style.opacity = "1";
+                                    container.style.cursor = "pointer";
+                                }
+                            }
+                        }
+                        
+                        updateFormIntradayState();
+                        investisseurInput.addEventListener("change", updateFormIntradayState);
+                    }, 500);
+                });
+            </script>
+            ');
     }
 }
