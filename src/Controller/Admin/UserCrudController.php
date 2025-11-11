@@ -51,7 +51,6 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setFormThemes(['admin/fields/custom_boolean_toggle.html.twig'])
             ->setPageTitle(Crud::PAGE_INDEX, 'Utilisateurs : création, suppression, accès aux méthodes')
             ->setPageTitle(Crud::PAGE_EDIT, 'Informations utilisateur')
             ->setPageTitle(Crud::PAGE_NEW, 'Créer un utilisateur')
@@ -213,6 +212,9 @@ class UserCrudController extends AbstractCrudController
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
+
+            BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
+                ->onlyOnIndex()->renderAsSwitch(),
 
             // Badge custom pour accès temporaire actif ou expiré
             TextField::new('badgeTemporaryInvestorAccess', 'Accès temporaire')
@@ -440,92 +442,28 @@ class UserCrudController extends AbstractCrudController
     {
         return $assets
             ->addHtmlContentToHead('
-                 <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    // Pour la page INDEX (liste des utilisateurs)
-                    setTimeout(function() {
-                        const rows = document.querySelectorAll("tbody tr");
-                        
-                        rows.forEach(function(row) {
-                            const switches = row.querySelectorAll(".form-check-input");
-                            
-                            let investisseurSwitch = null;
-                            let intradaySwitch = null;
-                            
-                            switches.forEach(function(sw) {
-                                const url = sw.getAttribute("data-toggle-url");
-                                if (url && url.includes("fieldName=isInvestisseur")) {
-                                    investisseurSwitch = sw;
-                                } else if (url && url.includes("fieldName=isIntraday")) {
-                                    intradaySwitch = sw;
-                                }
-                            });
-                            
-                            if (!investisseurSwitch || !intradaySwitch) return;
-                            
-                            function updateIntradayState() {
-                                if (!investisseurSwitch.checked) {
-                                    intradaySwitch.disabled = true;
-                                    intradaySwitch.checked = false;
-                                    
-                                    const container = intradaySwitch.closest(".form-check");
-                                    if (container) {
-                                        container.style.opacity = "0.5";
-                                        container.style.cursor = "not-allowed";
-                                        container.style.pointerEvents = "none";
-                                    }
-                                } else {
-                                    intradaySwitch.disabled = false;
-                                    
-                                    const container = intradaySwitch.closest(".form-check");
-                                    if (container) {
-                                        container.style.opacity = "1";
-                                        container.style.cursor = "pointer";
-                                        container.style.pointerEvents = "auto";
-                                    }
-                                }
-                            }
-                            
-                            updateIntradayState();
-                            investisseurSwitch.addEventListener("change", function() {
-                                setTimeout(updateIntradayState, 100);
-                            });
-                        });
-                    }, 500);
-                    
-                    // Pour la page EDIT/NEW (formulaire)
-                    setTimeout(function() {
-                        const investisseurInput = document.querySelector("input[name*=\"[isInvestisseur]\"]");
-                        const intradayInput = document.querySelector("input[name*=\"[isIntraday]\"]");
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const investisseurInput = document.querySelector("[name*=\"[isInvestisseur]\"]");
+                        const intradayInput = document.querySelector("[name*=\"[isIntraday]\"]");
                         
                         if (!investisseurInput || !intradayInput) return;
                         
-                        function updateFormIntradayState() {
+                        function updateIntradayState() {
                             if (!investisseurInput.checked) {
                                 intradayInput.disabled = true;
                                 intradayInput.checked = false;
-                                
-                                const container = intradayInput.closest(".form-check");
-                                if (container) {
-                                    container.style.opacity = "0.5";
-                                    container.style.cursor = "not-allowed";
-                                }
+                                intradayInput.closest(".form-switch").style.opacity = "0.5";
                             } else {
                                 intradayInput.disabled = false;
-                                
-                                const container = intradayInput.closest(".form-check");
-                                if (container) {
-                                    container.style.opacity = "1";
-                                    container.style.cursor = "pointer";
-                                }
+                                intradayInput.closest(".form-switch").style.opacity = "1";
                             }
                         }
                         
-                        updateFormIntradayState();
-                        investisseurInput.addEventListener("change", updateFormIntradayState);
-                    }, 500);
-                });
-            </script>
+                        updateIntradayState();
+                        investisseurInput.addEventListener("change", updateIntradayState);
+                    });
+                </script>
             ');
     }
 }

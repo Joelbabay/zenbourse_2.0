@@ -242,7 +242,7 @@ aside.sidebar .dropdown-item {
 }
 
 aside.sidebar .dropdown-item:hover {
-  background-color: #f8f9fa !important;
+  background-color: #4e47ff !important;
   color: #333 !important;
 }
 
@@ -303,7 +303,9 @@ body table tbody tr:nth-of-type(even) {
 body .ea-content table tbody tr:hover,
 body .table tbody tr:hover,
 body tbody tr:hover {
-  background-color: #e9ecef !important;
+  background-color: #3d5fd8 !important;
+  color: #ffffff !important;
+  cursor: pointer;
   transition: background-color 0.15s ease-in-out;
 }
 

@@ -490,13 +490,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getHasTemporaryInvestorAccess(): ?bool
     {
-        return $this->hasTemporaryInvestorAccess;
+        return $this->hasTemporaryInvestorAccess ?? false;
     }
 
     public function setHasTemporaryInvestorAccess(?bool $hasTemporaryInvestorAccess): static
     {
-        $this->hasTemporaryInvestorAccess = $hasTemporaryInvestorAccess;
-
+        $this->hasTemporaryInvestorAccess = $hasTemporaryInvestorAccess ?? false;
         return $this;
     }
 
