@@ -6,7 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class UserRoleManagerService
+class UserRoleManagerServices
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
