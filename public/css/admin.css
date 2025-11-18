@@ -303,7 +303,7 @@ body table tbody tr:nth-of-type(even) {
 body .ea-content table tbody tr:hover,
 body .table tbody tr:hover,
 body tbody tr:hover {
-  background-color: #3d5fd8 !important;
+  background-color: #dbeafe !important;
   color: #ffffff !important;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
