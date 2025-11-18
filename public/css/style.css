@@ -5,14 +5,222 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
-h1,
-h2,
-h3,
-h4 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 1.2;
+html {
+  font-size: 16px;
+}
+
+main p,
+.wysiwyg-content p,
+.article-content p {
+  font-size: 16px !important; /* Augmenté de 15 à 16px */
+  line-height: 24px !important; /* Augmenté de 20 à 24px */
+  margin: 0 0 1.2em 0 !important;
+  color: #32323c !important;
+  letter-spacing: 0.01em !important; /* Ajout d'espacement */
+}
+
+/* H2 - 22px / 28px line-height (augmenté) */
+main h2,
+.wysiwyg-content h2,
+.article-content h2 {
+  font-size: 24px !important; /* Augmenté de 22 à 24px */
+  line-height: 30px !important; /* Augmenté de 22 à 30px */
+  margin: 1.5em 0 0.6em 0 !important;
+  color: #32323c !important;
+  font-weight: normal !important; /* Légèrement plus gras */
+  font-style: normal !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* H1 - 23px / 32px line-height (augmenté) */
+main h1,
+.wysiwyg-content h1,
+.article-content h1 {
+  font-size: 28px !important; /* Augmenté de 23 à 28px */
+  line-height: 36px !important; /* Augmenté de 27 à 36px */
+  margin: 1em 0 0.6em 0 !important;
+  color: #32323c !important;
+  font-weight: 600 !important; /* Légèrement plus gras */
+  letter-spacing: -0.02em !important;
+}
+
+/* H3 - 20px / 26px line-height */
+main h3,
+.wysiwyg-content h3,
+.article-content h3 {
+  font-size: 20px !important;
+  line-height: 26px !important;
+  margin: 1.3em 0 0.5em 0 !important;
+  color: #32323c !important;
+  font-weight: 400 !important;
+  font-style: normal !important; /* Force en droit */
+  letter-spacing: -0.01em !important;
+}
+
+/* ============================================
+           TABLETTE (écrans 768px - 1024px)
+           ============================================ */
+@media screen and (max-width: 1024px) {
+  main p,
+  .wysiwyg-content p,
+  .article-content p {
+    font-size: 15px !important;
+    line-height: 23px !important;
+  }
+
+  .content h2,
+  .wysiwyg-content h2,
+  .article-content h2 {
+    font-size: 22px !important;
+    line-height: 28px !important;
+  }
+
+  main h1,
+  .wysiwyg-content h1,
+  .article-content h1 {
+    font-size: 25px !important;
+    line-height: 32px !important;
+  }
+}
+
+/* ============================================
+           MOBILE (écrans < 768px)
+           ============================================ */
+@media screen and (max-width: 768px) {
+  main,
+  .wysiwyg-content,
+  .article-content {
+    padding: 15px;
+  }
+
+  main p,
+  .wysiwyg-content p,
+  .article-content p {
+    font-size: 14px !important;
+    line-height: 21px !important;
+  }
+
+  main h2,
+  .wysiwyg-content h2,
+  .article-content h2 {
+    font-size: 20px !important;
+    line-height: 26px !important;
+  }
+
+  main h1,
+  .wysiwyg-content h1,
+  .article-content h1 {
+    font-size: 22px !important;
+    line-height: 28px !important;
+  }
+}
+
+/* ============================================
+           PETIT MOBILE (écrans < 480px)
+           ============================================ */
+@media screen and (max-width: 480px) {
+  main,
+  .wysiwyg-content,
+  .article-content {
+    padding: 10px;
+  }
+
+  main p,
+  .wysiwyg-content p,
+  .article-content p {
+    font-size: 13px !important;
+    line-height: 20px !important;
+  }
+
+  main h2,
+  .wysiwyg-content h2,
+  .article-content h2 {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+
+  main h1,
+  .wysiwyg-content h1,
+  .article-content h1 {
+    font-size: 20px !important;
+    line-height: 26px !important;
+  }
+}
+
+/* ============================================
+OVERRIDE DES STYLES INLINE DE CKEDITOR
+============================================ */
+
+/* Force la police Arial partout */
+main *[style*="font-family"],
+.wysiwyg-content *[style*="font-family"],
+.article-content *[style*="font-family"] {
+  font-family: Arial, sans-serif !important;
+}
+
+/* Neutralise les couleurs inline */
+main *[style*="color"]:not(a),
+.wysiwyg-content *[style*="color"]:not(a),
+.article-content *[style*="color"]:not(a) {
+  color: #32323c !important;
+}
+
+/* Neutralise les tailles inline (sauf images) */
+main *[style*="font-size"]:not(img),
+.wysiwyg-content *[style*="font-size"]:not(img),
+.article-content *[style*="font-size"]:not(img) {
+  /* La taille est définie par les règles ci-dessus */
+}
+
+/* ============================================
+           AUTRES ÉLÉMENTS
+           ============================================ */
+
+main strong,
+main b,
+.wysiwyg-content strong,
+.wysiwyg-content b,
+.article-content strong,
+.article-content b {
+  font-weight: 600 !important; /* Plus prononcé */
+}
+
+main em,
+main i,
+.wysiwyg-content em,
+.wysiwyg-content i,
+.article-content em,
+.article-content i {
+  font-style: italic !important;
+}
+
+/* Images responsives */
+main img,
+.wysiwyg-content img,
+.article-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 1em auto;
+}
+
+/* Tableaux responsives */
+main table,
+.wysiwyg-content table,
+.article-content table {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto;
+  display: block;
+  font-size: 15px !important;
+}
+
+@media screen and (max-width: 768px) {
+  .content table,
+  .wysiwyg-content table,
+  .article-content table {
+    font-size: 13px !important;
+  }
 }
 
 input::-webkit-input-placeholder {
