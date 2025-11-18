@@ -157,14 +157,6 @@ main *[style*="font-family"],
 .article-content *[style*="font-family"] {
   font-family: Arial, sans-serif !important;
 }
-
-/* Neutralise les couleurs inline */
-main *[style*="color"]:not(a),
-.wysiwyg-content *[style*="color"]:not(a),
-.article-content *[style*="color"]:not(a) {
-  color: #32323c !important;
-}
-
 /* Neutralise les tailles inline (sauf images) */
 main *[style*="font-size"]:not(img),
 .wysiwyg-content *[style*="font-size"]:not(img),
