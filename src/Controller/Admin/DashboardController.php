@@ -11,17 +11,21 @@ use App\Entity\Menu;
 use App\Entity\PageContent;
 use App\Entity\User;
 use App\Entity\StockExample;
+use App\Form\MailingType;
 use App\Repository\ContactRepository;
 use App\Repository\IntradayRequestRepository;
 use App\Repository\InvestisseurRequestRepository;
 use App\Repository\UserRepository;
 use App\Repository\StockExampleRepository;
+use App\Service\EmailService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,12 +36,24 @@ class DashboardController extends AbstractDashboardController
         private ContactRepository $contactRepository,
         private InvestisseurRequestRepository $investisseurRequestRepository,
         private IntradayRequestRepository $intradayRequestRepository,
-        private StockExampleRepository $stockExampleRepository
+        private StockExampleRepository $stockExampleRepository,
+        private EmailService $emailService,
+        private AdminUrlGenerator $adminUrlGenerator,
+        private RequestStack $requestStack
     ) {}
 
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
+        // Si l'action demandée est "mailing", rediriger vers la méthode mailing
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
+            $crudAction = $request->query->get('crudAction');
+            if ($crudAction === 'mailing') {
+                return $this->mailing($request);
+            }
+        }
+
         // Récupérer les statistiques
         $stats = [
             'total_users' => $this->userRepository->count([]),
@@ -93,6 +109,217 @@ class DashboardController extends AbstractDashboardController
             'totalTemporaryInvestorAccessExpired' => $totalTemporaryInvestorAccessExpired,
             'totalTemporaryInvestorAccess' => $totalTemporaryInvestorAccess,
         ]);
+    }
+
+    public function mailing(Request $request): Response
+    {
+        $form = $this->createForm(MailingType::class);
+        $form->handleRequest($request);
+
+        $recipientCount = 0;
+        $sendResults = null;
+
+        if ($form->isSubmitted()) {
+            // Afficher les erreurs de validation pour le débogage
+            if (!$form->isValid()) {
+                $errors = [];
+                foreach ($form->getErrors(true) as $error) {
+                    $errors[] = $error->getMessage();
+                }
+                $this->addFlash('error', 'Erreurs de validation : ' . implode(', ', $errors));
+            }
+        }
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $subject = $data['subject'];
+            $textContent = $data['textContent'] ?? '';
+
+            // Convertir le HTML de CKEditor en texte brut
+            if (!empty($textContent)) {
+                $textContent = strip_tags($textContent);
+                $textContent = html_entity_decode($textContent, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                // Nettoyer les espaces multiples et les sauts de ligne
+                $textContent = preg_replace('/\s+/', ' ', $textContent);
+                $textContent = trim($textContent);
+            }
+
+            // Vérifier que le contenu n'est pas vide après nettoyage
+            if (empty($textContent)) {
+                $this->addFlash('error', 'Le contenu du message ne peut pas être vide');
+                $form = $this->createForm(MailingType::class, $data);
+            } else {
+                $recipientTypes = $data['recipientType'];
+
+                // Normaliser en tableau si ce n'est pas déjà le cas
+                if (!is_array($recipientTypes)) {
+                    $recipientTypes = [$recipientTypes];
+                }
+
+                // Vérifier si "test" ou "all" est sélectionné (ne peut pas être combiné avec d'autres)
+                if (in_array('test', $recipientTypes) && count($recipientTypes) > 1) {
+                    $this->addFlash('error', 'L\'option "Email spécifique (test)" ne peut pas être combinée avec d\'autres options');
+                    $form = $this->createForm(MailingType::class, $data);
+                } elseif (in_array('all', $recipientTypes) && count($recipientTypes) > 1) {
+                    $this->addFlash('error', 'L\'option "Tous les utilisateurs" ne peut pas être combinée avec d\'autres options');
+                    $form = $this->createForm(MailingType::class, $data);
+                } elseif (in_array('test', $recipientTypes)) {
+                    // Envoi de test à un email spécifique
+                    $testEmail = $data['testEmail'] ?? null;
+                    if ($testEmail) {
+                        // Créer un utilisateur temporaire pour le test
+                        $testUser = new User();
+                        $testUser->setEmail($testEmail);
+                        $testUser->setFirstname('Test');
+                        $testUser->setLastname('User');
+
+                        // Envoyer uniquement en texte (pas de HTML)
+                        try {
+                            $result = $this->emailService->sendToUser($testUser, $subject, null, $textContent);
+                            if ($result) {
+                                $this->addFlash('success', 'Email de test envoyé avec succès à ' . $testEmail);
+                            } else {
+                                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email de test. Vérifiez la configuration SMTP dans les logs.');
+                            }
+                        } catch (\Exception $e) {
+                            $errorMessage = $e->getMessage();
+                            // Messages d'erreur plus clairs
+                            if (strpos($errorMessage, 'authentication') !== false || strpos($errorMessage, '535') !== false) {
+                                $this->addFlash('error', 'Erreur d\'authentification SMTP. Vérifiez vos identifiants de messagerie dans la configuration (MAILER_DSN).');
+                            } elseif (strpos($errorMessage, 'connection') !== false || strpos($errorMessage, 'timeout') !== false) {
+                                $this->addFlash('error', 'Erreur de connexion au serveur SMTP. Vérifiez votre connexion internet et la configuration du serveur.');
+                            } else {
+                                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email : ' . $errorMessage);
+                            }
+                        }
+                    } else {
+                        $this->addFlash('error', 'Veuillez saisir un email de test');
+                    }
+                } else {
+                    // Récupérer les utilisateurs pour tous les types sélectionnés
+                    $users = $this->getUsersForRecipientTypes($recipientTypes);
+                    $recipientCount = count($users);
+
+                    if ($recipientCount > 0) {
+                        // Envoyer les emails uniquement en texte (pas de HTML)
+                        $sendResults = $this->emailService->sendToUsers($users, $subject, null, $textContent);
+
+                        if ($sendResults['success'] > 0) {
+                            $this->addFlash('success', sprintf(
+                                'Emails envoyés avec succès : %d/%d',
+                                $sendResults['success'],
+                                $recipientCount
+                            ));
+                        }
+
+                        if ($sendResults['failed'] > 0) {
+                            $this->addFlash('warning', sprintf(
+                                '%d email(s) n\'ont pas pu être envoyés',
+                                $sendResults['failed']
+                            ));
+                        }
+                    } else {
+                        $this->addFlash('warning', 'Aucun destinataire trouvé avec les critères sélectionnés');
+                    }
+                }
+
+                // Réinitialiser le formulaire après envoi
+                $form = $this->createForm(MailingType::class);
+            }
+        } else {
+            // Compter les destinataires pour l'affichage
+            if ($form->isSubmitted()) {
+                $data = $form->getData();
+                $recipientTypes = $data['recipientType'] ?? ['all'];
+                if (!is_array($recipientTypes)) {
+                    $recipientTypes = [$recipientTypes];
+                }
+                // Exclure "test" et "all" du comptage si combinés avec d'autres
+                if (in_array('test', $recipientTypes) || (in_array('all', $recipientTypes) && count($recipientTypes) > 1)) {
+                    $recipientCount = 0;
+                } else {
+                    $users = $this->getUsersForRecipientTypes($recipientTypes);
+                    $recipientCount = count($users);
+                }
+            }
+        }
+
+        return $this->render('admin/mailing/index.html.twig', [
+            'form' => $form,
+            'recipientCount' => $recipientCount,
+            'sendResults' => $sendResults,
+        ]);
+    }
+
+    #[Route('/admin/mailing/count', name: 'admin_mailing_count', methods: ['POST'])]
+    public function countRecipients(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $recipientTypes = $data['recipientTypes'] ?? [];
+
+        if (empty($recipientTypes)) {
+            return $this->json(['count' => 0]);
+        }
+
+        // Normaliser en tableau si ce n'est pas déjà le cas
+        if (!is_array($recipientTypes)) {
+            $recipientTypes = [$recipientTypes];
+        }
+
+        // Exclure "test" du comptage
+        if (in_array('test', $recipientTypes)) {
+            return $this->json(['count' => 0]);
+        }
+
+        // Récupérer les utilisateurs pour tous les types sélectionnés
+        $users = $this->getUsersForRecipientTypes($recipientTypes);
+        $count = count($users);
+
+        return $this->json(['count' => $count]);
+    }
+
+    private function getFiltersForRecipientType(string $recipientType): ?array
+    {
+        return match ($recipientType) {
+            'all' => null,
+            'client' => ['statut' => 'CLIENT'],
+            'prospect' => ['statut' => 'PROSPECT'],
+            'invite' => ['statut' => 'INVITE'],
+            'investisseur' => ['isInvestisseur' => true],
+            'intraday' => ['isIntraday' => true],
+            'temporary_active' => ['hasTemporaryInvestorAccess' => true],
+            default => null,
+        };
+    }
+
+    /**
+     * Récupère les utilisateurs pour plusieurs types de destinataires (combinaison)
+     */
+    private function getUsersForRecipientTypes(array $recipientTypes): array
+    {
+        $allUsers = [];
+        $userIds = [];
+
+        foreach ($recipientTypes as $recipientType) {
+            if ($recipientType === 'all') {
+                // Si "all" est sélectionné, retourner tous les utilisateurs
+                return $this->userRepository->findAll();
+            }
+
+            $filters = $this->getFiltersForRecipientType($recipientType);
+            $users = $this->emailService->getUsersByFilters($filters);
+
+            // Ajouter les utilisateurs en évitant les doublons
+            foreach ($users as $user) {
+                $userId = $user->getId();
+                if (!isset($userIds[$userId])) {
+                    $allUsers[] = $user;
+                    $userIds[$userId] = true;
+                }
+            }
+        }
+
+        return $allUsers;
     }
 
     public function configureDashboard(): Dashboard
@@ -200,8 +427,10 @@ class DashboardController extends AbstractDashboardController
                     WordCount
                 } = CKEDITOR;
                  
-                 ClassicEditor
-                    .create( document.querySelector( '.ckeditor' ), {
+                 // Initialiser CKEditor pour tous les éléments .ckeditor
+                 document.querySelectorAll( '.ckeditor' ).forEach( function( element ) {
+                    ClassicEditor
+                    .create( element, {
                         licenseKey: '{$ckeditorLicenseKey}',
                         language: 'fr',
                         plugins: [ Alignment, Autoformat,
@@ -513,7 +742,15 @@ class DashboardController extends AbstractDashboardController
                                 'X-CSRF-TOKEN': 'CSRF-Token' 
                             }
                         }
-                } )
+                    } )
+                    .then( editor => {
+                        // Stocker l'instance de l'éditeur sur l'élément pour y accéder plus tard
+                        element.ckeditorInstance = editor;
+                    } )
+                    .catch( error => {
+                        console.error( error );
+                    } );
+                 } );
             </script>");
     }
 
@@ -549,6 +786,13 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Images du carrousel', 'fa fa-images', CarouselImage::class);
         yield MenuItem::linkToCrud('Gestion des pages de la bibliothèque', 'fa fa-chart-line', StockExample::class)
             ->setController(StockExampleCrudController::class);
+
+        // Mailing
+        yield MenuItem::linkToUrl(
+            'Envoi d\'emails',
+            'fas fa-envelope',
+            $this->adminUrlGenerator->setController(self::class)->setAction('mailing')->generateUrl()
+        );
 
         // Lien vers le site en bas du menu
         yield MenuItem::linkToUrl('Voir le site', 'fas fa-external-link-alt', '/')

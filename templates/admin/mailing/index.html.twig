@@ -1,0 +1,379 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}Gestionnaire d'envoi d'emails{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="text-muted">Envoyez des emails à vos utilisateurs</p>
+                    </div>
+                    <div>
+                        <a href="{{ ea_url().setController('App\\Controller\\Admin\\DashboardController').setAction('index').generateUrl() }}" 
+                           class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>
+                            Retour au dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-edit me-2"></i>
+                            Composer votre email
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {{ form_start(form) }}
+                            <div class="mb-3">
+                                {{ form_label(form.recipientType) }}
+                                <div class="recipient-type-checkboxes" id="recipientTypeContainer">
+                                    {{ form_widget(form.recipientType) }}
+                                </div>
+                                {{ form_help(form.recipientType) }}
+                                {{ form_errors(form.recipientType) }}
+                            </div>
+
+                            <div class="mb-3" id="testEmailGroup" style="display: none;">
+                                {{ form_label(form.testEmail) }}
+                                {{ form_widget(form.testEmail) }}
+                                {{ form_help(form.testEmail) }}
+                                {{ form_errors(form.testEmail) }}
+                            </div>
+
+                            <div class="alert alert-info" id="recipientCount" style="display: none;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong id="countValue">0</strong> destinataire(s) seront concernés par cet envoi
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.subject) }}
+                                {{ form_widget(form.subject) }}
+                                {{ form_errors(form.subject) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.textContent) }}
+                                {{ form_widget(form.textContent) }}
+                                {{ form_help(form.textContent) }}
+                                {{ form_errors(form.textContent) }}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary" id="sendButton">
+                                    <i class="fas fa-paper-plane me-1"></i>
+                                    Envoyer
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="previewEmail()">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Aperçu
+                                </button>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Informations
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <h6>Types de destinataires :</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Tous :</strong> Tous les utilisateurs</li>
+                            <li><strong>Clients :</strong> Utilisateurs avec statut CLIENT</li>
+                            <li><strong>Prospects :</strong> Utilisateurs avec statut PROSPECT</li>
+                            <li><strong>Invités :</strong> Utilisateurs avec statut INVITE</li>
+                            <li><strong>Investisseur :</strong> Utilisateurs avec accès Investisseur</li>
+                            <li><strong>Intraday :</strong> Utilisateurs avec accès Intraday</li>
+                            <li><strong>Accès temporaire :</strong> Utilisateurs avec accès temporaire actif</li>
+                        </ul>
+                        <hr>
+                        <p class="text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <strong>Astuce :</strong> Cochez simplement les cases correspondant aux types de destinataires souhaités. 
+                            Vous pouvez sélectionner plusieurs types en même temps.
+                        </p>
+                        <p class="text-muted small">
+                            <i class="fas fa-exclamation-triangle me-1"></i>
+                            <strong>Attention :</strong> L'envoi d'emails en masse peut prendre du temps. 
+                            Ne fermez pas cette page pendant l'envoi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .recipient-type-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .recipient-type-checkboxes .form-check {
+            padding: 6px 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            transition: all 0.2s ease;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .recipient-type-checkboxes .form-check:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        .recipient-type-checkboxes .form-check-input {
+            margin-top: 0.3rem;
+            margin-right: 6px;
+        }
+        .recipient-type-checkboxes .form-check-label {
+            cursor: pointer;
+            width: 100%;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .recipient-type-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const recipientTypeContainer = document.getElementById('recipientTypeContainer');
+            const recipientTypeCheckboxes = recipientTypeContainer.querySelectorAll('input[type="checkbox"]');
+            const testEmailGroup = document.getElementById('testEmailGroup');
+            const recipientCount = document.getElementById('recipientCount');
+            const countValue = document.getElementById('countValue');
+            const sendButton = document.getElementById('sendButton');
+
+            function updateRecipientType() {
+                const selectedValues = Array.from(recipientTypeCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                
+                if (selectedValues.includes('test')) {
+                    testEmailGroup.style.display = 'block';
+                    recipientCount.style.display = 'none';
+                } else {
+                    testEmailGroup.style.display = 'none';
+                    // Afficher le compteur si des options sont sélectionnées
+                    if (selectedValues.length > 0) {
+                        recipientCount.style.display = 'block';
+                        // Mettre à jour le compteur via AJAX
+                        updateRecipientCount(selectedValues);
+                    } else {
+                        recipientCount.style.display = 'none';
+                        if (countValue) {
+                            countValue.textContent = '0';
+                        }
+                    }
+                }
+            }
+
+            function updateRecipientCount(selectedValues) {
+                // Afficher un indicateur de chargement
+                if (countValue) {
+                    countValue.textContent = '...';
+                }
+
+                // Appel AJAX pour compter les destinataires
+                fetch('{{ path('admin_mailing_count') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recipientTypes: selectedValues
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (countValue) {
+                        countValue.textContent = data.count || 0;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors du comptage des destinataires:', error);
+                    if (countValue) {
+                        countValue.textContent = '?';
+                    }
+                });
+            }
+
+            // Ajouter un listener à chaque checkbox
+            recipientTypeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateRecipientType);
+            });
+            
+            // Initialiser au chargement
+            updateRecipientType();
+            
+            // Si le compteur est déjà affiché avec une valeur, mettre à jour en temps réel
+            if (recipientCount && recipientCount.style.display !== 'none') {
+                const selectedValues = Array.from(recipientTypeCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                if (selectedValues.length > 0 && !selectedValues.includes('test')) {
+                    updateRecipientCount(selectedValues);
+                }
+            }
+
+            // Synchroniser CKEditor avec le textarea avant la soumission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                // Synchroniser CKEditor 5 avec le textarea source
+                const ckeditorElement = document.querySelector('.ckeditor');
+                
+                if (ckeditorElement) {
+                    let content = '';
+                    let editorInstance = null;
+                    
+                    // Méthode 1 : Utiliser l'instance stockée sur l'élément
+                    if (ckeditorElement.ckeditorInstance) {
+                        editorInstance = ckeditorElement.ckeditorInstance;
+                        content = editorInstance.getData();
+                    }
+                    // Méthode 2 : Chercher via le conteneur CKEditor
+                    else {
+                        // CKEditor 5 crée un conteneur après le textarea
+                        let editorContainer = ckeditorElement.nextElementSibling;
+                        while (editorContainer && !editorContainer.classList.contains('ck-editor')) {
+                            editorContainer = editorContainer.nextElementSibling;
+                        }
+                        
+                        if (editorContainer) {
+                            // Chercher l'instance dans le conteneur
+                            const editable = editorContainer.querySelector('.ck-editor__editable');
+                            if (editable) {
+                                // CKEditor 5 stocke l'instance sur l'élément éditable
+                                editorInstance = editable.ckeditorInstance || editable._ckeditorInstance;
+                                if (editorInstance && typeof editorInstance.getData === 'function') {
+                                    content = editorInstance.getData();
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Si on n'a toujours pas le contenu, essayer de le récupérer directement depuis le DOM
+                    if (!content && ckeditorElement.value) {
+                        content = ckeditorElement.value;
+                    }
+                    
+                    // Mettre à jour le textarea avec le contenu
+                    if (content) {
+                        ckeditorElement.value = content;
+                        // S'assurer que le textarea est visible pour la validation
+                        ckeditorElement.style.display = 'block';
+                        ckeditorElement.style.position = 'absolute';
+                        ckeditorElement.style.left = '-9999px';
+                        ckeditorElement.style.opacity = '0';
+                        ckeditorElement.style.width = '1px';
+                        ckeditorElement.style.height = '1px';
+                    }
+                    
+                    // Validation manuelle : vérifier que le contenu n'est pas vide
+                    const cleanContent = content ? content.replace(/<[^>]*>/g, '').trim() : '';
+                    if (!cleanContent || cleanContent === '') {
+                        e.preventDefault();
+                        alert('Veuillez saisir un contenu pour votre message.');
+                        return false;
+                    }
+                    
+                    // Supprimer l'attribut required du textarea pour éviter l'erreur
+                    ckeditorElement.removeAttribute('required');
+                }
+
+                const selectedValues = Array.from(recipientTypeCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.value);
+                    
+                if (!selectedValues.includes('test')) {
+                    const countElement = document.getElementById('countValue');
+                    const count = countElement ? parseInt(countElement.textContent) : {{ recipientCount }};
+                    if (count > 0) {
+                        const selectedLabels = Array.from(recipientTypeCheckboxes)
+                            .filter(checkbox => checkbox.checked)
+                            .map(checkbox => {
+                                const label = checkbox.closest('.form-check').querySelector('label');
+                                return label ? label.textContent.trim() : '';
+                            })
+                            .filter(text => text)
+                            .join(', ');
+                        if (!confirm(`Vous êtes sur le point d'envoyer un email à ${count} destinataire(s) (${selectedLabels}). Continuer ?`)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    } else {
+                        if (!confirm('Aucun destinataire trouvé. Voulez-vous quand même continuer ?')) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                }
+            });
+        });
+
+        function previewEmail() {
+            // Récupérer le contenu depuis CKEditor si disponible
+            let textContent = '';
+            const ckeditorElement = document.querySelector('.ckeditor');
+            if (ckeditorElement && window.CKEDITOR && window.CKEDITOR.instances) {
+                const editorInstance = Object.values(window.CKEDITOR.instances).find(instance => 
+                    instance.element && instance.element.$ === ckeditorElement
+                );
+                if (editorInstance) {
+                    textContent = editorInstance.getData();
+                }
+            }
+            
+            // Fallback sur la valeur du textarea si CKEditor n'est pas disponible
+            if (!textContent) {
+                textContent = document.querySelector('[name*="[textContent]"]').value;
+            }
+            
+            const subject = document.querySelector('[name*="[subject]"]').value;
+            
+            if (!textContent || !subject) {
+                alert('Veuillez remplir au moins le sujet et le contenu du message');
+                return;
+            }
+
+            const previewWindow = window.open('', 'preview', 'width=800,height=600');
+            previewWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Aperçu: ${subject}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; padding: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Aperçu de l'email</h2>
+                        <hr>
+                        <strong>Sujet:</strong> ${subject}
+                        <hr>
+                        <div>${textContent}</div>
+                    </body>
+                </html>
+            `);
+        }
+    </script>
+{% endblock %}
+

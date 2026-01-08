@@ -6,6 +6,8 @@
 parameters:
   download_directory: "%kernel.project_dir%/public/files"
   app.temporary_access_duration: 10
+  app.mailer.from_email: 'no-reply@zenbourse.fr'
+  app.mailer.from_name: 'Zenbourse'
 
 services:
   # default configuration for services in *this* file
@@ -28,6 +30,12 @@ services:
       - "../src/DependencyInjection/"
       - "../src/Entity/"
       - "../src/Kernel.php"
+
+  # Configuration du service EmailService
+  App\Service\EmailService:
+    arguments:
+      $fromEmail: '%app.mailer.from_email%'
+      $fromName: '%app.mailer.from_name%'
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
