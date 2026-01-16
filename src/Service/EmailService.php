@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Message\SendEmailMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
@@ -11,104 +13,68 @@ use Psr\Log\LoggerInterface;
 
 class EmailService
 {
-    private MailerInterface $mailer;
-    private UserRepository $userRepository;
-    private LoggerInterface $logger;
-    private string $fromEmail;
-    private string $fromName;
-
     public function __construct(
-        MailerInterface $mailer,
-        UserRepository $userRepository,
-        LoggerInterface $logger,
-        ?string $fromEmail = null,
-        ?string $fromName = null
-    ) {
-        $this->mailer = $mailer;
-        $this->userRepository = $userRepository;
-        $this->logger = $logger;
-        $this->fromEmail = $fromEmail ?? 'no-reply@zenbourse.fr';
-        $this->fromName = $fromName ?? 'Zenbourse';
+        private MessageBusInterface $messageBus,
+        private UserRepository $userRepository,
+        private LoggerInterface $logger,
+        private MailerInterface $mailer
+    ) {}
+
+    public function getUserRepository(): UserRepository
+    {
+        return $this->userRepository;
+    }
+
+    public function getMailer(): MailerInterface
+    {
+        return $this->mailer;
     }
 
     /**
-     * Envoie un email à un utilisateur spécifique
+     * Envoie un email de manière asynchrone
      */
-    public function sendToUser(User $user, string $subject, ?string $htmlContent = null, ?string $textContent = null): bool
+    public function sendToUserAsync(User $user, string $subject, ?string $htmlContent = null, ?string $textContent = null): void
     {
-        try {
-            $email = (new Email())
-                ->from(new Address($this->fromEmail, $this->fromName))
-                ->to(new Address($user->getEmail(), $user->getFirstname() . ' ' . $user->getLastname()))
-                ->subject($subject);
+        $message = new SendEmailMessage(
+            $user->getId(),
+            $subject,
+            $textContent // SendEmailMessage attend textContent en 3ème paramètre
+        );
 
-            if ($htmlContent) {
-                $email->html($htmlContent);
-            }
+        $this->messageBus->dispatch($message);
 
-            if ($textContent) {
-                $email->text($textContent);
-            }
-
-            // Si ni HTML ni texte, utiliser le texte comme fallback
-            if (!$htmlContent && !$textContent) {
-                throw new \InvalidArgumentException('Au moins un contenu (HTML ou texte) doit être fourni');
-            }
-
-            $this->mailer->send($email);
-            $this->logger->info('Email envoyé avec succès', [
-                'to' => $user->getEmail(),
-                'subject' => $subject
-            ]);
-
-            return true;
-        } catch (\Exception $e) {
-            $this->logger->error('Erreur lors de l\'envoi de l\'email', [
-                'to' => $user->getEmail(),
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            // Relancer l'exception pour que le contrôleur puisse la gérer
-            throw $e;
-        }
+        $this->logger->info('Email queued', [
+            'user_id' => $user->getId(),
+            'subject' => $subject
+        ]);
     }
 
     /**
-     * Envoie un email à plusieurs utilisateurs
+     * Envoie des emails à plusieurs utilisateurs de manière asynchrone
      */
-    public function sendToUsers(array $users, string $subject, ?string $htmlContent = null, ?string $textContent = null): array
+    public function sendToUsersAsync(array $users, string $subject, ?string $htmlContent = null, ?string $textContent = null): int
     {
-        $results = [
-            'success' => 0,
-            'failed' => 0,
-            'errors' => []
-        ];
-
+        $count = 0;
         foreach ($users as $user) {
-            try {
-                if ($this->sendToUser($user, $subject, $htmlContent, $textContent)) {
-                    $results['success']++;
-                }
-            } catch (\Exception $e) {
-                $results['failed']++;
-                $results['errors'][] = $user->getEmail() . ' (' . $e->getMessage() . ')';
-            }
+            $this->sendToUserAsync($user, $subject, $htmlContent, $textContent);
+            $count++;
         }
 
-        return $results;
+        $this->logger->info('Emails queued', ['count' => $count]);
+        return $count;
     }
 
     /**
-     * Envoie un email à tous les utilisateurs selon des critères
+     * Envoie à tous les utilisateurs selon des critères
      */
-    public function sendToAllUsers(
+    public function sendToAllUsersAsync(
         string $subject,
         ?string $htmlContent = null,
         ?string $textContent = null,
         ?array $filters = null
-    ): array {
+    ): int {
         $users = $this->getUsersByFilters($filters);
-        return $this->sendToUsers($users, $subject, $htmlContent, $textContent);
+        return $this->sendToUsersAsync($users, $subject, $htmlContent, $textContent);
     }
 
     /**
@@ -147,5 +113,82 @@ class EmailService
     public function countUsersByFilters(?array $filters = null): int
     {
         return count($this->getUsersByFilters($filters));
+    }
+
+    /**
+     * Envoie des emails directement (sans Messenger) par lots pour éviter le timeout
+     * Utile quand le transport Messenger n'est pas compatible (ex: MariaDB/MySQL < 8)
+     */
+    public function sendToUsersDirect(array $users, string $subject, ?string $htmlContent = null, ?string $textContent = null, int $batchSize = 5): array
+    {
+        $results = [
+            'success' => 0,
+            'failed' => 0,
+            'errors' => []
+        ];
+
+        $totalUsers = count($users);
+        $batches = array_chunk($users, $batchSize);
+        $batchCount = count($batches);
+
+        foreach ($batches as $batchIndex => $batch) {
+            foreach ($batch as $user) {
+                try {
+                    $email = (new Email())
+                        ->from(new Address('no-reply@zenbourse.fr', 'Zenbourse'))
+                        ->to(new Address($user->getEmail(), $user->getFirstname() . ' ' . $user->getLastname()))
+                        ->subject($subject);
+
+                    if ($htmlContent) {
+                        $email->html($htmlContent);
+                    }
+                    if ($textContent) {
+                        $email->text($textContent);
+                    }
+                    if (!$htmlContent && !$textContent) {
+                        throw new \InvalidArgumentException('Au moins un contenu (HTML ou texte) doit être fourni');
+                    }
+
+                    $this->mailer->send($email);
+                    $results['success']++;
+
+                    // Log seulement tous les 10 emails pour éviter de surcharger les logs
+                    if ($results['success'] % 10 === 0) {
+                        $this->logger->info('Email sent directly (progress)', [
+                            'sent' => $results['success'],
+                            'total' => $totalUsers,
+                            'subject' => $subject
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    $results['failed']++;
+                    $results['errors'][] = [
+                        'user_id' => $user->getId(),
+                        'email' => $user->getEmail(),
+                        'error' => $e->getMessage()
+                    ];
+
+                    $this->logger->error('Email failed (direct send)', [
+                        'user_id' => $user->getId(),
+                        'email' => $user->getEmail(),
+                        'error' => $e->getMessage()
+                    ]);
+                }
+            }
+
+            // Pause minimale entre les lots (réduite pour accélérer)
+            if ($batchIndex < $batchCount - 1) {
+                usleep(50000); // 0.05 seconde au lieu de 0.1
+            }
+        }
+
+        $this->logger->info('Bulk email finished', [
+            'total' => $totalUsers,
+            'success' => $results['success'],
+            'failed' => $results['failed'],
+            'subject' => $subject
+        ]);
+
+        return $results;
     }
 }

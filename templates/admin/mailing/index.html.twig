@@ -21,6 +21,30 @@
             </div>
         </div>
 
+        {# Stats de la queue d'emails #}
+        {% if queueStats is defined and queueStats.total > 0 %}
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-inbox me-2"></i>
+                        Queue d'emails en attente
+                    </h5>
+                    <p class="mb-2">
+                        <strong>{{ queueStats.total }}</strong> email(s) en queue
+                        ({{ queueStats.pending }} en attente, {{ queueStats.processing }} en cours, {{ queueStats.failed }} échoué(s))
+                    </p>
+                    <p class="mb-0">
+                        <small>
+                            Pour traiter la queue, exécutez : 
+                            <code>php bin/console app:process-email-queue --limit=100</code>
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="row">
             <div class="col-lg-8">
                 <div class="card shadow mb-4">
@@ -35,7 +59,76 @@
                             <div class="mb-3">
                                 {{ form_label(form.recipientType) }}
                                 <div class="recipient-type-checkboxes" id="recipientTypeContainer">
-                                    {{ form_widget(form.recipientType) }}
+                                    {# Regrouper les options par catégorie avec couleurs #}
+                                    <div class="recipient-category recipient-category-home">
+                                        <span class="recipient-category-title">Accueil</span>
+                                        <div class="recipient-category-items">
+                                            {% for child in form.recipientType %}
+                                                {% if child.vars.value == 'all' %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(child) }}
+                                                        {{ form_label(child) }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recipient-category recipient-category-statut">
+                                        <span class="recipient-category-title">Statuts</span>
+                                        <div class="recipient-category-items">
+                                            {% for child in form.recipientType %}
+                                                {% if child.vars.value in ['client', 'prospect', 'invite'] %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(child) }}
+                                                        {{ form_label(child) }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recipient-category recipient-category-investisseur">
+                                        <span class="recipient-category-title">Investisseur</span>
+                                        <div class="recipient-category-items">
+                                            {% for child in form.recipientType %}
+                                                {% if child.vars.value in ['investisseur', 'temporary_active'] %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(child) }}
+                                                        {{ form_label(child) }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recipient-category recipient-category-intraday">
+                                        <span class="recipient-category-title">Intraday</span>
+                                        <div class="recipient-category-items">
+                                            {% for child in form.recipientType %}
+                                                {% if child.vars.value == 'intraday' %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(child) }}
+                                                        {{ form_label(child) }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recipient-category recipient-category-test">
+                                        <span class="recipient-category-title">Test</span>
+                                        <div class="recipient-category-items">
+                                            {% for child in form.recipientType %}
+                                                {% if child.vars.value == 'test' %}
+                                                    <div class="form-check">
+                                                        {{ form_widget(child) }}
+                                                        {{ form_label(child) }}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </div>
                                 {{ form_help(form.recipientType) }}
                                 {{ form_errors(form.recipientType) }}
@@ -119,36 +212,152 @@
 
     <style>
         .recipient-type-checkboxes {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             margin-top: 10px;
         }
-        .recipient-type-checkboxes .form-check {
-            padding: 6px 10px;
-            border: 1px solid #dee2e6;
+        
+        .recipient-category {
+            margin-bottom: 8px;
+        }
+        
+        .recipient-category-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            padding: 4px 8px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .recipient-category-items {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             border-radius: 4px;
-            background-color: #f8f9fa;
+            gap: 8px;
+        }
+        
+        /* HOME / Accueil - Violet/Bordeaux */
+        .recipient-category-home .recipient-category-title {
+            background-color: #370028;
+            color: #ffffff;
+        }
+        .recipient-category-home .form-check {
+            
+        }
+        .recipient-category-home .form-check:hover {
+            background-color: #f5e6f0;
+            border-color: #370028;
+        }
+        .recipient-category-home .form-check-input:checked {
+            background-color: #370028;
+            border-color: #370028;
+        }
+        
+        /* INVESTISSEUR - Vert */
+        .recipient-category-investisseur .recipient-category-title {
+            background-color: #257d43;
+            color: #ffffff;
+        }
+        .recipient-category-investisseur .form-check {
+            
+        }
+        .recipient-category-investisseur .form-check:hover {
+            background-color: #e8f5ed;
+            border-color: #257d43;
+        }
+        .recipient-category-investisseur .form-check-input:checked {
+            background-color: #257d43;
+            border-color: #257d43;
+        }
+        
+        /* INTRADAY - Bleu */
+        .recipient-category-intraday .recipient-category-title {
+            background-color: #0a63fc;
+            color: #ffffff;
+        }
+        .recipient-category-intraday .form-check {
+            
+        }
+        .recipient-category-intraday .form-check:hover {
+            background-color: #e6f2ff;
+            border-color: #0a63fc;
+        }
+        .recipient-category-intraday .form-check-input:checked {
+            background-color: #0a63fc;
+            border-color: #0a63fc;
+        }
+        
+        /* Statuts - Gris avec variations */
+        .recipient-category-statut .recipient-category-title {
+            background-color: #6c757d;
+            color: #ffffff;
+        }
+        .recipient-category-statut .form-check {
+        }
+        .recipient-category-statut .form-check:hover {
+            background-color: #f0f0f0;
+            border-color: #6c757d;
+        }
+        .recipient-category-statut .form-check-input:checked {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+        
+        /* Test - Orange */
+        .recipient-category-test .recipient-category-title {
+            background-color: #ff9800;
+            color: #ffffff;
+        }
+        .recipient-category-test .form-check {
+        }
+        .recipient-category-test .form-check:hover {
+            background-color: #fff3e0;
+            border-color: #ff9800;
+        }
+        .recipient-category-test .form-check-input:checked {
+            background-color: #ff9800;
+            border-color: #ff9800;
+        }
+        
+        .recipient-type-checkboxes .form-check {
+            padding: 8px 10px;
+            background-color: #ffffff;
             transition: all 0.2s ease;
             margin: 0;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
         }
-        .recipient-type-checkboxes .form-check:hover {
-            background-color: #e9ecef;
-            border-color: #adb5bd;
-        }
+        
         .recipient-type-checkboxes .form-check-input {
-            margin-top: 0.3rem;
-            margin-right: 6px;
+            margin-top: 0;
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
+        
         .recipient-type-checkboxes .form-check-label {
             cursor: pointer;
             width: 100%;
             margin: 0;
             font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
         }
+        
+        .recipient-type-checkboxes .form-check:has(.form-check-input:checked) {
+            background-color: rgba(0, 0, 0, 0.02);
+            font-weight: 600;
+        }
+        
         @media (max-width: 768px) {
-            .recipient-type-checkboxes {
+            .recipient-category-items {
                 grid-template-columns: 1fr;
             }
         }
@@ -157,6 +366,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const recipientTypeContainer = document.getElementById('recipientTypeContainer');
+            // Sélectionner tous les checkboxes dans les catégories
             const recipientTypeCheckboxes = recipientTypeContainer.querySelectorAll('input[type="checkbox"]');
             const testEmailGroup = document.getElementById('testEmailGroup');
             const recipientCount = document.getElementById('recipientCount');

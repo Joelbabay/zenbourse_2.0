@@ -18,12 +18,16 @@ use App\Repository\InvestisseurRequestRepository;
 use App\Repository\UserRepository;
 use App\Repository\StockExampleRepository;
 use App\Service\EmailService;
+use App\Service\EmailQueueService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,8 +42,10 @@ class DashboardController extends AbstractDashboardController
         private IntradayRequestRepository $intradayRequestRepository,
         private StockExampleRepository $stockExampleRepository,
         private EmailService $emailService,
+        private EmailQueueService $emailQueueService,
         private AdminUrlGenerator $adminUrlGenerator,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private MailerInterface $mailer
     ) {}
 
     #[Route('/admin', name: 'admin')]
@@ -164,33 +170,21 @@ class DashboardController extends AbstractDashboardController
                     $this->addFlash('error', 'L\'option "Tous les utilisateurs" ne peut pas être combinée avec d\'autres options');
                     $form = $this->createForm(MailingType::class, $data);
                 } elseif (in_array('test', $recipientTypes)) {
-                    // Envoi de test à un email spécifique
+                    // Envoi de test à un email spécifique (synchrone, vers une adresse libre)
                     $testEmail = $data['testEmail'] ?? null;
                     if ($testEmail) {
-                        // Créer un utilisateur temporaire pour le test
-                        $testUser = new User();
-                        $testUser->setEmail($testEmail);
-                        $testUser->setFirstname('Test');
-                        $testUser->setLastname('User');
-
-                        // Envoyer uniquement en texte (pas de HTML)
                         try {
-                            $result = $this->emailService->sendToUser($testUser, $subject, null, $textContent);
-                            if ($result) {
-                                $this->addFlash('success', 'Email de test envoyé avec succès à ' . $testEmail);
-                            } else {
-                                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email de test. Vérifiez la configuration SMTP dans les logs.');
-                            }
+                            $email = (new Email())
+                                ->from(new Address('no-reply@zenbourse.fr', 'Zenbourse'))
+                                ->to(new Address($testEmail, 'Test'))
+                                ->subject($subject)
+                                ->text($textContent);
+
+                            $this->mailer->send($email);
+
+                            $this->addFlash('success', 'Email de test envoyé avec succès à ' . $testEmail);
                         } catch (\Exception $e) {
-                            $errorMessage = $e->getMessage();
-                            // Messages d'erreur plus clairs
-                            if (strpos($errorMessage, 'authentication') !== false || strpos($errorMessage, '535') !== false) {
-                                $this->addFlash('error', 'Erreur d\'authentification SMTP. Vérifiez vos identifiants de messagerie dans la configuration (MAILER_DSN).');
-                            } elseif (strpos($errorMessage, 'connection') !== false || strpos($errorMessage, 'timeout') !== false) {
-                                $this->addFlash('error', 'Erreur de connexion au serveur SMTP. Vérifiez votre connexion internet et la configuration du serveur.');
-                            } else {
-                                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email : ' . $errorMessage);
-                            }
+                            $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email de test : ' . $e->getMessage());
                         }
                     } else {
                         $this->addFlash('error', 'Veuillez saisir un email de test');
@@ -201,22 +195,43 @@ class DashboardController extends AbstractDashboardController
                     $recipientCount = count($users);
 
                     if ($recipientCount > 0) {
-                        // Envoyer les emails uniquement en texte (pas de HTML)
-                        $sendResults = $this->emailService->sendToUsers($users, $subject, null, $textContent);
+                        // Limiter à 100 emails maximum par envoi pour éviter le timeout
+                        $maxEmails = 100;
+                        $usersToSend = array_slice($users, 0, $maxEmails);
+                        $remainingCount = max(0, $recipientCount - $maxEmails);
 
-                        if ($sendResults['success'] > 0) {
-                            $this->addFlash('success', sprintf(
-                                'Emails envoyés avec succès : %d/%d',
-                                $sendResults['success'],
-                                $recipientCount
+                        if ($recipientCount > $maxEmails) {
+                            $this->addFlash('warning', sprintf(
+                                'Limite de %d emails par envoi. %d email(s) seront envoyés maintenant, %d restant(s) à envoyer dans un prochain envoi.',
+                                $maxEmails,
+                                count($usersToSend),
+                                $remainingCount
                             ));
                         }
 
-                        if ($sendResults['failed'] > 0) {
-                            $this->addFlash('warning', sprintf(
-                                '%d email(s) n\'ont pas pu être envoyés',
-                                $sendResults['failed']
-                            ));
+                        // Augmenter le timeout PHP pour les envois en masse
+                        set_time_limit(300); // 5 minutes
+                        ini_set('max_execution_time', '300');
+                        ini_set('memory_limit', '512M'); // Augmenter aussi la mémoire
+
+                        // Envoi direct par lots (compatible MariaDB/MySQL < 8, évite le timeout)
+                        // Lots plus petits pour traiter plus rapidement
+                        $results = $this->emailService->sendToUsersDirect($usersToSend, $subject, null, $textContent, 3);
+
+                        if ($results['success'] > 0) {
+                            $message = sprintf(
+                                '%d email(s) envoyé(s) avec succès',
+                                $results['success']
+                            );
+                            if ($results['failed'] > 0) {
+                                $message .= sprintf(' (%d échec(s))', $results['failed']);
+                            }
+                            if ($remainingCount > 0) {
+                                $message .= sprintf('. %d email(s) restant(s) à envoyer.', $remainingCount);
+                            }
+                            $this->addFlash('success', $message);
+                        } else {
+                            $this->addFlash('error', 'Aucun email n\'a pu être envoyé');
                         }
                     } else {
                         $this->addFlash('warning', 'Aucun destinataire trouvé avec les critères sélectionnés');
