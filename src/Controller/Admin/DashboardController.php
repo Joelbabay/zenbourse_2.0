@@ -774,6 +774,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
         yield MenuItem::linkToCrud('Messagerie', 'fa fa-inbox', Contact::class);
         yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-user-friends', User::class)->setController(UserCrudController::class);
+        yield MenuItem::linkToCrud('Gestionnaire des accès administrateurs', 'fas fa-shield-alt', User::class)
+            ->setController(AccessManagerCrudController::class);
         yield MenuItem::linkToCrud('Téléchargement liste des valeurs 2020', 'fa fa-download', Download::class)
             ->setController(UserDownloadCrudController::class);
         yield MenuItem::linkToCrud('Méthode Investisseur', 'fa fa-star', InvestisseurRequest::class)

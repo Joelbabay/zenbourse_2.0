@@ -109,6 +109,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $temporaryInvestorAccessStart;
+    private array $adminRoles = [];
 
     public function __construct()
     {
@@ -513,6 +514,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->hasTemporaryInvestorAccess = false;
         return false;
     }
+    public function getAdminRoles(): array
+    {
+        return array_values(array_filter(
+            $this->getRoles(),
+            fn($role) => in_array($role, [
+                'ROLE_SUPER_ADMIN',
+                'ROLE_ADMIN',
+                'ROLE_EDITOR',
+            ])
+        ));
+    }
+
+    public function setAdminRoles(array $adminRoles): self
+    {
+        // On enlève les rôles admin existants
+        $roles = array_filter(
+            $this->roles,
+            fn($role) => !in_array($role, [
+                'ROLE_SUPER_ADMIN',
+                'ROLE_ADMIN',
+                'ROLE_EDITOR',
+            ])
+        );
+
+        // On ajoute les nouveaux
+        $this->roles = array_unique(array_merge($roles, $adminRoles));
+
+        return $this;
+    }
+
+
 
     public function getBadgeTemporaryInvestorAccess(): ?string
     {

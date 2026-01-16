@@ -40,10 +40,12 @@ security:
   role_hierarchy:
     ROLE_INVESTISSEUR: ROLE_USER
     ROLE_INTRADAY: ROLE_INVESTISSEUR
-    ROLE_ADMIN: [ROLE_USER, ROLE_INVESTISSEUR, ROLE_INTRADAY]
+    ROLE_EDITOR: ROLE_USER
+    ROLE_ADMIN: [ROLE_USER, ROLE_EDITOR]
+    ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_EDITOR, ROLE_ADMIN]
 
   access_control:
-    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/admin, roles: [ROLE_EDITOR, ROLE_ADMIN, ROLE_SUPER_ADMIN] }
     # - { path: ^/profile, roles: ROLE_USER }
     - { path: ^/investisseur, roles: ROLE_INVESTISSEUR }
     - { path: ^/intraday, roles: ROLE_INTRADAY }
