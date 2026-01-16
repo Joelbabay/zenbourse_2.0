@@ -37,4 +37,4 @@ services:
   # Configuration explicite pour EmailQueueService
   App\Service\EmailQueueService:
     arguments:
-      projectDir: '%kernel.project_dir%'
+      $projectDir: '%kernel.project_dir%'
