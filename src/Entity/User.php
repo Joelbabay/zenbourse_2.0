@@ -514,16 +514,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->hasTemporaryInvestorAccess = false;
         return false;
     }
-    public function getAdminRoles(): array
+    public function getAdminRoles(): string
     {
-        return array_values(array_filter(
-            $this->getRoles(),
-            fn($role) => in_array($role, [
-                'ROLE_SUPER_ADMIN',
-                'ROLE_ADMIN',
-                'ROLE_EDITOR',
-            ])
-        ));
+        return '';
     }
 
     public function setAdminRoles(array $adminRoles): self
