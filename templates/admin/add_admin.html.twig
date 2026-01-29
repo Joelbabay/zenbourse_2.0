@@ -1,0 +1,35 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block main %}
+    <h1 class="mb-4">Ajouter un administrateur</h1>
+
+    <form method="post" style="max-width: 600px;">
+        <div class="mb-3">
+            <label class="form-label">Email utilisateur</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Rôles administrateur</label>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_SUPER_ADMIN">
+                <label class="form-check-label">Super Admin</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_ADMIN">
+                <label class="form-check-label">Admin</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_EDITOR">
+                <label class="form-check-label">Editor</label>
+            </div>
+        </div>
+
+        <button class="btn btn-success">
+            <i class="fa fa-user-plus"></i> Ajouter
+        </button>
+    </form>
+{% endblock %}

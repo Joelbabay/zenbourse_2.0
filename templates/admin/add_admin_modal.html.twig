@@ -1,0 +1,79 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block main %}
+<div class="modal-header">
+    <h5 class="modal-title">
+        <i class="fa fa-user-plus"></i>
+        Ajouter un administrateur
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+
+<form method="post" action="{{ ea_url().setAction('processAddAdmin') }}">
+    <div class="modal-body">
+
+        {% if users is empty %}
+            <div class="alert alert-info mb-0">
+                Tous les utilisateurs ont déjà un accès administrateur.
+            </div>
+        {% else %}
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Utilisateur
+                </label>
+                <select name="user_id" class="form-select" required>
+                    <option value="">— Sélectionner un utilisateur —</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">
+                            {{ user.email }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Rôles à attribuer
+                </label>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_ADMIN" id="role_admin">
+                    <label class="form-check-label" for="role_admin">
+                        Administrateur
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_EDITOR" id="role_editor">
+                    <label class="form-check-label" for="role_editor">
+                        Éditeur
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="admin_roles[]" value="ROLE_SUPER_ADMIN" id="role_super_admin">
+                    <label class="form-check-label text-danger fw-bold" for="role_super_admin">
+                        Super administrateur
+                    </label>
+                </div>
+            </div>
+
+        {% endif %}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Annuler
+        </button>
+
+        {% if users is not empty %}
+            <button type="submit" class="btn btn-success">
+                <i class="fa fa-check"></i>
+                Valider
+            </button>
+        {% endif %}
+    </div>
+</form>
+
+{% endblock %}
