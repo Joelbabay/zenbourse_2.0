@@ -19,6 +19,7 @@ use App\Repository\UserRepository;
 use App\Repository\StockExampleRepository;
 use App\Service\EmailService;
 use App\Service\EmailQueueService;
+use App\Service\VisitService;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -43,6 +44,7 @@ class DashboardController extends AbstractDashboardController
         private StockExampleRepository $stockExampleRepository,
         private EmailService $emailService,
         private EmailQueueService $emailQueueService,
+        private VisitService $visitService,
         private AdminUrlGenerator $adminUrlGenerator,
         private RequestStack $requestStack,
         private MailerInterface $mailer
@@ -107,6 +109,19 @@ class DashboardController extends AbstractDashboardController
 
         $totalTemporaryInvestorAccess = $totalTemporaryInvestorAccessActive + $totalTemporaryInvestorAccessExpired;
 
+        // Récupérer les statistiques de visites
+        try {
+            $visitStats = $this->visitService->getStats();
+        } catch (\Exception $e) {
+            // Si la table n'existe pas encore, on retourne des stats vides
+            $visitStats = [
+                'today' => 0,
+                'this_week' => 0,
+                'this_month' => 0,
+                'total' => 0,
+            ];
+        }
+
         return $this->render('admin/dashboard.html.twig', [
             'stats' => $stats,
             'statutStats' => $statutStats,
@@ -114,6 +129,7 @@ class DashboardController extends AbstractDashboardController
             'totalTemporaryInvestorAccessActive' => $totalTemporaryInvestorAccessActive,
             'totalTemporaryInvestorAccessExpired' => $totalTemporaryInvestorAccessExpired,
             'totalTemporaryInvestorAccess' => $totalTemporaryInvestorAccess,
+            'visitStats' => $visitStats,
         ]);
     }
 

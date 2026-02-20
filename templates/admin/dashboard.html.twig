@@ -161,7 +161,7 @@
 
         <!-- Cartes secondaires -->
         <div class="row mb-4">
-            <!-- Statistiques de visites (placeholder pour l'instant) -->
+            <!-- Statistiques de visites -->
             <div class="col-xl-6 col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -176,21 +176,79 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                  aria-labelledby="dropdownMenuLink">
-                                <div class="dropdown-header">Options :</div>
-                                <a class="dropdown-item" href="#">Voir les détails</a>
-                                <a class="dropdown-item" href="#">Exporter les données</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Configurer</a>
+                                <div class="dropdown-header">Période :</div>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-calendar-day me-2"></i>Aujourd'hui
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-calendar-week me-2"></i>Cette semaine
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-calendar-alt me-2"></i>Ce mois
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="text-center">
-                            <i class="fas fa-chart-line fa-3x text-gray-300 mb-3"></i>
-                            <p class="text-muted">Les statistiques de visites seront bientôt disponibles</p>
-                            <small class="text-info">
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="border-right">
+                                    <div class="text-primary mb-1">
+                                        <i class="fas fa-calendar-day fa-2x"></i>
+                                    </div>
+                                    <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                        {{ visitStats.today|default(0) }}
+                                    </div>
+                                    <div class="text-xs font-weight-bold text-gray-500 text-uppercase mb-1">
+                                        Aujourd'hui
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div>
+                                    <div class="text-success mb-1">
+                                        <i class="fas fa-calendar-week fa-2x"></i>
+                                    </div>
+                                    <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                        {{ visitStats.this_week|default(0) }}
+                                    </div>
+                                    <div class="text-xs font-weight-bold text-gray-500 text-uppercase mb-1">
+                                        Cette semaine
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="border-right">
+                                    <div class="text-info mb-1">
+                                        <i class="fas fa-calendar-alt fa-2x"></i>
+                                    </div>
+                                    <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                        {{ visitStats.this_month|default(0) }}
+                                    </div>
+                                    <div class="text-xs font-weight-bold text-gray-500 text-uppercase mb-1">
+                                        Ce mois
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div>
+                                    <div class="text-warning mb-1">
+                                        <i class="fas fa-chart-line fa-2x"></i>
+                                    </div>
+                                    <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                        {{ visitStats.total|default(0) }}
+                                    </div>
+                                    <div class="text-xs font-weight-bold text-gray-500 text-uppercase mb-1">
+                                        Total
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="mt-3">
+                            <small class="text-muted">
                                 <i class="fas fa-info-circle me-1"></i>
-                                Intégration Google Analytics en cours
+                                Visites uniques par session. Les bots et les administrateurs sont exclus.
                             </small>
                         </div>
                     </div>
