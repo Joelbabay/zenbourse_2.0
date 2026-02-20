@@ -11,13 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
 
 class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     private RouterInterface $router;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(RouterInterface $router, EntityManagerInterface $entityManager)
+    public function __construct(RouterInterface $router, EntityManagerInterface $entityManager, private AuthorizationCheckerInterface $authChecker)
     {
         $this->router = $router;
         $this->entityManager = $entityManager;
@@ -28,9 +30,8 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
         /** @var User $user */
         $user = $token->getUser();
 
-        // Si l'utilisateur est un admin, on le redirige vers le dashboard
-        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
-            return new RedirectResponse($this->router->generate('admin'));
+        if ($this->authChecker->isGranted('ROLE_EDITOR')) {
+            return new RedirectResponse($this->router->generate('home'));
         }
 
         // Si l'utilisateur a accès à la section Investisseur

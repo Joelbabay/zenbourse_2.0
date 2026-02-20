@@ -147,7 +147,12 @@
     </div>
     <div id="main-content">{% block body %}{% endblock %}</div>
 
+    {% if app.request.attributes.get('crudControllerFqcn') is null %}
+    {{ include('partials/admin_floating_button.html.twig') }}
+{% endif %}
+
     {% include 'partials/footer.html.twig' %}
+
     <script src="/js/jquery.magnific-popup.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
