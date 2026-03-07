@@ -616,7 +616,7 @@ class DashboardController extends AbstractDashboardController
                             supportAllValues: true
                         },
                         fontSize: {
-                            options: [10, 12, 14, 'default', 18, 20, 21, 22, 23, 24, 26, 28, 30, 32, 35, 40, 45],
+                            options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 'default', 18, 20, 21, 22, 23, 24, 26, 28, 30, 32, 35, 40, 45],
                             supportAllValues: true
                         },
                         heading: {

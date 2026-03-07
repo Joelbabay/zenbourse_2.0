@@ -42,4 +42,19 @@ class StatutService
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    public function handleDownload(User $user): bool
+    {
+        $firstTime = !$user->isDownloadRequestSubmitted();
+
+        if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'], true)) {
+            $user->setStatut('PROSPECT');
+        }
+
+        if ($firstTime) {
+            $user->setIsDownloadRequestSubmitted(true);
+        }
+
+        return $firstTime; // permet de savoir si on crée Download ou non
+    }
 }

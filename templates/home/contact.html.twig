@@ -1,28 +1,86 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Zenbourse - Contactez-nous
+    Zenbourse – Contactez-nous
 {% endblock %}
 
 {% block body %}
-	{% include 'partials/header.html.twig' %}
+    {% include 'partials/header.html.twig' %}
 
-	<main class="custom-container mt-4">
-        <div class="row g-5" >
-            <div class="col-md-9">
-                <p>
-                    REDIGEZ VOTRE MESSAGE
-                </p>
-                <div class="row bg-light rounded p-4">
-                    <div class="col-8 mx-auto">
-                        {{ form(form) }}
-                    </div>
+    <main class="custom-container my-5">
+        <div class="row g-5 align-items-start">
+
+            {# 📝 FORMULAIRE #}
+            <div class="col-lg-8">
+                <div class="bg-white shadow-sm rounded-4 p-5">
+
+                    <h1 class="h4 fw-bold mb-3 mt-0">
+                        Contactez-nous
+                    </h1>
+
+                    <p class="text-muted mb-4">
+                        Une question, une suggestion ou besoin d’informations ?
+                        Remplissez le formulaire ci-dessous, nous vous répondrons dans les meilleurs délais.
+                    </p>
+
+                    {{ form_start(form, { attr: { class: 'contact-form' } }) }}
+                        <div class="row g-4">
+                        <div class="mt-4">
+                            {{ form_row(form.civility, {
+                                label: 'Civilité'
+                            }) }}
+                        </div>
+
+                            <div class="col-md-6">
+                                {{ form_row(form.lastname, {
+                                    label: 'Nom'
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.firstname, {
+                                    label: 'Prénom'
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            {{ form_row(form.email, {
+                                label: 'Email'
+                            }) }}
+                        </div>
+
+                        <div class="mt-4">
+                            {{ form_row(form.content, {
+                                label: 'Message'
+                            }) }}
+                        </div>
+
+                        {# Champs invisibles #}
+                        {{ form_row(form.website) }}
+                        {{ form_row(form.captcha) }}
+
+                        <div class="mt-4">
+                            {{ form_row(form.submit) }}
+                        </div>
+
+                    {{ form_end(form) }}
+
+                    <p class="text-muted small mt-4">
+                        Ce site est protégé par reCAPTCHA et les
+                        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">règles de confidentialité</a>
+                        et
+                        <a href="https://policies.google.com/terms" target="_blank" rel="noopener">conditions d’utilisation</a>
+                        de Google s’appliquent.
+                    </p>
+
                 </div>
             </div>
-            <div class="col-md-3">
+
+            {# 📌 SIDEBAR #}
+            <div class="col-lg-4">
                 {% include 'home/widgets/sidebar.html.twig' %}
             </div>
+
         </div>
     </main>
-
-	{% endblock %}
+{% endblock %}

@@ -14,114 +14,95 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @method User getUser()
- */
 class FileDownloadController extends AbstractController
 {
-    private $fileDirectory;
-    private $passwordHasher;
+    private string $filePath;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         ParameterBagInterface $parameterBag,
-        UserPasswordHasherInterface $passwordHasher,
         private StatutService $statutService
     ) {
-        $this->fileDirectory = $parameterBag->get('download_directory') . '/file.pdf';
-        $this->passwordHasher = $passwordHasher;
+        $this->filePath = $parameterBag->get('download_directory') . '/file.pdf';
     }
 
     #[Route('/file/download', name: 'file_download')]
-    public function index(): Response
+    public function download(): Response
     {
         $user = $this->getUser();
-        if ($user) {
-            if (!$user->isDownloadRequestSubmitted()) {
-                $user->setIsDownloadRequestSubmitted(true);
-            }
-            if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'])) {
-                $user->setStatut('PROSPECT');
-            }
 
-            $downloadEntity = new Download();
-            $downloadEntity->setCivility($user->getCivility());
-            $downloadEntity->setLastname($user->getLastname());
-            $downloadEntity->setFirstname($user->getFirstname());
-            $downloadEntity->setEmail($user->getEmail());
-            $downloadEntity->setCreatedAt(new \Datetime());
-
-            $this->entityManager->persist($downloadEntity);
-
-            $this->entityManager->flush();
+        if (!$user instanceof User || !$user->isDownloadRequestSubmitted()) {
+            throw $this->createAccessDeniedException('Téléchargement non autorisé.');
         }
 
-        $filePath = $this->fileDirectory;
-
-        if (file_exists($filePath)) {
-            $response = new BinaryFileResponse($filePath);
-            $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                basename($filePath)
-            );
-            return $response;
-        } else {
-            throw $this->createNotFoundException('The file does not exist');
-        }
-
-        return $this->redirectToRoute('home_download_page');
+        return $this->downloadFile();
     }
 
     #[Route('/download', name: 'home_download_page')]
-    public function requestDownload(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
-    {
-        $downloadEntity = new Download();
-        $form = $this->createForm(DownloadRequestType::class, $downloadEntity);
+    public function requestDownload(
+        Request $request,
+        UserRepository $userRepository
+    ): Response {
+        $download = new Download();
+        $form = $this->createForm(DownloadRequestType::class, $download);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $downloadEntity->setCreatedAt(new \DateTime());
-            $data = $form->getData();
 
-            $user = $userRepository->findOneBy(['email' => $data->getEmail()]);
+            $download->setCreatedAt(new \DateTimeImmutable());
+            $email = $download->getEmail();
 
-            if ($user) {
-                if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'])) {
-                    $user->setStatut('PROSPECT');
+            $user = $userRepository->findOneBy(['email' => $email]);
+
+            if ($user instanceof User) {
+                $firstTime = $this->statutService->handleDownload($user);
+                $this->entityManager->persist($user);
+
+                if (!$firstTime) {
+                    // utilisateur déjà enregistré → pas de doublon
+                    $this->entityManager->flush();
+                    return $this->downloadFile();
                 }
-            } else {
-                $user = new User();
-                $user->setCivility($data->getCivility());
-                $user->setEmail($data->getEmail());
-                $user->setLastname($data->getLastname());
-                $user->setFirstname($data->getFirstname());
-                $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
-                $user->setStatut('PROSPECT');
-                $user->setCreatedAt(new \DateTimeImmutable());
 
-                $entityManager->persist($user);
+                // enrichissement depuis User
+                $download
+                    ->setCivility($user->getCivility())
+                    ->setFirstname($user->getFirstname())
+                    ->setLastname($user->getLastname());
             }
-            $user->setIsDownloadRequestSubmitted(true);
-            $entityManager->persist($downloadEntity);
-            $entityManager->flush();
 
-            $filePath = $this->fileDirectory;
+            $this->entityManager->persist($download);
+            $this->entityManager->flush();
 
-            if (file_exists($filePath)) {
-                $response = new BinaryFileResponse($filePath);
-                $response->setContentDisposition(
-                    ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                    basename($filePath)
-                );
-                return $response;
-            } else {
-                throw $this->createNotFoundException('The file does not exist');
-            }
+            return $this->redirectToRoute('download_thank_you');
         }
+
         return $this->render('download/request_download.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/download/merci', name: 'download_thank_you')]
+    public function thankYou(): Response
+    {
+        $user = $this->getUser();
+
+
+        return $this->render('download/thank_you.html.twig');
+    }
+
+    private function downloadFile(): Response
+    {
+        if (!file_exists($this->filePath)) {
+            throw $this->createNotFoundException('Le fichier n’existe pas.');
+        }
+
+        return (new BinaryFileResponse($this->filePath))
+            ->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                basename($this->filePath)
+            );
     }
 }

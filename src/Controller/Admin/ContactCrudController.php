@@ -24,6 +24,7 @@ class ContactCrudController extends AbstractCrudController
 {
     private $entityManager;
     private $adminUrlGenerator;
+    // Liste de mots-clés spam
 
     public function __construct(EntityManagerInterface $entityManager, AdminUrlGenerator $adminUrlGenerator, private UrlGeneratorInterface $urlGenerator)
     {

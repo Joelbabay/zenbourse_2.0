@@ -145,11 +145,14 @@
         </div>
       </div>
     </div>
-    <div id="main-content">{% block body %}{% endblock %}</div>
+    <div id="main-content">
+      {% block body %}
+      {% endblock %}
+    </div>
 
     {% if app.request.attributes.get('crudControllerFqcn') is null %}
-    {{ include('partials/admin_floating_button.html.twig') }}
-{% endif %}
+      {{ include('partials/admin_floating_button.html.twig') }}
+    {% endif %}
 
     {% include 'partials/footer.html.twig' %}
 
