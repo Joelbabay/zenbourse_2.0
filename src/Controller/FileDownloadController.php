@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class FileDownloadController extends AbstractController
 {
@@ -25,25 +26,30 @@ class FileDownloadController extends AbstractController
         ParameterBagInterface $parameterBag,
         private StatutService $statutService
     ) {
-        $this->filePath = $parameterBag->get('download_directory') . '/file.pdf';
+        $this->filePath = $parameterBag->get('download_directory') . '/valeurs2020.xlsx';
     }
 
     #[Route('/file/download', name: 'file_download')]
-    public function download(): Response
+    public function download(SessionInterface $session): Response
     {
         $user = $this->getUser();
 
-        if (!$user instanceof User || !$user->isDownloadRequestSubmitted()) {
-            throw $this->createAccessDeniedException('Téléchargement non autorisé.');
+        if ($user instanceof User && $user->isDownloadRequestSubmitted()) {
+            return $this->downloadFile();
         }
 
-        return $this->downloadFile();
+        if ($session->get('download_authorized')) {
+            return $this->downloadFile();
+        }
+
+        throw $this->createAccessDeniedException('Téléchargement non autorisé.');
     }
 
     #[Route('/download', name: 'home_download_page')]
     public function requestDownload(
         Request $request,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        SessionInterface $session
     ): Response {
         $download = new Download();
         $form = $this->createForm(DownloadRequestType::class, $download);
@@ -75,6 +81,8 @@ class FileDownloadController extends AbstractController
 
             $this->entityManager->persist($download);
             $this->entityManager->flush();
+
+            $session->set('download_authorized', true);
 
             return $this->redirectToRoute('download_thank_you');
         }
