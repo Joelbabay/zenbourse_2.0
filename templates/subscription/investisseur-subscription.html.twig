@@ -1,40 +1,53 @@
+{# templates/subscription/investisseur-subscription.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    Zenbourse - Demande d'adhésion
-{% endblock %}
+{% block title %}{{ specialPage.title }} - Zenbourse{% endblock %}
+
+{# {% block meta_description %}
+    {{ specialPage.metaDescription ?? specialPage.title }}
+{% endblock %} #}
 
 {% block body %}
     {% include 'partials/header.html.twig' %}
+    
     <main class="custom-container">
         <div class="row">
             <div class="col-md-9 mt-4">
-                <h2 class="fst-italic border-bottom pb-4 mb-3">Achat et paiement de la méthode Investisseur</h2>
-                <p>
-                    La méthode Investisseur n’est pas actuellement disponible à la vente. La société ZENBOURSE
-                    n’étant pas créée.
-                </p>
-                <p>
-                    Si vous êtes intéressé et souhaitez être informé de la mise en vente de la méthode, nous vous
-                    remercions de bien vouloir nous retourner le formulaire ci-après.
-                </p>
-                <p>
-                    Dès que la société sera créée, nous pourrons vous informer de sa disponibilité.
-                </p>
+                <h2 class="fst-italic border-bottom pb-4 mb-3">{{ specialPage.title }}</h2>
+                
+                {# Messages flash #}
+                {% for message in app.flashes('success') %}
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
 
+                {% for message in app.flashes('info') %}
+                    <div class="alert alert-info alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+
+                {# Contenu AVANT le formulaire (éditable par admin) #}
+                {% if specialPage.content %}
+                    <div class="dynamic-content mb-4">
+                        {{ specialPage.content|raw }}
+                    </div>
+                {% endif %}
+
+                {# FORMULAIRE (non modifiable par admin) #}
                 <div class="from-investisseur bg-light rounded">
                     <div class="row col-md-8 mx-auto p-3">
                         {{ form(form) }}
                     </div>
                 </div>
-
             </div>
 
             <div class="col-md-3">
                 {% include 'home/widgets/sidebar.html.twig' %}
             </div>
-
         </div>
-
     </main>
 {% endblock %}

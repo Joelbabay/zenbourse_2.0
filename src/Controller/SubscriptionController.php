@@ -1,60 +1,51 @@
 <?php
+// src/Controller/SubscriptionController.php
 
 namespace App\Controller;
 
 use App\Entity\IntradayRequest;
 use App\Entity\InvestisseurRequest;
+use App\Entity\SpecialPage;
 use App\Entity\User;
 use App\Form\IntradayRequestType;
 use App\Form\InvestisseurSubscriptionType;
+use App\Repository\SpecialPageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-/**
- * @method User getUser()
- */
 class SubscriptionController extends AbstractController
 {
-    private $entityManager;
-    private $passwordHasher;
-
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher,)
-    {
-        $this->entityManager = $entityManager;
-        $this->passwordHasher = $passwordHasher;
-    }
-
-    private function getFirstSectionMenu(String $section)
-    {
-        $firstMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
-            ['section' => $section, 'isActive' => true],
-            ['menuorder' => 'ASC']
-        );
-
-        if ($firstMenu) {
-            if ($section === "INVESTISSEUR") {
-                return $this->redirectToRoute('app_investisseur_page', ['slug' => $firstMenu->getSlug()]);
-            } elseif ($section === "INTRADAY") {
-                return $this->redirectToRoute('app_intraday_page', ['slug' => $firstMenu->getSlug()]);
-            }
-        }
-        //fallback
-        return $this->redirectToRoute('home');
-    }
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private SpecialPageRepository $specialPageRepository
+    ) {}
 
     #[Route('/subscribe/investisseur', name: 'home_investisseur_subscription')]
     public function subscribeInvestisseur(Request $request): Response
     {
+        // Récupérer le contenu de la page spéciale
+        $specialPage = $this->specialPageRepository->findOneBy([
+            'code' => 'INVESTISSEUR_SUBSCRIPTION',
+            'isActive' => true
+        ]);
+
+        // Fallback si pas de page configurée
+        if (!$specialPage) {
+            $specialPage = $this->createDefaultSpecialPage(
+                'INVESTISSEUR_SUBSCRIPTION',
+                'Demande d\'adhésion à la méthode Investisseur'
+            );
+        }
+
         return $this->handleSubscriptionRequest(
             $request,
             'investisseur',
             new InvestisseurRequest(),
-            'Votre demande d\'adhésion à la méthode investisseur a été soumise avec succès.',
-            $this->getFirstSectionMenu('INVESTISSEUR'),
+            InvestisseurSubscriptionType::class,
+            $specialPage,
             'subscription/investisseur-subscription.html.twig'
         );
     }
@@ -62,52 +53,55 @@ class SubscriptionController extends AbstractController
     #[Route('/subscribe/intraday', name: 'home_intraday_subscription')]
     public function subscribeIntraday(Request $request): Response
     {
+        // Récupérer le contenu de la page spéciale
+        $specialPage = $this->specialPageRepository->findOneBy([
+            'code' => 'INTRADAY_SUBSCRIPTION',
+            'isActive' => true
+        ]);
+
+        // Fallback si pas de page configurée
+        if (!$specialPage) {
+            $specialPage = $this->createDefaultSpecialPage(
+                'INTRADAY_SUBSCRIPTION',
+                'Demande d\'adhésion à la méthode Intraday'
+            );
+        }
+
         return $this->handleSubscriptionRequest(
             $request,
             'intraday',
             new IntradayRequest(),
-            'Votre demande d\'adhésion à la méthode intraday a été soumise avec succès.',
-            $this->getFirstSectionMenu('INTRADAY'),
-            'subscription/intraday-subscription.html.twig',
-            true
+            IntradayRequestType::class,
+            $specialPage,
+            'subscription/intraday-subscription.html.twig'
         );
     }
     private function handleSubscriptionRequest(
         Request $request,
-        string $subscriptionType, // 'investisseur' ou 'intraday'
-        object $subscriptionRequest, // Instance de InvestisseurRequest ou IntradayRequest
-        string $successMessage, // Message de succès à afficher
-        string $redirectRoute, // Route de redirection après succès
-        string $template,
-        bool $isIntraday = false // Booléen pour différencier les types d'abonnement
+        string $subscriptionType,
+        object $subscriptionRequest,
+        string $formType,
+        SpecialPage $specialPage,
+        string $template
     ): Response {
+        /** @var User|null $user */
         $user = $this->getUser();
+        $isIntraday = ($subscriptionType === 'intraday');
 
-        $formType = $isIntraday ? IntradayRequestType::class : InvestisseurSubscriptionType::class;
-
+        // Vérifier si l'utilisateur a déjà accès
         if ($user && ($isIntraday ? $user->isIntraday() : $user->isInvestisseur())) {
-            $this->addFlash('info', sprintf('Vous êtes déjà abonné à la méthode %s.', $subscriptionType));
-            return $this->redirectToRoute($redirectRoute);
+            $this->addFlash('info', sprintf('Vous avez déjà accès à la méthode %s.', ucfirst($subscriptionType)));
+            return $this->redirectToFirstSectionMenu($isIntraday ? 'INTRADAY' : 'INVESTISSEUR');
         }
 
+        // Vérifier si une demande est déjà en cours
         if ($user && ($isIntraday ? $user->isInterestedInIntradayMethode() : $user->isInterestedInInvestorMethod())) {
-            $this->addFlash('info', sprintf('Votre demande sur la méthode %s est en cours de validation', ucfirst($subscriptionType)));
-
-            // Redirection vers le premier menu actif de la section HOME
-            $firstHomeMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
-                ['section' => 'HOME', 'isActive' => true],
-                ['menuorder' => 'ASC']
-            );
-
-            if ($firstHomeMenu) {
-                return $this->redirectToRoute('app_home_page', ['slug' => $firstHomeMenu->getSlug()]);
-            }
-
-            // Fallback si aucun menu HOME n'est trouvé
-            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
+            $this->addFlash('info', sprintf('Votre demande pour la méthode %s est en cours de traitement.', ucfirst($subscriptionType)));
+            return $this->redirectToFirstSectionMenu('HOME');
         }
 
-        $form = $this->createForm($formType, $user, [
+        // Créer le formulaire
+        $form = $this->createForm($formType, null, [
             'existing_user' => (bool) $user,
         ]);
 
@@ -116,70 +110,66 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            if (!$user) {
-                $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $data->getEmail()]);
-            }
-
-            $subscriptionRequest->setCreatedAt(new \DateTime());
-
-            if ($user) {
-                if ($isIntraday) {
-                    $user->setInterestedInIntradayMethode(true);
-                } else {
-                    $user->setInterestedInInvestorMethod(true);
-                }
-
-                if (!in_array($user->getStatut(), ['CLIENT', 'INVITE'])) {
-                    $user->setStatut('PROSPECT');
-                }
-            } else {
-                $user = new User();
-                $user->setCivility($data->getCivility());
-                $user->setEmail($data->getEmail());
-                $user->setLastname($data->getLastname());
-                $user->setFirstname($data->getFirstname());
-                $user->setPassword($this->passwordHasher->hashPassword($user, 'zenbourse'));
-                $user->setStatut('PROSPECT');
-                $user->setCreatedAt(new \DateTimeImmutable());
-
-                if ($isIntraday) {
-                    $user->setInterestedInIntradayMethode(true);
-                } else {
-                    $user->setInterestedInInvestorMethod(true);
-                }
-
-                $this->entityManager->persist($user);
-            }
-
-
+            // Sauvegarder UNIQUEMENT la demande (pas l'utilisateur)
             $subscriptionRequest->setCivility($data->getCivility());
             $subscriptionRequest->setLastname($data->getLastname());
             $subscriptionRequest->setFirstname($data->getFirstname());
             $subscriptionRequest->setEmail($data->getEmail());
             $subscriptionRequest->setCreatedAt(new \DateTime());
 
-            //dd($subscriptionRequest);
             $this->entityManager->persist($subscriptionRequest);
             $this->entityManager->flush();
 
-            $this->addFlash('success', $successMessage);
+            // Message de succès
+            $this->addFlash('success', sprintf(
+                'Votre demande d\'adhésion à la méthode %s a été enregistrée. Nous vous contacterons prochainement.',
+                ucfirst($subscriptionType)
+            ));
 
-            // Redirection vers le premier menu actif de la section HOME
-            $firstHomeMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
-                ['section' => 'HOME', 'isActive' => true],
-                ['menuorder' => 'ASC']
-            );
-
-            if ($firstHomeMenu) {
-                return $this->redirectToRoute('app_home_page', ['slug' => $firstHomeMenu->getSlug()]);
-            }
-
-            // Fallback si aucun menu HOME n'est trouvé
-            return $this->redirectToRoute('app_home_page', ['slug' => 'accueil']);
+            return $this->redirectToFirstSectionMenu('HOME');
         }
 
         return $this->render($template, [
-            'form' => $form
+            'form' => $form,
+            'specialPage' => $specialPage,
         ]);
+    }
+
+    /**
+     * Redirige vers le premier menu d'une section
+     */
+    private function redirectToFirstSectionMenu(string $section): Response
+    {
+        $firstMenu = $this->entityManager->getRepository(\App\Entity\Menu::class)->findOneBy(
+            ['section' => $section, 'isActive' => true],
+            ['menuorder' => 'ASC']
+        );
+
+        if ($firstMenu) {
+            $routeName = match ($section) {
+                'INVESTISSEUR' => 'app_investisseur_page',
+                'INTRADAY' => 'app_intraday_page',
+                'HOME' => 'app_home_page',
+                default => 'home'
+            };
+
+            return $this->redirectToRoute($routeName, ['slug' => $firstMenu->getSlug()]);
+        }
+
+        // Fallback
+        return $this->redirectToRoute('home');
+    }
+
+    /**
+     * Crée une page spéciale par défaut
+     */
+    private function createDefaultSpecialPage(string $code, string $title): SpecialPage
+    {
+        $page = new SpecialPage();
+        $page->setCode($code);
+        $page->setTitle($title);
+        $page->setUpdatedAt(new \DateTimeImmutable());
+
+        return $page;
     }
 }

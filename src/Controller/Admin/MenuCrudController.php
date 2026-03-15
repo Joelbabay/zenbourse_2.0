@@ -111,6 +111,14 @@ class MenuCrudController extends AbstractCrudController
                 ->setDisabled(true)
                 ->hideOnIndex()->hideOnForm(),
 
+            ChoiceField::new('type', 'Type de menu')
+                ->setChoices([
+                    'Menu standard' => 'STANDARD',
+                    'Bibliothèque' => 'LIBRARY',
+                    'Catégorie bibliothèque' => 'LIBRARY_CATEGORY',
+                ])
+                ->setRequired(false),
+
             ChoiceField::new('section', 'Section')
                 ->setChoices([
                     'ACCUEIL' => 'HOME',

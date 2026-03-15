@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Download;
+use App\Entity\SpecialPage;
 use App\Entity\User;
 use App\Form\DownloadRequestType;
+use App\Repository\SpecialPageRepository;
 use App\Repository\UserRepository;
 use App\Service\StatutService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -49,8 +51,21 @@ class FileDownloadController extends AbstractController
     public function requestDownload(
         Request $request,
         UserRepository $userRepository,
-        SessionInterface $session
+        SessionInterface $session,
+        SpecialPageRepository $specialPageRepository
     ): Response {
+
+        $specialPage = $specialPageRepository->findOneBy([
+            'code' => 'DOWNLOAD_FILE',
+            'isActive' => true
+        ]);
+
+        if (!$specialPage) {
+            $specialPage = new SpecialPage();
+            $specialPage->setTitle('Telechargement fichier');
+            $specialPage->setContent('<p>Contenu par défaut...</p>');
+        }
+
         $download = new Download();
         $form = $this->createForm(DownloadRequestType::class, $download);
         $form->handleRequest($request);
@@ -88,6 +103,7 @@ class FileDownloadController extends AbstractController
         }
 
         return $this->render('download/request_download.html.twig', [
+            'specialPage' => $specialPage,
             'form' => $form->createView()
         ]);
     }

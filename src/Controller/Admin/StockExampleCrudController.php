@@ -140,45 +140,56 @@ class StockExampleCrudController extends AbstractCrudController
     private function getCategoryChoices(): array
     {
         try {
-            // 4. Utiliser la propriété $this->entityManager qui est maintenant définie et fiable
             $menuRepository = $this->entityManager->getRepository(Menu::class);
 
-            // 1. D'abord, trouver le menu "Bibliothèque" dans la section INVESTISSEUR
-            $bibliothequeMenu = $menuRepository->findOneBy([
-                'section' => 'INVESTISSEUR',
-                'label' => 'Bibliothèque',
+            // Récupérer toutes les bibliothèques actives, triées par section puis par ordre
+            $bibliotheques = $menuRepository->findBy([
+                'type' => 'LIBRARY',
                 'isActive' => true
-            ]);
+            ], ['section' => 'ASC', 'menuorder' => 'ASC']);
 
-            if (!$bibliothequeMenu) {
-                // Cette erreur est informative et aide au débogage
-                return ['aucune-categorie' => 'Menu "Bibliothèque" non trouvé'];
+            if (empty($bibliotheques)) {
+                return ['aucune-categorie' => 'Aucune bibliothèque trouvée'];
             }
 
-            // 2. Récupérer tous les sous-menus de "Bibliothèque"
-            // La recherche sur la propriété 'parent' avec l'objet $bibliothequeMenu fonctionne
-            // car Doctrine sait qu'il doit chercher les entrées où parent_id = $bibliothequeMenu->getId()
-            $sousMenus = $menuRepository->findBy([
-                'parent' => $bibliothequeMenu,
-                'isActive' => true
-            ], ['menuorder' => 'ASC']);
-
             $choices = [];
-            foreach ($sousMenus as $sousMenu) {
-                // Utiliser le slug comme clé et le label comme valeur est une bonne pratique
-                $choices[$sousMenu->getSlug()] = $sousMenu->getLabel();
+
+            foreach ($bibliotheques as $bibliotheque) {
+                // Récupérer les catégories de cette bibliothèque
+                $categories = $menuRepository->findBy([
+                    'parent' => $bibliotheque,
+                    'type' => 'LIBRARY_CATEGORY',
+                    'isActive' => true
+                ], ['menuorder' => 'ASC']);
+
+                if (!empty($categories)) {
+                    $groupChoices = [];
+
+                    foreach ($categories as $category) {
+                        // Label de la catégorie comme clé d'affichage
+                        // Slug de la catégorie comme valeur
+                        $groupChoices[$category->getLabel()] = $category->getSlug();
+                    }
+
+                    // Créer un label de groupe incluant le nom de la bibliothèque ET sa section
+                    // Format: "Bibliothèque Haussière (INVESTISSEUR)"
+                    $groupLabel = sprintf(
+                        '%s (%s)',
+                        $bibliotheque->getLabel(),
+                        $bibliotheque->getSection()
+                    );
+
+                    $choices[$groupLabel] = $groupChoices;
+                }
             }
 
             if (empty($choices)) {
-                return ['aucune-categorie' => 'Aucun sous-menu actif trouvé'];
+                return ['aucune-categorie' => 'Aucune catégorie trouvée'];
             }
 
-            // Inverser le tableau pour que le label soit affiché dans le select et le slug soit la valeur
-            return array_flip($choices);
-            //return $choices;
+            return $choices;
         } catch (\Exception $e) {
-            error_log('Erreur critique dans getCategoryChoices: ' . $e->getMessage());
-            // Retourner un message d'erreur clair dans l'interface si tout échoue
+            error_log('Erreur getCategoryChoices: ' . $e->getMessage());
             return ['erreur' => 'Erreur de configuration'];
         }
     }

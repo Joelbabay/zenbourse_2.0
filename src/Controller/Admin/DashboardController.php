@@ -9,6 +9,8 @@ use App\Entity\IntradayRequest;
 use App\Entity\InvestisseurRequest;
 use App\Entity\Menu;
 use App\Entity\PageContent;
+use App\Entity\SiteConfig;
+use App\Entity\SpecialPage;
 use App\Entity\User;
 use App\Entity\StockExample;
 use App\Form\MailingType;
@@ -816,6 +818,8 @@ class DashboardController extends AbstractDashboardController
                 ->setQueryParameter('section', 'INTRADAY'),
         ]);
 
+        yield MenuItem::linkToCrud('Pages spéciales', 'fa fa-edit', SpecialPage::class);
+
         yield MenuItem::linkToCrud('Images du carrousel', 'fa fa-images', CarouselImage::class);
         yield MenuItem::linkToCrud('Gestion des pages de la bibliothèque', 'fa fa-chart-line', StockExample::class)
             ->setController(StockExampleCrudController::class);
@@ -832,5 +836,8 @@ class DashboardController extends AbstractDashboardController
             ->setLinkRel('noopener noreferrer')
             ->setLinkTarget('_blank')
             ->setCssClass('ea-menu-item-link-to-site');
+
+        yield MenuItem::linkToCrud('Textes du site', 'fa fa-edit', SiteConfig::class)
+            ->setController(SiteConfigCrudController::class);
     }
 }

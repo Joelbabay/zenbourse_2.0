@@ -43,6 +43,9 @@ class Menu
     #[ORM\Column]
     private ?bool $isActive = true;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $type = null;
+
     #[ORM\OneToOne(mappedBy: 'menu', cascade: ['persist', 'remove'])]
     private ?PageContent $pageContent = null;
 
@@ -183,6 +186,17 @@ class Menu
     public function setPageContent(?PageContent $pageContent): static
     {
         $this->pageContent = $pageContent;
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
         return $this;
     }
 }

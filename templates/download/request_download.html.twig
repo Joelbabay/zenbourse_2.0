@@ -6,37 +6,13 @@
     <div class="col-md-9 mt-4">
       <div class="mt-3">
         <h2 class="fst-italic border-bottom pb-4 mb-3">
-          Les valeurs de l’étude statistique
+          {{ specialPage.title }}
         </h2>
-        <p>
-          Nous mettons à votre disposition la liste des valeurs qui ont permis
-          d’élaborer la méthode Investisseur.
-        </p>
-        <p>Cette liste vous permettra :</p>
-        <ul>
-          <li>
-            De constater que la méthode Investisseur a été élaborée à partir
-            d’une étude statistique et non d’un backtest automatisé.
-          </li>
-          <li>De créer éventuellement votre propre méthode.</li>
-        </ul>
-        <p>Chaque valeur a fait l’objet d’une analyse visuelle.</p>
-        <p>
-          Nous rappelons qu’une étude statistique est le prérequis indispensable
-          à la création d’une méthode.
-        </p>
-        <p>
-          Nous espérons que votre analyse de ces valeurs vous amènera à
-          considérer que les décisions à prendre doivent être de votre ressort
-          sans influence extérieure, sans le conseil de qui que ce soit.
-          Condition indispensable pour acquérir la confiance absolue.
-        </p>
-        <p>
-          Vous pouvez nous demander les graphiques de quelques valeurs qui vous
-          intéressent. Les graphiques ne seront pas commentés, mais comporteront
-          le signal de la méthode. Il vous appartiendra de faire votre propre
-          analyse sans influence comme si vous avez acquis la méthode.
-        </p>
+        {% if specialPage.content %}
+          <div class="dynamic-content">
+            {{ specialPage.content|raw }}
+          </div>
+        {% endif %}
       </div>
       {% if app.user %}
       <div class="row col-md-6 m-auto p-4">
