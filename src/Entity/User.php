@@ -107,9 +107,75 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $hasTemporaryInvestorAccess = false;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $loginCount = 0;
+
+    /**
+     * Nombre de connexions Investisseur
+     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $investorLoginCount = 0;
+
+    /**
+     * Nombre de connexions Intraday
+     */
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $intradayLoginCount = 0;
+
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $temporaryInvestorAccessStart;
     private array $adminRoles = [];
+
+    public function getLoginCount(): int
+    {
+        return $this->loginCount;
+    }
+
+    public function setLoginCount(int $loginCount): self
+    {
+        $this->loginCount = $loginCount;
+        return $this;
+    }
+
+    public function incrementLoginCount(): self
+    {
+        $this->loginCount++;
+        return $this;
+    }
+
+    public function getInvestorLoginCount(): int
+    {
+        return $this->investorLoginCount;
+    }
+
+    public function setInvestorLoginCount(int $investorLoginCount): self
+    {
+        $this->investorLoginCount = $investorLoginCount;
+        return $this;
+    }
+
+    public function incrementInvestorLoginCount(): self
+    {
+        $this->investorLoginCount++;
+        return $this;
+    }
+
+    public function getIntradayLoginCount(): int
+    {
+        return $this->intradayLoginCount;
+    }
+
+    public function setIntradayLoginCount(int $intradayLoginCount): self
+    {
+        $this->intradayLoginCount = $intradayLoginCount;
+        return $this;
+    }
+
+    public function incrementIntradayLoginCount(): self
+    {
+        $this->intradayLoginCount++;
+        return $this;
+    }
 
     public function __construct()
     {

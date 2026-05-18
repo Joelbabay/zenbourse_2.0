@@ -1,4 +1,5 @@
 <?php
+// src/Controller/Admin/UserCrudController.php
 
 namespace App\Controller\Admin;
 
@@ -14,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -27,22 +29,22 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * @method User getUser()
- */
 class UserCrudController extends AbstractCrudController
 {
     private $userRepository;
     private $entityRepository;
 
-
-    public function __construct(OrmEntityRepository $entityRepository, UserRepository $userRepository, private UserPasswordHasherInterface $passwordHasher, private RequestStack $requestStack)
-    {
+    public function __construct(
+        OrmEntityRepository $entityRepository,
+        UserRepository $userRepository,
+        private UserPasswordHasherInterface $passwordHasher,
+        private RequestStack $requestStack
+    ) {
         $this->userRepository = $userRepository;
         $this->entityRepository = $entityRepository;
     }
+
     public static function getEntityFqcn(): string
     {
         return User::class;
@@ -58,7 +60,6 @@ class UserCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('Utilisateurs')
             ->setDefaultSort(['lastname' => 'ASC'])
             ->showEntityActionsInlined();
-        //->overrideTemplates(['label/null' => 'admin/labels/null_label.html.twig']);
     }
 
     public function configureActions(Actions $actions): Actions
@@ -72,14 +73,12 @@ class UserCrudController extends AbstractCrudController
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('fa fa-plus')->setLabel('Créer un utilisateur');
             })
-
             ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $action) {
                 return $action
                     ->setIcon('fas fa-edit')
                     ->setLabel(false)
                     ->addCssClass('btn btn-link');
             })
-            // Mise à jour de l'action de suppression pour utiliser une icône spécifique
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
                 return $action
                     ->setIcon('fas fa-trash')
@@ -109,20 +108,16 @@ class UserCrudController extends AbstractCrudController
                         'Expiré' => false,
                     ])
             )
-
             ->add(
                 NullFilter::new('temporaryInvestorAccessStart')
                     ->setChoiceLabels('NULL', 'NOT_NULL')
             )
-
             ->add(
                 BooleanFilter::new('isInvestisseur', 'Accès investisseur')
             )
             ->add(
                 BooleanFilter::new('isIntraday', 'Accès intraday')
-            )
-
-        ;
+            );
     }
 
     public function configureFields(string $pageName): iterable
@@ -187,13 +182,15 @@ class UserCrudController extends AbstractCrudController
                     'attr' => [
                         'maxlength' => 15,
                         'pattern' => '^\+?[0-9]{8,15}$',
-                        'title' => 'Veuillez entrer un numéro de téléphone valide (entre 8 et 15 chiffres, avec un code international optionnel).',
+                        'title' => 'Veuillez entrer un numéro de téléphone valide.',
                     ]
                 ]),
             TextField::new('city', 'Ville')
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
+
+            // ACCÈS INVESTISSEUR
             BooleanField::new('isInvestisseur', 'Investisseur')
                 ->renderAsSwitch()
                 ->onlyOnIndex(),
@@ -202,21 +199,31 @@ class UserCrudController extends AbstractCrudController
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
+
+            // ← NOUVEAU : Compteur connexions Investisseur
+            IntegerField::new('investorLoginCount', 'Nb. Cx Inv.')
+                ->addCssClass('text-center'),
+
+
+            // ACCÈS INTRADAY
             BooleanField::new('isIntraday', 'Intraday')
-                //->setFormTypeOption('disabled',  fn($user) => !$user || !$user->isInvestisseur())
                 ->onlyOnIndex()
                 ->renderAsSwitch(),
-            //->setTemplatePath('admin/fields/custom_boolean_toggle.html.twig'),
             DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
                     return $value ? $formatter->format($value) : ' ';
                 }),
 
+            // ← NOUVEAU : Compteur connexions Intraday
+            // COMPTEUR CONNEXIONS INTRADAY
+            IntegerField::new('intradayLoginCount', 'Nb. Cx Int.')
+                ->addCssClass('text-center'),
+
+            // ACCÈS TEMPORAIRE
             BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
                 ->onlyOnIndex()->renderAsSwitch(),
 
-            // Badge custom pour accès temporaire actif ou expiré
             TextField::new('badgeTemporaryInvestorAccess', 'Accès temporaire')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
@@ -252,17 +259,37 @@ class UserCrudController extends AbstractCrudController
                 ->setFormat('dd/MM/YYYY HH:mm')
                 ->onlyOnForms(),
 
+            // DERNIÈRE CONNEXION
             DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
                 }),
+
+            // ← NOUVEAU : Compteur total connexions (dans les formulaires)
+            IntegerField::new('loginCount', 'Nombre total de connexions')
+                ->setHelp('Nombre total de connexions (tous accès confondus)')
+                ->onlyOnForms()
+                ->setFormTypeOption('disabled', true),
+
+            IntegerField::new('investorLoginCount', 'Connexions Investisseur')
+                ->setHelp('Nombre de connexions avec accès Investisseur actif')
+                ->onlyOnForms()
+                ->setFormTypeOption('disabled', true),
+
+            IntegerField::new('intradayLoginCount', 'Connexions Intraday')
+                ->setHelp('Nombre de connexions avec accès Intraday actif')
+                ->onlyOnForms()
+                ->setFormTypeOption('disabled', true),
+
             TextareaField::new('comment', 'Notes')
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
         ];
     }
+
+    // ... vos méthodes persistEntity, updateEntity, toggleBoolean, configureAssets restent identiques ...
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
@@ -302,7 +329,6 @@ class UserCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-
         if (!$entityInstance instanceof User) {
             return;
         }
@@ -323,10 +349,8 @@ class UserCrudController extends AbstractCrudController
         } else {
             $user->setInterestedInInvestorMethod(false);
 
-            // Détecter un changement de false -> true
             $wasInvestor = $originalUser['isInvestisseur'] ?? false;
             if (!$wasInvestor && $user->isInvestisseur()) {
-                // Mise à jour de la date à chaque activation
                 $user->setInvestorAccessDate(new \DateTime());
             }
 
@@ -377,26 +401,21 @@ class UserCrudController extends AbstractCrudController
             return $this->redirect($adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
         }
 
-        // Construire directement les méthodes avec le nom du champ tel quel
-        $getter = $fieldName; // isInvestisseur
-        $setter = 'set' . ucfirst($fieldName); // setIsInvestisseur
+        $getter = $fieldName;
+        $setter = 'set' . ucfirst($fieldName);
 
         if (!method_exists($user, $getter) || !method_exists($user, $setter)) {
             return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
         }
 
-        // Inverser la valeur
         $currentValue = $user->$getter();
         $newValue = !$currentValue;
         $user->$setter($newValue);
 
-        // Gérer les rôles
         $roles = $user->getRoles();
 
-        // Gestion spéciale pour Investisseur
         if ($fieldName === 'isInvestisseur') {
             if ($newValue) {
-                // Activer investisseur
                 if (!$user->getInvestorAccessDate()) {
                     $user->setInvestorAccessDate(new \DateTime());
                 }
@@ -405,7 +424,6 @@ class UserCrudController extends AbstractCrudController
                 }
                 $user->setInterestedInInvestorMethod(false);
             } else {
-                // Désactiver investisseur (et intraday)
                 $user->setIsIntraday(false);
                 $user->setInvestorAccessDate(null);
                 $user->setIntradayAccessDate(null);
@@ -413,10 +431,8 @@ class UserCrudController extends AbstractCrudController
             }
         }
 
-        // Gestion spéciale pour Intraday
         if ($fieldName === 'isIntraday') {
             if ($newValue) {
-                // Activer intraday (nécessite investisseur)
                 if (!$user->isInvestisseur()) {
                     return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
                 }
@@ -427,7 +443,6 @@ class UserCrudController extends AbstractCrudController
                     $roles[] = 'ROLE_INTRADAY';
                 }
             } else {
-                // Désactiver intraday
                 $user->setIntradayAccessDate(null);
                 $roles = array_diff($roles, ['ROLE_INTRADAY']);
             }
@@ -438,6 +453,7 @@ class UserCrudController extends AbstractCrudController
 
         return $this->redirect($context->getReferrer() ?? $adminUrlGenerator->setController(self::class)->setAction(Action::INDEX)->generateUrl());
     }
+
     public function configureAssets(Assets $assets): Assets
     {
         return $assets
