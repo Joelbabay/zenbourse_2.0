@@ -29,6 +29,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Form\SendEmailToUserType;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -39,10 +42,132 @@ class UserCrudController extends AbstractCrudController
         OrmEntityRepository $entityRepository,
         UserRepository $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private MailerInterface $mailer
     ) {
         $this->userRepository = $userRepository;
         $this->entityRepository = $entityRepository;
+    }
+
+    /**
+     * Affiche le formulaire d'envoi d'email
+     */
+    public function sendEmailForm(AdminContext $context): Response
+    {
+        /** @var User $user */
+        $user = $context->getEntity()->getInstance();
+
+        if (!$user) {
+            $this->addFlash('error', 'Utilisateur introuvable.');
+            return $this->redirectToRoute('admin');
+        }
+
+        $form = $this->createForm(SendEmailToUserType::class);
+        $form->handleRequest($context->getRequest());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            try {
+                // Construire l'email
+                $email = (new Email())
+                    ->from('contact@zenbourse.fr')
+                    ->to($user->getEmail())
+                    ->subject($data['subject'])
+                    ->html($this->renderEmailTemplate($user, $data['message']));
+
+                // Envoyer
+                $this->mailer->send($email);
+
+                $this->addFlash('success', sprintf(
+                    'Email envoyé avec succès à %s (%s)',
+                    $user->getFullName(),
+                    $user->getEmail()
+                ));
+
+                // Retourner à la liste
+                return $this->redirectToRoute('admin', [
+                    'crudAction' => 'index',
+                    'crudControllerFqcn' => self::class,
+                ]);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de l\'envoi de l\'email : ' . $e->getMessage());
+            }
+        }
+
+        return $this->render('admin/user/send_email.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Template de l'email avec mise en forme
+     */
+    private function renderEmailTemplate(User $user, string $message): string
+    {
+        return sprintf(
+            '
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    line-height: 1.6;
+                    color: #333;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                .header {
+                    background: linear-gradient(90deg, #0d6efd 0%%, #00c9a7 100%%);
+                    color: white;
+                    padding: 20px;
+                    text-align: center;
+                    border-radius: 5px 5px 0 0;
+                }
+                .content {
+                    background: #f8f9fa;
+                    padding: 30px;
+                    border-radius: 0 0 5px 5px;
+                }
+                .message {
+                    background: white;
+                    padding: 20px;
+                    border-radius: 5px;
+                    margin: 20px 0;
+                    white-space: pre-line;
+                }
+                .footer {
+                    text-align: center;
+                    margin-top: 20px;
+                    font-size: 12px;
+                    color: #666;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Zenbourse</h1>
+                </div>
+                <div class="content">
+                    <div class="message">%s</div>
+                    <p>Cordialement,<br>L\'équipe Zenbourse</p>
+                </div>
+                <div class="footer">
+                    <p>Cet email a été envoyé depuis votre espace administrateur Zenbourse.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    ',
+            nl2br(htmlspecialchars($message))
+        );
     }
 
     public static function getEntityFqcn(): string
@@ -64,12 +189,20 @@ class UserCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
+        // Action pour envoyer un email
+        $sendEmail = Action::new('sendEmail', false)
+            ->linkToCrudAction('sendEmailForm')
+            ->setIcon('fas fa-envelope')
+            ->setCssClass('btn btn-link text-primary')
+            ->setHtmlAttributes(['title' => 'Envoyer un email']);
+
         $toggleAction = Action::new('toggleBoolean', false)
             ->linkToCrudAction('toggleBoolean')
             ->setHtmlAttributes(['data-action' => 'toggle']);
 
         return $actions
             ->add(Crud::PAGE_INDEX, $toggleAction)
+            ->add(Crud::PAGE_INDEX, $sendEmail)
             ->update(Crud::PAGE_INDEX, Action::NEW, function (Action $action) {
                 return $action->setIcon('fa fa-plus')->setLabel('Créer un utilisateur');
             })
@@ -84,7 +217,8 @@ class UserCrudController extends AbstractCrudController
                     ->setIcon('fas fa-trash')
                     ->setLabel(false)
                     ->addCssClass('btn btn-link text-danger');
-            });
+            })
+            ->reorder(Crud::PAGE_INDEX, ['sendEmail', Action::EDIT, Action::DELETE]);
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -201,7 +335,7 @@ class UserCrudController extends AbstractCrudController
                 }),
 
             // ← NOUVEAU : Compteur connexions Investisseur
-            IntegerField::new('investorLoginCount', 'Nb. Cx Inv.')
+            IntegerField::new('investorLoginCount', 'Nb. Cx.')
                 ->addCssClass('text-center'),
 
 
@@ -217,8 +351,8 @@ class UserCrudController extends AbstractCrudController
 
             // ← NOUVEAU : Compteur connexions Intraday
             // COMPTEUR CONNEXIONS INTRADAY
-            IntegerField::new('intradayLoginCount', 'Nb. Cx Int.')
-                ->addCssClass('text-center'),
+            //IntegerField::new('intradayLoginCount', 'Nb. Cx Int.')
+            //->addCssClass('text-center'),
 
             // ACCÈS TEMPORAIRE
             BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
