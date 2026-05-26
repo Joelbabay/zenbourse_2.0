@@ -319,3 +319,16 @@ body .ea-content table tbody tr:nth-of-type(even) td,
 body table tbody tr:nth-of-type(even) td {
   background-color: transparent !important;
 }
+
+.ea .actions {
+  display: flex;
+  gap: 3px;
+}
+
+.ea .actions a {
+  font-weight: 600;
+}
+
+.ea .actions a i {
+  font-size: 20px !important;
+}
