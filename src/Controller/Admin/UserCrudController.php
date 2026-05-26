@@ -193,7 +193,7 @@ class UserCrudController extends AbstractCrudController
         $sendEmail = Action::new('sendEmail', false)
             ->linkToCrudAction('sendEmailForm')
             ->setIcon('fas fa-envelope')
-            ->setCssClass('btn btn-link text-primary')
+            ->setCssClass('btn btn-link text-primary btn-lg')
             ->setHtmlAttributes(['title' => 'Envoyer un email']);
 
         $toggleAction = Action::new('toggleBoolean', false)
@@ -210,13 +210,14 @@ class UserCrudController extends AbstractCrudController
                 return $action
                     ->setIcon('fas fa-edit')
                     ->setLabel(false)
-                    ->addCssClass('btn btn-link');
+                    ->addCssClass('btn btn-link')
+                    ->addCssClass('btn btn-primary btn-lg');
             })
             ->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) {
                 return $action
                     ->setIcon('fas fa-trash')
                     ->setLabel(false)
-                    ->addCssClass('btn btn-link text-danger');
+                    ->addCssClass('btn btn-link text-danger btn-lg');
             })
             ->reorder(Crud::PAGE_INDEX, ['sendEmail', Action::EDIT, Action::DELETE]);
     }
@@ -308,7 +309,7 @@ class UserCrudController extends AbstractCrudController
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 }),
-            TelephoneField::new('phone', 'Téléphone')
+            TelephoneField::new('phone', 'Tél.')
                 ->formatValue(function ($value, $entity) {
                     return $value ?? ' ';
                 })
@@ -325,7 +326,7 @@ class UserCrudController extends AbstractCrudController
                 }),
 
             // ACCÈS INVESTISSEUR
-            BooleanField::new('isInvestisseur', 'Investisseur')
+            BooleanField::new('isInvestisseur', 'Inv.')
                 ->renderAsSwitch()
                 ->onlyOnIndex(),
             DateTimeField::new('investorAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
@@ -340,7 +341,7 @@ class UserCrudController extends AbstractCrudController
 
 
             // ACCÈS INTRADAY
-            BooleanField::new('isIntraday', 'Intraday')
+            BooleanField::new('isIntraday', 'Int.')
                 ->onlyOnIndex()
                 ->renderAsSwitch(),
             DateTimeField::new('intradayAccessDate', 'Date')->setFormat('dd/MM/YYYY')->onlyOnIndex()
@@ -355,10 +356,43 @@ class UserCrudController extends AbstractCrudController
             //->addCssClass('text-center'),
 
             // ACCÈS TEMPORAIRE
-            BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
+            BooleanField::new('hasTemporaryInvestorAccess', 'temp.')
                 ->onlyOnIndex()->renderAsSwitch(),
 
-            TextField::new('badgeTemporaryInvestorAccess', 'Accès temporaire')
+            TextField::new('badgeTemporaryInvestorAccess', 'Accès temp.')
+                ->onlyOnIndex()
+                ->formatValue(function ($value, $entity) {
+                    $start = $entity->getTemporaryInvestorAccessStart();
+                    $hasTemp = $entity->getHasTemporaryInvestorAccess();
+                    if ($start) {
+                        $startDate = new \DateTime($start->format('Y-m-d H:i:s'));
+                        $dateEnd = $startDate->add(new \DateInterval('P10D'));
+                        $now = new \DateTime();
+                        if ($hasTemp) {
+                            return '<span">' . $dateEnd->format('d/m/Y') . '</span>';
+                        }
+                    }
+                    return ' ';
+                })
+                ->renderAsHtml(),
+
+            //DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
+            //->setFormat('dd/MM/YYYY HH:mm')
+            //->onlyOnIndex()
+            //->formatValue(function ($value, $entity) {
+            //    return $value ? $value->format('d/m/Y H:i') : ' ';
+            //}),
+
+            BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
+                ->renderAsSwitch(true)
+                ->setHelp('Activez pour donner un accès temporaire de 10 jours à la méthode Investisseur')
+                ->onlyOnForms(),
+
+            DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
+                ->setFormat('dd/MM/YYYY HH:mm')
+                ->onlyOnForms(),
+
+            TextField::new('badgeTemporaryInvestorAccess', 'Fin Accès Temp.')
                 ->onlyOnIndex()
                 ->formatValue(function ($value, $entity) {
                     $start = $entity->getTemporaryInvestorAccessStart();
@@ -377,24 +411,8 @@ class UserCrudController extends AbstractCrudController
                 })
                 ->renderAsHtml(),
 
-            DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
-                ->setFormat('dd/MM/YYYY HH:mm')
-                ->onlyOnIndex()
-                ->formatValue(function ($value, $entity) {
-                    return $value ? $value->format('d/m/Y H:i') : ' ';
-                }),
-
-            BooleanField::new('hasTemporaryInvestorAccess', 'Accès temporaire Investisseur')
-                ->renderAsSwitch(true)
-                ->setHelp('Activez pour donner un accès temporaire de 10 jours à la méthode Investisseur')
-                ->onlyOnForms(),
-
-            DateTimeField::new('temporaryInvestorAccessStart', 'Début accès temporaire')
-                ->setFormat('dd/MM/YYYY HH:mm')
-                ->onlyOnForms(),
-
             // DERNIÈRE CONNEXION
-            DateTimeField::new('lastConnexion', 'Dernière Connexion')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm()
+            DateTimeField::new('lastConnexion', 'Dernière Cx.')->setFormat('dd/MM/YYYY - HH:mm')->hideOnForm()
                 ->formatValue(function ($value, $entity) {
                     $formatter = new \IntlDateFormatter('fr_FR', \IntlDateFormatter::RELATIVE_MEDIUM, \IntlDateFormatter::SHORT);
                     return $value ? $formatter->format($value) : ' ';
